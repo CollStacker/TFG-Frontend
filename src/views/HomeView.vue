@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <Toast/>
     <div class="container" :class="{ 'right-panel-active': isSignUp }">
       <!-- Register form -->
@@ -167,7 +167,7 @@ body {
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
   height: 100vh;
-  margin: -20px 0 50px;
+  margin: 0;
 }
 
 h1 {
@@ -275,10 +275,15 @@ form {
       0 10px 10px rgba(0,0,0,0.22);
   position: relative;
   overflow: hidden;
-  width: 768px;
-  max-width: 100%;
-  min-height: 480px;
+  width: 100%;
+  max-width: 930px; 
+  min-height: 600px;
+  position: absolute; 
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
 }
+
 
 .form-container {
   position: absolute;
@@ -438,7 +443,6 @@ footer a {
   padding: 8px;
   border-radius: 6px;
   margin-left: 206px;
-
 }
 
 .customNextStepButton:hover {
@@ -450,7 +454,7 @@ footer a {
 
 .fixed-size-textarea {
   resize: none;
-  width: 241px;
+  width: 245px;
   height: 100px; 
   background-color: #eee;
   border: none;

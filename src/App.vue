@@ -1,14 +1,4 @@
 <template>
-  <header>
-    <div class="wrapper">
-
-      <nav>
-        <!-- <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink> -->
-      </nav>
-    </div>
-  </header>
-
   <RouterView />
 </template>
 
@@ -24,7 +14,7 @@ input.p-inputtext.p-component {
   background-color: #eee;
   border: none;
   margin: 10px;
-  height: 8%;
+  height: 6.5%;
 }
 
 input.p-inputtext.p-component.p-password-input {
