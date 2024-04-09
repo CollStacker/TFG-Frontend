@@ -89,7 +89,7 @@ const signUpForm = ref({
   biography: '',
 });
 const repeatedPassword = ref('');
-const registerStep = ref(1);
+const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
 
 const handleSignUp = () => {
@@ -119,15 +119,15 @@ const isCorrectPassword = () => {
 }
 
 const areAllRegisterStepOneFieldsFilled = () => {
-  return signUpForm.value.password == '' &&  
-    repeatedPassword.value == '' &&
-    signUpForm.value.username == '' && 
-    signUpForm.value.email == ''
+  return signUpForm.value.password !== '' &&  
+    repeatedPassword.value !== '' &&
+    signUpForm.value.username !== '' && 
+    signUpForm.value.email !== ''
 }
 
 const areAllRegisterStepTwoFieldsFilled = () => {
-  return signUpForm.value.name == '' &&  
-    signUpForm.value.surnames == ''
+  return signUpForm.value.name !== '' &&  
+    signUpForm.value.surnames !== ''
     // Biography is not mandatory
 }
 
@@ -141,7 +141,7 @@ const nextRegisterFormStep = () => {
       registerStep.value += 1;
     } 
   } else if (registerStep.value == 1){
-    if (areAllRegisterStepTwoFieldsFilled()) {
+    if (!areAllRegisterStepTwoFieldsFilled()) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name and surnames are mandatory fields.', life: 3000 });
     } else {
       registerStep.value += 1;      
