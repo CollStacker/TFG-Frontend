@@ -20,12 +20,19 @@ import HomeView from './views/HomeView.vue'
 
 <style >
 
+input.p-inputtext.p-component {
+  background-color: #eee;
+  border: none;
+  margin: 10px;
+  height: 8%;
+}
+
 input.p-inputtext.p-component.p-password-input {
   background-color: #eee;
   border: none;
-  margin-bottom: 8px;
-  width: 100%;
-  height: 100%;
+  margin: 10px;
+  padding: 11px;
+  height: 65%;
 }
 /* header {
   line-height: 1.5;
