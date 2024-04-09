@@ -18,7 +18,15 @@ import HomeView from './views/HomeView.vue'
 </script>
 
 
-<style scoped>
+<style >
+
+input.p-inputtext.p-component.p-password-input {
+  background-color: #eee;
+  border: none;
+  margin-bottom: 8px;
+  width: 100%;
+  height: 100%;
+}
 /* header {
   line-height: 1.5;
   max-height: 100vh;

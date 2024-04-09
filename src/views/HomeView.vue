@@ -1,10 +1,12 @@
 <template>
   <div>
+    <Toast/>
     <div class="container" :class="{ 'right-panel-active': isSignUp }">
       <!-- Register form -->
       <div class="form-container sign-up-container">
         <form @submit.prevent="handleSignUp">
           <h1>Create Account</h1>
+          <InputText type="text" v-model="signUpForm.name" placeholder="Name"/>
           <input type="text" placeholder="Name" v-model="signUpForm.name" />
           <input type="email" placeholder="Email" v-model="signUpForm.email" />
           <input type="password" placeholder="Password" v-model="signUpForm.password" />
@@ -15,8 +17,11 @@
       <div class="form-container sign-in-container">
         <form @submit.prevent="handleSignIn">
           <h1 class="sing-in-title">Sign in</h1>
-          <input type="email" placeholder="Email" v-model="signInForm.email" />
-          <input type="password" placeholder="Password" v-model="signInForm.password" />
+          <InputText v-model="signInForm.email" placeholder="Email account" />
+          <!-- <div class="card flex justify-content-center"> -->
+          <!-- </div> -->
+          <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
+          <!-- <input type="password" placeholder="Password" v-model="signInForm.password" /> -->
           <a href="#">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
@@ -31,8 +36,8 @@
           </div>
           <!-- Login right panel-->
           <div class="overlay-panel overlay-right">
-            <h1>Hello, Friend!</h1>
-            <p>Enter your personal details and start journey with us</p>
+            <h1>Hello, Collector!</h1>
+            <p>Are you still not registered?. Enter your personal details and start journey with us</p>
             <button class="ghost" @click="toggleSignIn">Sign Up</button>
           </div>
         </div>
@@ -51,7 +56,12 @@
 
 <script setup lang="ts">
 import Password from 'primevue/password';
+import InputText from 'primevue/inputtext';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
+
+const toast = useToast();
 
 const isSignUp = ref(false);
 const signUpForm = ref({ name: '', email: '', password: '' });
@@ -62,6 +72,9 @@ const handleSignUp = () => {
 };
 
 const handleSignIn = () => {
+  if (signInForm.value.email === '' || signInForm.value.password === '' ) {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+  }
   console.log('Sign in form submitted:', signInForm.value);
 };
 
