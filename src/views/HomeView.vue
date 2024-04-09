@@ -12,9 +12,13 @@
             <Password v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
             <Password v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
             <p class="error-message" v-if="!checkPassword() && repeatedPassword.length > 0">Password does not match</p>
+            <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
           </template>
           <template id="registerFormStep0" v-if="registerStep === 1">
-
+            <InputText v-model="signUpForm.name" placeholder="Name" />
+            <InputText v-model="signUpForm.surnames" placeholder="Surnames" />
+            <Textarea v-model="signUpForm.biography" placeholder="Biography" class="fixed-size-textarea"/>
+            <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
           </template>
           <template id="registerFormStep0" v-if="registerStep === 2">
 
@@ -63,10 +67,13 @@
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Toast from 'primevue/toast';
+import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
 
 const toast = useToast();
+
+const wrongPasswordErrorMessage = "Password must be greater than 8 characters.\n Must have at least one number, one capital letter and one non-alphanumeric character"
 
 const isSignUp = ref(false);
 const signUpForm = ref({
@@ -82,12 +89,13 @@ const signUpForm = ref({
   biography: '',
 });
 const repeatedPassword = ref('');
-const registerStep = ref(0);
+const registerStep = ref(1);
 const signInForm = ref({email: '', password: ''});
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
   // refrescar pagina
+  registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
 };
 
 const handleSignIn = () => {
@@ -103,6 +111,42 @@ const toggleSignIn = () => {
 
 const checkPassword = ():boolean => {
   return signUpForm.value.password == repeatedPassword.value
+}
+
+const isCorrectPassword = () => {
+  const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  return securityPasswordRegex.test(signUpForm.value.password);
+}
+
+const areAllRegisterStepOneFieldsFilled = () => {
+  return signUpForm.value.password == '' &&  
+    repeatedPassword.value == '' &&
+    signUpForm.value.username == '' && 
+    signUpForm.value.email == ''
+}
+
+const areAllRegisterStepTwoFieldsFilled = () => {
+  return signUpForm.value.name == '' &&  
+    signUpForm.value.surnames == ''
+    // Biography is not mandatory
+}
+
+const nextRegisterFormStep = () => {
+  if (registerStep.value == 0) {
+    if (!isCorrectPassword()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
+    } else if (!areAllRegisterStepOneFieldsFilled()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+    } else if (repeatedPassword.value == signUpForm.value.password) {
+      registerStep.value += 1;
+    } 
+  } else if (registerStep.value == 1){
+    if (areAllRegisterStepTwoFieldsFilled()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name and surnames are mandatory fields.', life: 3000 });
+    } else {
+      registerStep.value += 1;      
+    }
+  }
 }
 
 </script>
@@ -212,6 +256,7 @@ form {
 .error-message {
   color: red !important;
   margin-top: 0px !important;
+  margin-bottom: 2px;
   text-align: left !important;
 }
 
@@ -383,5 +428,32 @@ footer i {
 footer a {
   color: #3c97bf;
   text-decoration: none;
+}
+
+.customNextStepButton {
+  color: #FFFFFF;
+  margin-top: 10px;
+  background-color: #FF4B2B;
+  border: 1px solid #FF4B2B;
+  padding: 8px;
+  border-radius: 6px;
+  margin-left: 206px;
+
+}
+
+.customNextStepButton:hover {
+  color: #FF4B2B;
+  background-color: #FFFFFF;
+  border: 1px solid #FF4B2B;
+  transform: scale(1.07);
+}
+
+.fixed-size-textarea {
+  resize: none;
+  width: 241px;
+  height: 100px; 
+  background-color: #eee;
+  border: none;
+  margin: 10px;
 }
 </style>
