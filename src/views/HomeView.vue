@@ -6,11 +6,20 @@
       <div class="form-container sign-up-container">
         <form @submit.prevent="handleSignUp">
           <h1>Create Account</h1>
-          <InputText type="text" v-model="signUpForm.name" placeholder="Name"/>
-          <input type="text" placeholder="Name" v-model="signUpForm.name" />
-          <input type="email" placeholder="Email" v-model="signUpForm.email" />
-          <input type="password" placeholder="Password" v-model="signUpForm.password" />
-          <button type="submit">Sign Up</button>
+          <template id="registerFormStep0" v-if="registerStep === 0">
+            <InputText v-model="signUpForm.email" placeholder="Email" />
+            <InputText v-model="signUpForm.username" placeholder="Username"/>
+            <Password v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
+            <Password v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
+            <p class="error-message" v-if="!checkPassword() && repeatedPassword.length > 0">Password does not match</p>
+          </template>
+          <template id="registerFormStep0" v-if="registerStep === 1">
+
+          </template>
+          <template id="registerFormStep0" v-if="registerStep === 2">
+
+            <button type="submit">Sign Up</button>
+          </template>
         </form>
       </div>
       <!-- Login form -->
@@ -18,10 +27,7 @@
         <form @submit.prevent="handleSignIn">
           <h1 class="sing-in-title">Sign in</h1>
           <InputText v-model="signInForm.email" placeholder="Email account" />
-          <!-- <div class="card flex justify-content-center"> -->
-          <!-- </div> -->
           <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
-          <!-- <input type="password" placeholder="Password" v-model="signInForm.password" /> -->
           <a href="#">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
@@ -63,11 +69,25 @@ import { ref } from 'vue';
 const toast = useToast();
 
 const isSignUp = ref(false);
-const signUpForm = ref({ name: '', email: '', password: '' });
+const signUpForm = ref({
+  username: '',
+  email: '',
+  password: '',
+  realm: '',
+  emailVerified: true,
+  verificationToken: '',
+  name: '',
+  surnames: '',
+  profilePhoto: '',
+  biography: '',
+});
+const repeatedPassword = ref('');
+const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
+  // refrescar pagina
 };
 
 const handleSignIn = () => {
@@ -80,6 +100,10 @@ const handleSignIn = () => {
 const toggleSignIn = () => {
   isSignUp.value = !isSignUp.value;
 };
+
+const checkPassword = ():boolean => {
+  return signUpForm.value.password == repeatedPassword.value
+}
 
 </script>
 
@@ -183,6 +207,12 @@ form {
   padding: 0 50px;
   height: 100%;
   text-align: center;
+}
+
+.error-message {
+  color: red !important;
+  margin-top: 0px !important;
+  text-align: left !important;
 }
 
 /* input {
