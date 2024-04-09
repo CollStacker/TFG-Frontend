@@ -147,6 +147,13 @@ button {
   transition: transform 80ms ease-in;
 }
 
+button:hover {
+  border: 1px solid #FF4B2B;
+  background-color: #FFFFFF;
+  color: #FF4B2B;
+  transform: scale(1.05);
+}
+
 button:active {
   transform: scale(0.95);
 }
@@ -158,6 +165,13 @@ button:focus {
 button.ghost {
   background-color: transparent;
   border-color: #FFFFFF;
+}
+
+button.ghost:hover {
+  background-color: #FFFFFF;
+  border-color: transparent;
+  color: FF4B2B;
+  transform: scale(1.05);
 }
 
 form {
