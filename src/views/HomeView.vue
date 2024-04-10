@@ -18,8 +18,10 @@
           </template>
           <template id="registerFormStep2" v-if="registerStep === 1">
             <Textarea v-model="signUpForm.biography" placeholder="Biography" class="fixed-size-textarea"/>
-            
-            <button type="submit">Sign Up</button>
+            <div class="button-container">
+              <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
+              <button class="customSignUpButton" type="submit">Sign Up</button>
+            </div>
           </template>
         </form>
       </div>
@@ -86,7 +88,7 @@ const signUpForm = ref({
   biography: '',
 });
 const repeatedPassword = ref('');
-const registerStep = ref(0);
+const registerStep = ref(1);
 const signInForm = ref({email: '', password: ''});
 
 const handleSignUp = () => {
@@ -432,7 +434,7 @@ footer a {
   background-color: #FF4B2B;
   border: 1px solid #FF4B2B;
   padding: 8px;
-  border-radius: 6px;
+  border-radius: 20px;
   margin-left: 206px;
 }
 
@@ -445,11 +447,37 @@ footer a {
 
 .fixed-size-textarea {
   resize: none;
-  width: 245px;
-  height: 100px; 
+  width: 360px;
+  height: 180px; 
   background-color: #eee;
   border: none;
   margin: 10px;
+}
+
+.customSignUpButton {
+  margin-left: 180px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center; /* Alinear verticalmente al centro */
+}
+
+.customPreviousStepButton {
+  color: #FFFFFF;
+  margin-top: 10px;
+  background-color: #FF4B2B;
+  border: 1px solid #FF4B2B;
+  padding: 8px;
+  border-radius: 20px;
+  margin-right: 0;
+}
+
+.customPreviousStepButton:hover {
+  color: #FF4B2B;
+  background-color: #FFFFFF;
+  border: 1px solid #FF4B2B;
+  transform: scale(1.07);
 }
 
 </style>
