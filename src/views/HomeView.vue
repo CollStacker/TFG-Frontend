@@ -10,15 +10,25 @@
             <InputText v-model="signUpForm.email" placeholder="Email" />
             <InputText v-model="signUpForm.username" placeholder="Username"/>
             <InputText v-model="signUpForm.name" placeholder="Name" />
-            <InputText v-model="signUpForm.surnames" placeholder="Surnames" />
-            <Password v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
-            <Password v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
+            <InputText class="customInputText" v-model="signUpForm.surnames" placeholder="Surnames" />
+            <Password class="customPassword" v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
+            <Password class="customPassword" v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
             <p class="error-message" v-if="!checkPassword() && repeatedPassword.length > 0">Password does not match</p>
             <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
           </template>
           <template id="registerFormStep2" v-if="registerStep === 1">
             <h1>Choose Profile Photo</h1>
-            <img v-if="!photoSelected" class="customAvatar" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
+            <img v-if="!photoSelected" class="customAvatar" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
+            <Dialog v-model:visible="dialogVisible" modal style="width:55rem; " :closable="false" class="customDialog">
+              <section>
+                <img src="../assets/imgs/profilePhoto/male-young.jpg" @click="dialogVisible = false"></img>
+                <img src="../assets/imgs/profilePhoto/male-adult.jpg"></img>
+                <img src="../assets/imgs/profilePhoto/male-old.jpg"></img>
+                <img src="../assets/imgs/profilePhoto/female-old.jpg"></img>
+                <img src="../assets/imgs/profilePhoto/female-adult.jpg"></img>
+                <img src="../assets/imgs/profilePhoto/female-young.jpg"></img>
+              </section>
+            </Dialog>
             <div class="button-container">
               <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
               <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
@@ -82,6 +92,7 @@
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
+import Dialog from 'primevue/dialog';
 import Toast from 'primevue/toast';
 import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
@@ -108,7 +119,8 @@ const repeatedPassword = ref('');
 const registerStep = ref(1);
 const signInForm = ref({email: '', password: ''});
 const photoSelected = ref(false);
-const licenseAndConditionsReaded = ref(false)
+const licenseAndConditionsReaded = ref(false);
+const dialogVisible = ref(false);
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
@@ -531,6 +543,33 @@ footer a {
 
 .licenseCheckBox a {
   color: #FF4B2B;
+}
+
+section {
+  display: flex;
+  width: 51.5rem;
+  height: 25rem;
+
+}
+
+section img {
+  width: 0px;
+  flex-grow: 1;
+  object-fit: cover;
+  opacity: .8;
+  transition: .5s ease;
+}
+
+section img:hover {
+  cursor: crosshair;
+  width: 300px;
+  opacity: 1;
+  filter: contrast(120%);
+}
+
+.p-dialog-content {
+  background-color: red;
+  color: red;
 }
 
 </style>
