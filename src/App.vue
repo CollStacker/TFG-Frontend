@@ -24,6 +24,12 @@ input.p-inputtext.p-component.p-password-input {
   padding: 11px;
   height: 65%;
 }
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  background-color: #FF4B2B;
+  border-color: #FF4B2B;
+}
+
 /* header {
   line-height: 1.5;
   max-height: 100vh;

@@ -5,8 +5,8 @@
       <!-- Register form -->
       <div class="form-container sign-up-container">
         <form @submit.prevent="handleSignUp">
-          <h1>Create Account</h1>
           <template id="registerFormStep1" v-if="registerStep === 0">
+            <h1>Create Account</h1>
             <InputText v-model="signUpForm.email" placeholder="Email" />
             <InputText v-model="signUpForm.username" placeholder="Username"/>
             <InputText v-model="signUpForm.name" placeholder="Name" />
@@ -17,7 +17,23 @@
             <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
           </template>
           <template id="registerFormStep2" v-if="registerStep === 1">
+            <h1>Choose Profile Photo</h1>
+            <img v-if="!photoSelected" class="customAvatar" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
+            <div class="button-container">
+              <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
+              <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
+            </div>
+          </template>
+          <template id="registerFormStep3" v-if="registerStep === 2">
+            <h1>Wrapping up, last configurations</h1>      
             <Textarea v-model="signUpForm.biography" placeholder="Biography" class="fixed-size-textarea"/>
+            <div class="licenseCheckBox flex">
+              <Checkbox v-model="licenseAndConditionsReaded" :binary="true" class="custom-checkbox"/>
+                <label > I have read and accept the </label>
+                <a href="">Legal Notice </a>
+                <label>and the </label>
+                <a href="">Privacy Policies.</a>
+            </div>
             <div class="button-container">
               <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
               <button class="customSignUpButton" type="submit">Sign Up</button>
@@ -65,6 +81,7 @@
 <script setup lang="ts">
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
+import Checkbox from 'primevue/checkbox';
 import Toast from 'primevue/toast';
 import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
@@ -90,11 +107,17 @@ const signUpForm = ref({
 const repeatedPassword = ref('');
 const registerStep = ref(1);
 const signInForm = ref({email: '', password: ''});
+const photoSelected = ref(false);
+const licenseAndConditionsReaded = ref(false)
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
-  // refrescar pagina
-  registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
+  if (!licenseAndConditionsReaded.value) {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
+  } else  {
+    // crear cuenta y si todo ha salido bien, refrescar pagina
+    registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
+  }
 };
 
 const handleSignIn = () => {
@@ -127,14 +150,18 @@ const areAllRegisterStepOneFieldsFilled = () => {
 }
 
 const nextRegisterFormStep = () => {
-  if (!areAllRegisterStepOneFieldsFilled()) {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
-  } 
-  if (!isCorrectPassword()) {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
-  } else if (repeatedPassword.value == signUpForm.value.password) {
+  if (registerStep.value == 0) {
+    if (!areAllRegisterStepOneFieldsFilled()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+    } 
+    if (!isCorrectPassword()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
+    } else if (repeatedPassword.value == signUpForm.value.password) {
+      registerStep.value += 1;
+    } 
+  } else {
     registerStep.value += 1;
-  } 
+  }
 }
 
 const previousRegisterFormStep = () => {
@@ -478,6 +505,32 @@ footer a {
   background-color: #FFFFFF;
   border: 1px solid #FF4B2B;
   transform: scale(1.07);
+}
+
+.customAvatar {
+  /* border: 3px solid #FF4B2B; */
+  object-fit: cover;
+  margin-top: 10px;
+  background-color: #eee;
+  padding: 30px;
+  border-radius: 80px;
+  width: 200px;
+  height: 200px;
+}
+
+.customAvatar:hover {
+  transform: scale(1.1);
+}
+
+.licenseCheckBox {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-align: left;
+  margin-left: 6px;
+}
+
+.licenseCheckBox a {
+  color: #FF4B2B;
 }
 
 </style>
