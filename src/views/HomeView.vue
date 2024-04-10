@@ -19,7 +19,7 @@
           <template id="registerFormStep2" v-if="registerStep === 1">
             <h1>Choose Profile Photo</h1>
             <img v-if="!photoSelected" class="customAvatar" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
-            <Dialog v-model:visible="dialogVisible" modal style="width:55rem; " :closable="false" class="customDialog">
+            <Dialog v-model:visible="dialogVisible" modal style="width:55rem;height: 31rem; " :closable="false" class="customDialog">
               <section>
                 <img src="../assets/imgs/profilePhoto/male-young.jpg" @click="dialogVisible = false"></img>
                 <img src="../assets/imgs/profilePhoto/male-adult.jpg"></img>

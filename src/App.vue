@@ -34,12 +34,10 @@ input.p-inputtext.p-component.p-password-input {
   margin-right: 6px;
 }
 
-.p-dialog-content,
-.p-dialog-header,
-.p-dialog.p-component.p-ripple-disabled {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 0;
-}
+.p-dialog.p-component.p-ripple-disabled.customDialog {
+  position: absolute;
+  top: 19.5%
+} 
 
 /* header {
   line-height: 1.5;
