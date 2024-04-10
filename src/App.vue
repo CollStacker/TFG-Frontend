@@ -30,6 +30,10 @@ input.p-inputtext.p-component.p-password-input {
   border-color: #FF4B2B;
 }
 
+.p-icon.p-input-icon {
+  margin-right: 6px;
+}
+
 /* header {
   line-height: 1.5;
   max-height: 100vh;
