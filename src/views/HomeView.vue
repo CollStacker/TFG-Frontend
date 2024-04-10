@@ -6,22 +6,19 @@
       <div class="form-container sign-up-container">
         <form @submit.prevent="handleSignUp">
           <h1>Create Account</h1>
-          <template id="registerFormStep0" v-if="registerStep === 0">
+          <template id="registerFormStep1" v-if="registerStep === 0">
             <InputText v-model="signUpForm.email" placeholder="Email" />
             <InputText v-model="signUpForm.username" placeholder="Username"/>
+            <InputText v-model="signUpForm.name" placeholder="Name" />
+            <InputText v-model="signUpForm.surnames" placeholder="Surnames" />
             <Password v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
             <Password v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
             <p class="error-message" v-if="!checkPassword() && repeatedPassword.length > 0">Password does not match</p>
             <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
           </template>
-          <template id="registerFormStep0" v-if="registerStep === 1">
-            <InputText v-model="signUpForm.name" placeholder="Name" />
-            <InputText v-model="signUpForm.surnames" placeholder="Surnames" />
+          <template id="registerFormStep2" v-if="registerStep === 1">
             <Textarea v-model="signUpForm.biography" placeholder="Biography" class="fixed-size-textarea"/>
-            <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
-          </template>
-          <template id="registerFormStep0" v-if="registerStep === 2">
-
+            
             <button type="submit">Sign Up</button>
           </template>
         </form>
@@ -122,31 +119,24 @@ const areAllRegisterStepOneFieldsFilled = () => {
   return signUpForm.value.password !== '' &&  
     repeatedPassword.value !== '' &&
     signUpForm.value.username !== '' && 
-    signUpForm.value.email !== ''
-}
-
-const areAllRegisterStepTwoFieldsFilled = () => {
-  return signUpForm.value.name !== '' &&  
-    signUpForm.value.surnames !== ''
-    // Biography is not mandatory
+    signUpForm.value.email !== '' && 
+    signUpForm.value.surnames !== '' &&
+    signUpForm.value.name !== ''
 }
 
 const nextRegisterFormStep = () => {
-  if (registerStep.value == 0) {
-    if (!isCorrectPassword()) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
-    } else if (!areAllRegisterStepOneFieldsFilled()) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
-    } else if (repeatedPassword.value == signUpForm.value.password) {
-      registerStep.value += 1;
-    } 
-  } else if (registerStep.value == 1){
-    if (!areAllRegisterStepTwoFieldsFilled()) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name and surnames are mandatory fields.', life: 3000 });
-    } else {
-      registerStep.value += 1;      
-    }
-  }
+  if (!areAllRegisterStepOneFieldsFilled()) {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+  } 
+  if (!isCorrectPassword()) {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
+  } else if (repeatedPassword.value == signUpForm.value.password) {
+    registerStep.value += 1;
+  } 
+}
+
+const previousRegisterFormStep = () => {
+  registerStep.value -= 1;
 }
 
 </script>
@@ -173,6 +163,7 @@ body {
 h1 {
   font-weight: bold;
   margin: 0;
+  margin-bottom: 5px;
 }
 
 .sing-in-title {
@@ -460,4 +451,5 @@ footer a {
   border: none;
   margin: 10px;
 }
+
 </style>
