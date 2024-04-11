@@ -19,14 +19,21 @@
           <template id="registerFormStep2" v-if="registerStep === 1">
             <h1>Choose Profile Photo</h1>
             <img v-if="!photoSelected" class="customAvatar" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
-            <Dialog v-model:visible="dialogVisible" modal style="width:55rem;height: 31rem; " :closable="false" class="customDialog">
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+
+            <Dialog v-model:visible="dialogVisible" modal style="width:53rem; " :closable="false" :showHeader="false" class="customDialog">
               <section>
-                <img src="../assets/imgs/profilePhoto/male-young.jpg" @click="dialogVisible = false"></img>
-                <img src="../assets/imgs/profilePhoto/male-adult.jpg"></img>
-                <img src="../assets/imgs/profilePhoto/male-old.jpg"></img>
-                <img src="../assets/imgs/profilePhoto/female-old.jpg"></img>
-                <img src="../assets/imgs/profilePhoto/female-adult.jpg"></img>
-                <img src="../assets/imgs/profilePhoto/female-young.jpg"></img>
+                <img src="../assets/imgs/profilePhoto/male-young.jpg" @click="selectProfilePhoto('maleYoung')"></img>
+                <img src="../assets/imgs/profilePhoto/male-adult.jpg" @click="selectProfilePhoto('maleAdult')"></img>
+                <img src="../assets/imgs/profilePhoto/male-old.jpg" @click="selectProfilePhoto('maleOld')"></img>
+                <img src="../assets/imgs/profilePhoto/female-old.jpg" @click="selectProfilePhoto('femaleOld')"></img>
+                <img src="../assets/imgs/profilePhoto/female-adult.jpg" @click="selectProfilePhoto('femaleAdult')"></img>
+                <img src="../assets/imgs/profilePhoto/female-young.jpg" @click="selectProfilePhoto('femaleYoung')"></img>
               </section>
             </Dialog>
             <div class="button-container">
@@ -116,7 +123,7 @@ const signUpForm = ref({
   biography: '',
 });
 const repeatedPassword = ref('');
-const registerStep = ref(1);
+const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
 const photoSelected = ref(false);
 const licenseAndConditionsReaded = ref(false);
@@ -124,6 +131,9 @@ const dialogVisible = ref(false);
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
+  if(signUpForm.value.profilePhoto === '') {
+    signUpForm.value.profilePhoto = 'defaultProfilePhoto'
+  }
   if (!licenseAndConditionsReaded.value) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
   } else  {
@@ -178,6 +188,46 @@ const nextRegisterFormStep = () => {
 
 const previousRegisterFormStep = () => {
   registerStep.value -= 1;
+}
+
+const selectProfilePhoto = (pictureSelected: String) => {
+  switch (pictureSelected) {
+    case 'femaleYoung':
+      signUpForm.value.profilePhoto = 'femaleYoung';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'femaleAdult':
+      signUpForm.value.profilePhoto = 'femaleAdult';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'femaleOld':
+      signUpForm.value.profilePhoto = 'femaleOld';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleYoung':
+      signUpForm.value.profilePhoto = 'maleYoung';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleAdult':
+      signUpForm.value.profilePhoto = 'maleAdult';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleOld':
+      signUpForm.value.profilePhoto = 'maleOld';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    default:
+      signUpForm.value.profilePhoto = "defaultProfilePhoto";
+      dialogVisible.value = false
+      photoSelected.value = true;
+      break;
+  }
 }
 
 </script>
@@ -530,9 +580,20 @@ footer a {
   height: 200px;
 }
 
+.customProfilePhoto {
+  object-fit: cover;
+  margin-top: 10px;
+  background-color: #eee;
+  border-radius: 80px;
+  width: 200px;
+  height: 200px;
+}
+
+.customProfilePhoto:hover,
 .customAvatar:hover {
   transform: scale(1.1);
 }
+
 
 .licenseCheckBox {
   margin-top: 4px;
@@ -549,7 +610,6 @@ section {
   display: flex;
   width: 51.5rem;
   height: 25rem;
-
 }
 
 section img {

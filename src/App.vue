@@ -39,6 +39,11 @@ input.p-inputtext.p-component.p-password-input {
   top: 19.5%
 } 
 
+.p-dialog-content {
+  padding: 10px;
+  border-radius: 10px;
+}
+
 /* header {
   line-height: 1.5;
   max-height: 100vh;
