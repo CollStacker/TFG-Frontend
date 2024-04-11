@@ -134,6 +134,9 @@ const handleSignUp = () => {
   if(signUpForm.value.profilePhoto === '') {
     signUpForm.value.profilePhoto = 'defaultProfilePhoto'
   }
+  if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+  }
   if (!licenseAndConditionsReaded.value) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
   } else  {
@@ -145,6 +148,9 @@ const handleSignUp = () => {
 const handleSignIn = () => {
   if (signInForm.value.email === '' || signInForm.value.password === '' ) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+  }
+  if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
   }
   console.log('Sign in form submitted:', signInForm.value);
 };
@@ -160,6 +166,11 @@ const checkPassword = ():boolean => {
 const isCorrectPassword = () => {
   const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
   return securityPasswordRegex.test(signUpForm.value.password);
+}
+
+const isCorrectEmail = (email: string): boolean => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email);
 }
 
 const areAllRegisterStepOneFieldsFilled = () => {
