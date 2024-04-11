@@ -561,7 +561,7 @@ section img {
 }
 
 section img:hover {
-  cursor: crosshair;
+  cursor: pointer; 
   width: 300px;
   opacity: 1;
   filter: contrast(120%);
