@@ -2,8 +2,9 @@
 <template>
   <div class="sideBarContainer">
     <Menu :model="items" class="customSidebar w-full md:w-15rem">
-      <template #start>
-        <span class="customLogoText">LOGO + TITLE</span>
+      <template #start class="customSideBarLogoContainer">
+        <!-- <img src="../../assets/imgs/logo.png" class="customSideBarLogo"/> -->
+        <span class="customLogoText">Collstacker</span>
       </template>
       <template #item="{ item, props }">
           <a v-ripple class="flex align-items-center" v-bind="props.action">
@@ -55,17 +56,19 @@ const items = ref([
   display: flex;
   justify-content: start;
   padding: 0;
+  min-width: 25vh;
   min-height: 100vh;
   background-image: url('../../assets/imgs/sidebar/sidebar.jpg');
   background-size: cover;
   background-position: center;
-  opacity: .9;
 }
+
 
 .p-menu.p-component.p-ripple-disabled.customSidebar {
   background-color: transparent;
   border-radius: 0px;
   border: none;
+  min-width: 25vh;
 }
 
 .p-submenu-header {
@@ -74,11 +77,63 @@ const items = ref([
 
 .customSideBarIcon,
 .customSideBarText{
+  font-weight: bold;
   color: white;
+  font-size: 16px;
 }
 
 .customSideBarText {
   margin-left: 7px;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  line-height: 31px;
+  font-weight: 600;
+}
+
+.customSideBarIcon {
+  margin-left: 6px;
+}
+
+.p-menuitem:hover .customSideBarText, 
+.p-menuitem:hover .customSideBarIcon {
+  color: black; 
+  transform: scale(1.1);
+}
+
+.p-menuitem:hover .customSideBarText {
+  margin-left: 12px;
+}
+
+.customLogoText {
+  color: white;
+  font-size: 20px; 
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  margin-left: 16px;
+  margin-right: 3px;
+  font-weight: bold; 
+  margin-top: 12px; 
+  letter-spacing: 2px; 
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.customLogoText:hover {
+  cursor: pointer;
+}
+
+.customSideBarLogo {
+  object-fit: cover;
+  max-width: 6vh;
+  border-radius: 50px;
+  padding: 3px;
+  margin-top: 5px;
+  margin-left: 11px;
+}
+
+.p-menu-start {
+  display: flex;
+  align-items: center;
+  min-height: 5vh;
 }
 
 </style>
