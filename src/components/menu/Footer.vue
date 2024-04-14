@@ -39,4 +39,14 @@ a {
   right: 0;
   margin-right: 20px;
 }
+
+@media screen and (max-width: 768px) {
+  p {
+    margin-top: 0px;
+    font-size: 8px;
+  }
+  a {
+    font-size: 8px;
+  }
+}
 </style>
