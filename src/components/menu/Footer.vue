@@ -40,7 +40,7 @@ a {
   margin-right: 20px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 840px) {
   p {
     margin-top: 0px;
     font-size: 8px;

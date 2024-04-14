@@ -29,7 +29,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const items = ref([
     {
-        label: 'Notification',
+        label: '',
         icon: 'pi pi-comments',
         badge: 2
     },
@@ -42,12 +42,12 @@ const items = ref([
                 icon: 'pi pi-user'
             },
             {
-                label: 'Help',
-                icon: 'pi pi-question-circle'
+                label: 'My collections',
+                icon: 'pi pi-server'
             },
             {
-                label: 'Language',
-                icon: 'pi pi-language'
+                label: 'Help',
+                icon: 'pi pi-question-circle'
             },
             {
                 label: 'Log out',
@@ -77,8 +77,8 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
     case 'Help':
       
       break;
-    case 'Language':
-      
+    case 'My collections':
+      router.push('/collections')
       break;
     case 'Log out':
       router.push('/')

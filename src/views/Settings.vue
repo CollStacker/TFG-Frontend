@@ -44,7 +44,10 @@ import Footer from '@/components/menu/Footer.vue';
   }
   .mainContent {
   margin-top: 69px;
-}
+  }
+  .customFooter {
+    height: 200px;
+  }
 }
 
 .customFooter {
