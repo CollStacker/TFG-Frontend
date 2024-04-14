@@ -1,14 +1,4 @@
 <template>
-  <header>
-    <div class="wrapper">
-
-      <nav>
-        <!-- <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink> -->
-      </nav>
-    </div>
-  </header>
-
   <RouterView />
 </template>
 
@@ -20,13 +10,40 @@ import HomeView from './views/HomeView.vue'
 
 <style >
 
+input.p-inputtext.p-component {
+  background-color: #eee;
+  border: none;
+  margin: 10px;
+  height: 6.5%;
+}
+
 input.p-inputtext.p-component.p-password-input {
   background-color: #eee;
   border: none;
-  margin-bottom: 8px;
-  width: 100%;
-  height: 100%;
+  margin: 10px;
+  padding: 11px;
+  height: 65%;
 }
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  background-color: #FF4B2B;
+  border-color: #FF4B2B;
+}
+
+.p-icon.p-input-icon {
+  margin-right: 6px;
+}
+
+.p-dialog.p-component.p-ripple-disabled.customDialog {
+  position: absolute;
+  top: 19.5%
+} 
+
+.p-dialog-content {
+  padding: 10px;
+  border-radius: 10px;
+}
+
 /* header {
   line-height: 1.5;
   max-height: 100vh;

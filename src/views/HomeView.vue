@@ -1,16 +1,61 @@
 <template>
-  <div>
+  <div id="app">
     <Toast/>
     <div class="container" :class="{ 'right-panel-active': isSignUp }">
       <!-- Register form -->
       <div class="form-container sign-up-container">
         <form @submit.prevent="handleSignUp">
-          <h1>Create Account</h1>
-          <InputText type="text" v-model="signUpForm.name" placeholder="Name"/>
-          <input type="text" placeholder="Name" v-model="signUpForm.name" />
-          <input type="email" placeholder="Email" v-model="signUpForm.email" />
-          <input type="password" placeholder="Password" v-model="signUpForm.password" />
-          <button type="submit">Sign Up</button>
+          <template id="registerFormStep1" v-if="registerStep === 0">
+            <h1>Create Account</h1>
+            <InputText v-model="signUpForm.email" placeholder="Email" />
+            <InputText v-model="signUpForm.username" placeholder="Username"/>
+            <InputText v-model="signUpForm.name" placeholder="Name" />
+            <InputText class="customInputText" v-model="signUpForm.surnames" placeholder="Surnames" />
+            <Password class="customPassword" v-model="signUpForm.password" placeholder="Password" toggleMask :feedback="false" />
+            <Password class="customPassword" v-model="repeatedPassword" placeholder="Repeat password" toggleMask :feedback="false" />
+            <p class="error-message" v-if="!checkPassword() && repeatedPassword.length > 0">Password does not match</p>
+            <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
+          </template>
+          <template id="registerFormStep2" v-if="registerStep === 1">
+            <h1>Choose Profile Photo</h1>
+            <img v-if="!photoSelected" class="customAvatar" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'maleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+            <img v-if="photoSelected && signUpForm.profilePhoto === 'femaleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+
+            <Dialog v-model:visible="dialogVisible" modal style="width:53rem; " :closable="false" :showHeader="false" class="customDialog">
+              <section>
+                <img src="../assets/imgs/profilePhoto/male-young.jpg" @click="selectProfilePhoto('maleYoung')"></img>
+                <img src="../assets/imgs/profilePhoto/male-adult.jpg" @click="selectProfilePhoto('maleAdult')"></img>
+                <img src="../assets/imgs/profilePhoto/male-old.jpg" @click="selectProfilePhoto('maleOld')"></img>
+                <img src="../assets/imgs/profilePhoto/female-old.jpg" @click="selectProfilePhoto('femaleOld')"></img>
+                <img src="../assets/imgs/profilePhoto/female-adult.jpg" @click="selectProfilePhoto('femaleAdult')"></img>
+                <img src="../assets/imgs/profilePhoto/female-young.jpg" @click="selectProfilePhoto('femaleYoung')"></img>
+              </section>
+            </Dialog>
+            <div class="button-container">
+              <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
+              <i class="customNextStepButton pi pi-arrow-right" @click="nextRegisterFormStep"></i>
+            </div>
+          </template>
+          <template id="registerFormStep3" v-if="registerStep === 2">
+            <h1>Wrapping up, last configurations</h1>      
+            <Textarea v-model="signUpForm.biography" placeholder="Biography" class="fixed-size-textarea"/>
+            <div class="licenseCheckBox flex">
+              <Checkbox v-model="licenseAndConditionsReaded" :binary="true" class="custom-checkbox"/>
+                <label > I have read and accept the </label>
+                <a href="">Legal Notice </a>
+                <label>and the </label>
+                <a href="">Privacy Policies.</a>
+            </div>
+            <div class="button-container">
+              <i class="customPreviousStepButton pi pi-arrow-left" @click="previousRegisterFormStep"></i>
+              <button class="customSignUpButton" type="submit">Sign Up</button>
+            </div>
+          </template>
         </form>
       </div>
       <!-- Login form -->
@@ -18,10 +63,7 @@
         <form @submit.prevent="handleSignIn">
           <h1 class="sing-in-title">Sign in</h1>
           <InputText v-model="signInForm.email" placeholder="Email account" />
-          <!-- <div class="card flex justify-content-center"> -->
-          <!-- </div> -->
           <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
-          <!-- <input type="password" placeholder="Password" v-model="signInForm.password" /> -->
           <a href="#">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
@@ -45,10 +87,9 @@
     </div>
     <footer>
       <p>
-        Created with <i class="fa fa-heart"></i> by
-        <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
-        - Read how I created this and how you can join the challenge
-        <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
+        Created by
+        <a target="_blank" href="https://github.com/Adrian-glz01">Adrián González Expósito</a>
+        - As a application for the final degree project.
       </p>
     </footer>
   </div>
@@ -57,30 +98,151 @@
 <script setup lang="ts">
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
+import Checkbox from 'primevue/checkbox';
+import Dialog from 'primevue/dialog';
 import Toast from 'primevue/toast';
+import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const toast = useToast();
 
+const wrongPasswordErrorMessage = "Password must be greater than 8 characters.\n Must have at least one number, one capital letter and one non-alphanumeric character"
+
 const isSignUp = ref(false);
-const signUpForm = ref({ name: '', email: '', password: '' });
+const signUpForm = ref({
+  username: '',
+  email: '',
+  password: '',
+  realm: '',
+  emailVerified: true,
+  verificationToken: '',
+  name: '',
+  surnames: '',
+  profilePhoto: '',
+  biography: '',
+});
+const repeatedPassword = ref('');
+const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
+const photoSelected = ref(false);
+const licenseAndConditionsReaded = ref(false);
+const dialogVisible = ref(false);
 
 const handleSignUp = () => {
   console.log('Sign up form submitted:', signUpForm.value);
+  if(signUpForm.value.profilePhoto === '') {
+    signUpForm.value.profilePhoto = 'defaultProfilePhoto'
+  }
+  if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+  }
+  if (!licenseAndConditionsReaded.value) {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
+  } else  {
+    // crear cuenta y si todo ha salido bien, refrescar pagina
+    registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
+  }
 };
 
 const handleSignIn = () => {
   if (signInForm.value.email === '' || signInForm.value.password === '' ) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
   }
+  if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+  }
   console.log('Sign in form submitted:', signInForm.value);
+  router.push('/main')
 };
 
 const toggleSignIn = () => {
   isSignUp.value = !isSignUp.value;
 };
+
+const checkPassword = ():boolean => {
+  return signUpForm.value.password == repeatedPassword.value
+}
+
+const isCorrectPassword = () => {
+  const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  return securityPasswordRegex.test(signUpForm.value.password);
+}
+
+const isCorrectEmail = (email: string): boolean => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email);
+}
+
+const areAllRegisterStepOneFieldsFilled = () => {
+  return signUpForm.value.password !== '' &&  
+    repeatedPassword.value !== '' &&
+    signUpForm.value.username !== '' && 
+    signUpForm.value.email !== '' && 
+    signUpForm.value.surnames !== '' &&
+    signUpForm.value.name !== ''
+}
+
+const nextRegisterFormStep = () => {
+  if (registerStep.value == 0) {
+    if (!areAllRegisterStepOneFieldsFilled()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+    } 
+    if (!isCorrectPassword()) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
+    } else if (repeatedPassword.value == signUpForm.value.password) {
+      registerStep.value += 1;
+    } 
+  } else {
+    registerStep.value += 1;
+  }
+}
+
+const previousRegisterFormStep = () => {
+  registerStep.value -= 1;
+}
+
+const selectProfilePhoto = (pictureSelected: String) => {
+  switch (pictureSelected) {
+    case 'femaleYoung':
+      signUpForm.value.profilePhoto = 'femaleYoung';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'femaleAdult':
+      signUpForm.value.profilePhoto = 'femaleAdult';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'femaleOld':
+      signUpForm.value.profilePhoto = 'femaleOld';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleYoung':
+      signUpForm.value.profilePhoto = 'maleYoung';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleAdult':
+      signUpForm.value.profilePhoto = 'maleAdult';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    case 'maleOld':
+      signUpForm.value.profilePhoto = 'maleOld';
+      dialogVisible.value = false;
+      photoSelected.value = true;
+      break;
+    default:
+      signUpForm.value.profilePhoto = "defaultProfilePhoto";
+      dialogVisible.value = false
+      photoSelected.value = true;
+      break;
+  }
+}
 
 </script>
 
@@ -100,12 +262,13 @@ body {
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
   height: 100vh;
-  margin: -20px 0 50px;
+  margin: 0;
 }
 
 h1 {
   font-weight: bold;
   margin: 0;
+  margin-bottom: 5px;
 }
 
 .sing-in-title {
@@ -148,6 +311,13 @@ button {
   transition: transform 80ms ease-in;
 }
 
+button:hover {
+  border: 1px solid #FF4B2B;
+  background-color: #FFFFFF;
+  color: #FF4B2B;
+  transform: scale(1.05);
+}
+
 button:active {
   transform: scale(0.95);
 }
@@ -161,6 +331,13 @@ button.ghost {
   border-color: #FFFFFF;
 }
 
+button.ghost:hover {
+  background-color: #FFFFFF;
+  border-color: transparent;
+  color: FF4B2B;
+  transform: scale(1.05);
+}
+
 form {
   background-color: #FFFFFF;
   display: flex;
@@ -172,13 +349,20 @@ form {
   text-align: center;
 }
 
-input {
+.error-message {
+  color: red !important;
+  margin-top: 0px !important;
+  margin-bottom: 2px;
+  text-align: left !important;
+}
+
+/* input {
   background-color: #eee;
   border: none;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
-}
+} */
 
 .container {
   background-color: #fff;
@@ -187,10 +371,15 @@ input {
       0 10px 10px rgba(0,0,0,0.22);
   position: relative;
   overflow: hidden;
-  width: 768px;
-  max-width: 100%;
-  min-height: 480px;
+  width: 100%;
+  max-width: 930px; 
+  min-height: 600px;
+  position: absolute; 
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
 }
+
 
 .form-container {
   position: absolute;
@@ -341,4 +530,120 @@ footer a {
   color: #3c97bf;
   text-decoration: none;
 }
+
+.customNextStepButton {
+  color: #FFFFFF;
+  margin-top: 10px;
+  background-color: #FF4B2B;
+  border: 1px solid #FF4B2B;
+  padding: 8px;
+  border-radius: 20px;
+  margin-left: 206px;
+}
+
+.customNextStepButton:hover {
+  color: #FF4B2B;
+  background-color: #FFFFFF;
+  border: 1px solid #FF4B2B;
+  transform: scale(1.07);
+}
+
+.fixed-size-textarea {
+  resize: none;
+  width: 360px;
+  height: 180px; 
+  background-color: #eee;
+  border: none;
+  margin: 10px;
+}
+
+.customSignUpButton {
+  margin-left: 180px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center; /* Alinear verticalmente al centro */
+}
+
+.customPreviousStepButton {
+  color: #FFFFFF;
+  margin-top: 10px;
+  background-color: #FF4B2B;
+  border: 1px solid #FF4B2B;
+  padding: 8px;
+  border-radius: 20px;
+  margin-right: 0;
+}
+
+.customPreviousStepButton:hover {
+  color: #FF4B2B;
+  background-color: #FFFFFF;
+  border: 1px solid #FF4B2B;
+  transform: scale(1.07);
+}
+
+.customAvatar {
+  /* border: 3px solid #FF4B2B; */
+  object-fit: cover;
+  margin-top: 10px;
+  background-color: #eee;
+  padding: 30px;
+  border-radius: 80px;
+  width: 200px;
+  height: 200px;
+}
+
+.customProfilePhoto {
+  object-fit: cover;
+  margin-top: 10px;
+  background-color: #eee;
+  border-radius: 80px;
+  width: 200px;
+  height: 200px;
+}
+
+.customProfilePhoto:hover,
+.customAvatar:hover {
+  transform: scale(1.1);
+}
+
+
+.licenseCheckBox {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-align: left;
+  margin-left: 6px;
+}
+
+.licenseCheckBox a {
+  color: #FF4B2B;
+}
+
+section {
+  display: flex;
+  width: 51.5rem;
+  height: 25rem;
+}
+
+section img {
+  width: 0px;
+  flex-grow: 1;
+  object-fit: cover;
+  opacity: .8;
+  transition: .5s ease;
+}
+
+section img:hover {
+  cursor: pointer; 
+  width: 300px;
+  opacity: 1;
+  filter: contrast(120%);
+}
+
+.p-dialog-content {
+  background-color: red;
+  color: red;
+}
+
 </style>
