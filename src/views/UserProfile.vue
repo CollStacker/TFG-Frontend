@@ -1,7 +1,7 @@
 <template>
-  <div class="overviewContainer"> 
+  <div class="userProfileContainer"> 
     <SideBar></SideBar>
-    <h1>Hello from main page</h1>
+    <h1>Hello from user Profile</h1>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import SideBar from '@/components/menu/SideBar.vue';
 </script>
 
 <style>
-.overviewContainer {
+.userProfileContainer {
   display: flex;
 }
 
