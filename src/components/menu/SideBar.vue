@@ -4,10 +4,10 @@
     <Menu :model="items" class="customSidebar w-full md:w-15rem">
       <template #start class="customSideBarLogoContainer">
         <!-- <img src="../../assets/imgs/logo.png" class="customSideBarLogo"/> -->
-        <span class="customLogoText">Collstacker</span>
+        <span class="customLogoText" @click="handleRoutering('HOME')" >Collstacker</span>
       </template>
-      <template #item="{ item, props }">
-          <a v-ripple class="flex align-items-center" v-bind="props.action">
+      <template #item="{ item, props } ">
+          <a v-ripple class="flex align-items-center" v-bind="props.action" @click="handleRoutering(item.label)">
             <span class="customSideBarIcon" :class="item.icon" />
             <span class="customSideBarText">{{ item.label }}</span>
           </a>
@@ -19,6 +19,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Menu from 'primevue/menu';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const items = ref([
   {
     items: [
@@ -48,6 +51,32 @@ const items = ref([
     ]
   },
 ]);
+
+const handleRoutering = (label: string | ((...args: any) => string) | undefined) => {
+  var elementSelected = "";
+  if (label !== undefined) {
+    elementSelected = label.toString();
+  }
+  switch (elementSelected) {
+    case 'HOME':
+      router.push('/main');
+      break;
+    case 'USER PROFILE':
+      router.push('/userProfile');
+      break;
+    case 'COLLECTIONS':
+      router.push('/collections');
+      break;
+    case 'MESSAGES':
+      router.push('/messages');
+      break;
+    case 'SETTINGS':
+      router.push('/settings');
+      break;
+    default:
+      break;
+  }
+}
 </script>
 
 <style>
@@ -119,6 +148,7 @@ const items = ref([
 
 .customLogoText:hover {
   cursor: pointer;
+  transform: scale(1.05);
 }
 
 .customSideBarLogo {
