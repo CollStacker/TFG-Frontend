@@ -8,7 +8,7 @@
         </div>
       </template>
       <template #item="{item, props, hasSubmenu, root}">
-        <a v-ripple class="flex align-items-center" v-bind="props.action">
+        <a v-ripple class="flex align-items-center" v-bind="props.action" @click="handleNavbar(item.label)">
           <span :class="item.icon" />
           <span class="customNavbarText">{{ item.label }}</span>
           <Badge v-if="item.badge" class="customNavbarBadge" severity="contrast" :value="item.badge" />
@@ -24,7 +24,9 @@ import Menubar from 'primevue/menubar';
 import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const items = ref([
     {
         label: 'Notification',
@@ -59,6 +61,35 @@ const items = ref([
     }
 ]);
 
+
+const handleNavbar = (label: string | ((...args: any) => string) | undefined) => {
+  var itemSelected = ""; 
+  if (label) {
+    itemSelected = label.toString();
+  }
+  switch (itemSelected) {
+    case 'Notification':
+      
+      break;
+    case 'My profile':
+      router.push('userProfile')
+      break;
+    case 'Help':
+      
+      break;
+    case 'Language':
+      
+      break;
+    case 'Log out':
+      
+      break;
+    case 'Settings':
+      router.push('/settings')
+      break;
+    default:
+      break;
+  }
+}
 
 </script>
 
