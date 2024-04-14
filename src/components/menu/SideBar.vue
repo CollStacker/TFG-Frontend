@@ -146,6 +146,13 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
+@media screen and (min-width: 25vh) {
+  .customLogoText {
+    font-size: 2.2vh;
+  }
+}
+
+
 .customLogoText:hover {
   cursor: pointer;
   transform: scale(1.05);
