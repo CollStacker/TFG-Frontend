@@ -1,0 +1,123 @@
+<template>
+  <div class="navBarContainer">
+    <Menubar :model="items" class="customNavBar">
+      <template #start>
+        <div class="searchInputText">
+          <span class="customSearchLogo pi pi-search"></span>
+          <InputText placeholder="Search" type="text" class="customNavBarInputText" />
+        </div>
+      </template>
+      <template #item="{item, props, hasSubmenu, root}">
+        <a v-ripple class="flex align-items-center" v-bind="props.action">
+          <span :class="item.icon" />
+          <span class="customNavbarText">{{ item.label }}</span>
+          <Badge v-if="item.badge" class="customNavbarBadge" severity="contrast" :value="item.badge" />
+          <i v-if="hasSubmenu" :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
+        </a>
+      </template>
+    </Menubar> 
+  </div>
+</template>
+
+<script setup lang="ts">
+import Menubar from 'primevue/menubar';
+import InputText from 'primevue/inputtext';
+import Badge from 'primevue/badge';
+import { ref } from "vue";
+
+const items = ref([
+    {
+        label: 'Notification',
+        icon: 'pi pi-comments',
+        badge: 2
+    },
+    {
+        label: 'Account',
+        icon: 'pi pi-user',
+        items: [
+            {
+                label: 'My profile',
+                icon: 'pi pi-user'
+            },
+            {
+                label: 'Help',
+                icon: 'pi pi-question-circle'
+            },
+            {
+                label: 'Language',
+                icon: 'pi pi-language'
+            },
+            {
+                label: 'Log out',
+                icon: 'pi pi-sign-out'
+            },
+        ]
+    },
+    {
+        label: 'Settings',
+        icon: 'pi pi-cog'
+    }
+]);
+
+
+</script>
+
+<style>
+
+.p-menubar.p-component.customNavBar {
+  width: 100%;
+  height: 100%;
+}
+
+.p-inputtext.p-component.customNavBarInputText {
+  height: 2.5rem;
+  width: 18rem;
+  margin-left: 0px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  box-shadow: none;
+}
+
+.p-inputtext.p-component.customNavBarInputText:focus {
+  border: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.customNavbarText {
+  margin-left: 4px;
+}
+
+.customNavbarBadge {
+  margin-left: 4px;
+}
+
+.p-menubar.p-component.customNavBar ul {
+  position: absolute;
+  right: 0;
+  margin-right: 10px;
+}
+
+.customSearchLogo {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-right: 0px;
+  margin-left: 8px;
+  background-color: #eee;
+  height: 2.5rem;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  padding: 4px;
+}
+
+.customSearchLogo.pi.pi-search {
+  color: #334155;
+}
+
+.searchInputText {
+  display: flex;
+  align-items: center;
+}
+
+</style>
