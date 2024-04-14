@@ -58,8 +58,9 @@ import Footer from '@/components/menu/Footer.vue';
 }
 
 .collectionsMainContent {
-  margin-top: 69px;
-  margin-bottom: 50px;
+  margin: 69px 0 50px;
+  background-color: #f3f2f2;
+  min-height: calc(100vh - 69px - 50px);
 }
 
 body {
