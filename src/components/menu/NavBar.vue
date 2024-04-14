@@ -81,7 +81,7 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
       
       break;
     case 'Log out':
-      
+      router.push('/')
       break;
     case 'Settings':
       router.push('/settings')

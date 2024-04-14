@@ -104,7 +104,9 @@ import Toast from 'primevue/toast';
 import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const toast = useToast();
 
 const wrongPasswordErrorMessage = "Password must be greater than 8 characters.\n Must have at least one number, one capital letter and one non-alphanumeric character"
@@ -153,6 +155,7 @@ const handleSignIn = () => {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
   }
   console.log('Sign in form submitted:', signInForm.value);
+  router.push('/main')
 };
 
 const toggleSignIn = () => {
