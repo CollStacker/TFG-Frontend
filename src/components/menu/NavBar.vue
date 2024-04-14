@@ -8,7 +8,7 @@
         </div>
       </template>
       <template #item="{item, props, hasSubmenu, root}">
-        <a v-ripple class="flex align-items-center" v-bind="props.action" @click="handleNavbar(item.label)">
+        <a v-ripple class="customNavbarItem flex align-items-center" v-bind="props.action" @click="handleNavbar(item.label)">
           <span :class="item.icon" />
           <span class="customNavbarText">{{ item.label }}</span>
           <Badge v-if="item.badge" class="customNavbarBadge" severity="contrast" :value="item.badge" />
@@ -98,6 +98,12 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
 .p-menubar.p-component.customNavBar {
   width: 100%;
   height: 100%;
+  background-color: transparent;
+  border-radius: 0px;
+  border-left: 0px;
+  border-top: 0px;
+  border-right: 0px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .p-inputtext.p-component.customNavBarInputText {
@@ -149,6 +155,32 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
 .searchInputText {
   display: flex;
   align-items: center;
+}
+
+.customNavbarItem::before,
+.customNavbarItem::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  transition: width 0.3s ease-in-out;
+}
+
+.customNavbarItem::before {
+  left: 50%;
+  transform-origin: left;
+}
+
+.customNavbarItem::after {
+  right: 50%;
+  transform-origin: right;
+}
+
+.customNavbarItem:hover::before,
+.customNavbarItem:hover::after {
+  width: 50%;
 }
 
 </style>
