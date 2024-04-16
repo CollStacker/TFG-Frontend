@@ -146,9 +146,34 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
-@media screen and (min-width: 25vh) {
+@media screen and (max-width: 800px) {
   .customLogoText {
-    font-size: 2.2vh;
+    width: 40px; 
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis; 
+  }
+}
+
+/* @media screen and (min-width: 2600px) {
+  .p-submenu-header {
+    display: none;
+  }
+} */
+
+@media screen and (min-width: 2300px) {
+  .customLogoText {
+    min-width: 0;
+    margin-top: 0px;
+  }
+  .p-submenu-header {
+    display: none;
+  }
+  .sideBarContainer {
+    min-width: 0; 
+  }
+  .p-menu.p-component.p-ripple-disabled.customSidebar {
+    min-width: 0;
   }
 }
 
@@ -171,6 +196,18 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
   display: flex;
   align-items: center;
   min-height: 5vh;
+}
+
+@media screen and (max-width: 768px) {
+  .sideBarContainer {
+    display: none; /* Oculta el componente NavBar cuando la pantalla sea muy pequeña */
+  }
+}
+
+@media screen and (min-width: 2800px) {
+  .sideBarContainer {
+    display: none; /* Oculta el componente NavBar cuando la pantalla sea muy pequeña */
+  }
 }
 
 </style>

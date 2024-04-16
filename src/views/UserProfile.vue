@@ -4,7 +4,7 @@
     <div class="userProfileContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="userProfileMainContent">
-        <h1 class="test">Hello from user profile</h1>
+        <UserProfileComponent></UserProfileComponent>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -16,6 +16,7 @@
 import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
+import UserProfileComponent from '@/components/UserProfileComponent.vue';
 </script>
 
 <style>
@@ -58,8 +59,9 @@ import Footer from '@/components/menu/Footer.vue';
 }
 
 .userProfileMainContent {
-  margin-top: 69px;
-  margin-bottom: 50px;
+  margin: 69px 0 50px;
+  background-color: #f3f2f2;
+  min-height: calc(100vh - 69px - 50px);
 }
 
 body {
