@@ -6,7 +6,7 @@ export const userAuthentication = defineStore({
   state: () => ({
     userAuthenticated: false,
     token: "",
-    _id: "",
+    id: "",
     username: "", 
     email: "", 
     name: "",
@@ -25,14 +25,33 @@ export const userAuthentication = defineStore({
     clearStore() {
       this.userAuthenticated = false;
       this.token = "";
-      this._id = "";
+      this.id = "";
       this.username = ""; 
       this.email = ""; 
       this.name = "";
       this.surnames = "";
       this.profilePhoto = "";
       this.biography = "";
-      this.loginError = false;
+    },
+    setUserData(userData: { biography: string, email: string, id: string,name: string, profilePhoto: string,surnames: string, username: string}) {
+      this.id = userData.id;
+      this.username = userData.username; 
+      this.email = userData.email; 
+      this.name = userData.name;
+      this.surnames = userData.surnames;
+      this.profilePhoto = userData.profilePhoto;
+      this.biography = userData.biography;
+    },
+    getUserData() {
+      return {
+        id: this.id,
+        email: this.email,
+        username: this.username,
+        name: this.name,
+        surnames: this.surnames,
+        profilePhoto: this.profilePhoto,
+        biography: this.biography
+      }
     },
     async login(credentials: {email: string, password: string}) {
       const response = await fetch(API_URI+`/users/login`,{
@@ -43,14 +62,25 @@ export const userAuthentication = defineStore({
         body: JSON.stringify(credentials)
       })
       if(!response.ok) {
-        this.loginError = true;
-        return "Error"
+        return "Error";
       } else {
         const data = await response.json();
         const token = data.token; 
         this.token = token;
         this.userAuthenticated = true;
-        return "Succes"
+        const userData = await fetch(API_URI + `/userData/${credentials.email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        if (!userData.ok) {
+          return "Error"
+        }
+        const userDataJSON = await userData.json();
+        this.setUserData(userDataJSON);
+        return "Succes";
       }
     } 
   },
