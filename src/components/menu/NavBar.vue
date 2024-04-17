@@ -25,6 +25,9 @@ import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import { userAuthentication } from '@/store/userAuth.store';
+
+const authStore = userAuthentication();
 
 const router = useRouter();
 const items = ref([
@@ -81,6 +84,7 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
       router.push('/collections')
       break;
     case 'Log out':
+      authStore.clearStore();
       router.push('/')
       break;
     case 'Settings':
