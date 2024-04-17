@@ -105,6 +105,10 @@ import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { userAuthentication } from '@/store/userAuth.store';
+import Swal from 'sweetalert2'
+
+const authStore = userAuthentication();
 
 const router = useRouter();
 const toast = useToast();
@@ -147,15 +151,32 @@ const handleSignUp = () => {
   }
 };
 
-const handleSignIn = () => {
+const handleSignIn = async () => {
+  let errorDetected = false;
   if (signInForm.value.email === '' || signInForm.value.password === '' ) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+    errorDetected = true;
   }
   if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+    errorDetected = true;
   }
-  console.log('Sign in form submitted:', signInForm.value);
-  router.push('/main')
+  if (errorDetected) {
+    return;
+  } else {
+    const response = await authStore.login(signInForm.value);
+    if (response === "Succes") {
+      // console.log(authStore.getToken())
+      router.push('/main')
+    } else if (response === "Error") {
+      Swal.fire({
+      title: 'Error!',
+      text: 'Wrong credentials. Try it again!!',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+      })
+    }
+  }
 };
 
 const toggleSignIn = () => {
