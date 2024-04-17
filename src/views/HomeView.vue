@@ -107,6 +107,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import Swal from 'sweetalert2'
+import { API_URI } from '@/types/env';
 
 const authStore = userAuthentication();
 
@@ -127,7 +128,9 @@ const signUpForm = ref({
   surnames: '',
   profilePhoto: '',
   biography: '',
+  additionalProp1: {},
 });
+
 const repeatedPassword = ref('');
 const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
@@ -135,38 +138,67 @@ const photoSelected = ref(false);
 const licenseAndConditionsReaded = ref(false);
 const dialogVisible = ref(false);
 
-const handleSignUp = () => {
-  console.log('Sign up form submitted:', signUpForm.value);
+const handleSignUp = async () => {
+  let errorFounded = false;
   if(signUpForm.value.profilePhoto === '') {
-    signUpForm.value.profilePhoto = 'defaultProfilePhoto'
+    signUpForm.value.profilePhoto = 'defaultProfilePhoto';
+    errorFounded = true;
   }
   if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+    errorFounded = true;
   }
   if (!licenseAndConditionsReaded.value) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
-  } else  {
-    // crear cuenta y si todo ha salido bien, refrescar pagina
-    registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
+    errorFounded = true;
+  } 
+  if (errorFounded) {
+    registerStep.value = 0;
+  } else {
+    const userRegistered = await fetch(API_URI + `/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(signUpForm.value),
+    });
+    if(!userRegistered.ok) {
+      Swal.fire({
+      title: 'Error!',
+      text: 'Bad Request!. Probably Email or Username already exists, change it and try it again!',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+      })
+    }
+    Swal.fire({
+      icon: "success",
+      title: "Your account has been created",
+      showConfirmButton: false,
+      timer: 1700
+    });
+    setTimeout(function() {
+      window.location.reload();
+    }, 1700);
   }
+
 };
 
 const handleSignIn = async () => {
-  let errorDetected = false;
+  let errorFounded = false;
   if (signInForm.value.email === '' || signInForm.value.password === '' ) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
-    errorDetected = true;
+    errorFounded = true;
   }
   if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
-    errorDetected = true;
+    errorFounded = true;
   }
-  if (errorDetected) {
+  if (errorFounded) {
     return;
   } else {
     const response = await authStore.login(signInForm.value);
     if (response === "Succes") {
-      console.log(authStore.getUserData());
+      //console.log(authStore.getUserData());
       router.push('/main')
     } else if (response === "Error") {
       Swal.fire({
