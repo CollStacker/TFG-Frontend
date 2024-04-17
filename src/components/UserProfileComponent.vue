@@ -17,21 +17,21 @@
             <div class="userDataText">
               <div class="formGroup">
                 <span class="formGroupInputText">Email</span>
-                <InputText class="customUserProfileInputText" v-model="userData.email" disabled />
+                <InputText class="customUserProfileInputText" v-model="userData.email" :disabled="inputTextEditable" />
               </div>
               <div class="formGroup">
                 <span class="formGroupInputText">Name</span>
-                <InputText class="customUserProfileInputText" v-model="userData.name" disabled />  
+                <InputText class="customUserProfileInputText" v-model="userData.name" :disabled="inputTextEditable" />  
               </div>
               <div class="formGroup">
                 <span class="formGroupInputText">Surnames</span>
-                <InputText class="customUserProfileInputText" v-model="userData.surnames" disabled />
+                <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
               </div>
             </div>
             <div class="biografyFormGroup">
               <div class="formGroup">
                 <span class="formGroupInputText">Biography</span>
-                <Textarea class="customUserProfileTextArea" v-model="userData.biography" disabled autoResize />
+                <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
               </div>
             </div>
           </div>
@@ -46,16 +46,12 @@
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import { ref } from "vue";
+import { userAuthentication } from '@/store/userAuth.store';
 
-const inputTextEditable = ref(false)
-const userData = ref({
-  username: "Adrian01",
-  email: "adrian@test.com",
-  name: "Adrián",
-  surnames: "González Expósito",
-  profilePhoto: "maleOld",
-  biography: "Hola soy Adrián, actualmente estudio ingenieria informatica. Me gusta coleccionar coches antiguos bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla"
-})
+const authStore = userAuthentication();
+
+const inputTextEditable = ref(true)
+const userData = ref(authStore.getUserData());
 </script>
 
 <style>
