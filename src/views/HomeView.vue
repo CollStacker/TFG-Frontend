@@ -353,8 +353,10 @@ a {
 
 button {
   border-radius: 20px;
-  border: 1px solid #FF4B2B;
-  background-color: #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
+  /* background-color: #FF4B2B; */
+  background-color: #333;
   color: #FFFFFF;
   font-size: 12px;
   font-weight: bold;
@@ -365,9 +367,11 @@ button {
 }
 
 button:hover {
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   background-color: #FFFFFF;
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   transform: scale(1.05);
 }
 
@@ -493,9 +497,12 @@ form {
 }
 
 .overlay {
-  background: #FF416C;
+  /* background: #FF416C;
   background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background: linear-gradient(to right, #FF4B2B, #FF416C); */
+  background: #333;
+  background: -webkit-linear-gradient(to right, #333, #767676);
+  background: linear-gradient(to right, #131313, #666666);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -588,16 +595,20 @@ footer a {
   color: #FFFFFF;
   margin-top: 10px;
   background-color: #FF4B2B;
-  border: 1px solid #FF4B2B;
+  background-color: #333;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   padding: 8px;
   border-radius: 20px;
   margin-left: 206px;
 }
 
 .customNextStepButton:hover {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   background-color: #FFFFFF;
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   transform: scale(1.07);
 }
 
@@ -622,17 +633,21 @@ footer a {
 .customPreviousStepButton {
   color: #FFFFFF;
   margin-top: 10px;
-  background-color: #FF4B2B;
-  border: 1px solid #FF4B2B;
+  /* background-color: #FF4B2B; */
+  background-color: #333;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   padding: 8px;
   border-radius: 20px;
   margin-right: 0;
 }
 
 .customPreviousStepButton:hover {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   background-color: #FFFFFF;
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   transform: scale(1.07);
 }
 
@@ -670,7 +685,8 @@ footer a {
 }
 
 .licenseCheckBox a {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
 }
 
 section {
