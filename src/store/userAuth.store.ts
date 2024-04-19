@@ -82,6 +82,21 @@ export const userAuthentication = defineStore({
         this.setUserData(userDataJSON);
         return "Succes";
       }
-    } 
+    },
+    async checkToken() {
+      if(this.token !== "") {
+        const response = await fetch(API_URI + `/whoAmI`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+          },
+        })
+        if (response.ok) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
 })
