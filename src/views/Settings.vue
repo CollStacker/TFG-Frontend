@@ -78,16 +78,60 @@
                 </Dialog>
               </template>
               <template v-if="secondSplitterDisplay == 'Change Password'">
-                
+                <div class="secondSplitterHeader mb-8">
+                  <span class="uppercase bold big-text" >Change Password</span>
+                  <div class="separator"></div>
+                </div>
+                <div style="display:flex">
+                  <div style="flex: 1; margin-right: 20px;">
+                    <div class="userProfileSettingsform mb-8">
+                      <span class="uppercase bold">Current Password</span>
+                      <Password class="settingCustomPassword" v-model="currentPassword" toggleMask :feedback="false" />
+                    </div>
+                    <div class="userProfileSettingsform mb-8">
+                      <span class="uppercase bold">Repeat current password</span>
+                      <Password class="settingCustomPassword" v-model="repeatedCurrentPassword" toggleMask :feedback="false" />
+                      <p class="error-message" v-if="!checkPassword() && repeatedCurrentPassword.length > 0">Password does not match</p>
+                    </div>
+                    <div class="userProfileSettingsform mb-8">
+                      <span class="uppercase bold">New password</span>
+                      <Password class="settingCustomPassword" v-model="newPassword" toggleMask >
+                        <template #footer>
+                            <Divider />
+                            <p class="mt-2">Suggestions</p>
+                            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                <li>At least one lowercase</li>
+                                <li>At least one uppercase</li>
+                                <li>At least one numeric</li>
+                                <li>At least one icon(@/"$..)</li>
+                                <li>Minimum 8 characters</li>
+                            </ul>
+                        </template>
+                    </Password>
+                    </div>
+                    <div class="mb-15 mt-12">
+                      <Button class="customSettingsButton" label="Change password" @click="changePassword()"/>
+                    </div>
+                  </div>
+                </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Delete Account'">
-                
+                <div class="secondSplitterHeader mb-8">
+                  <span class="uppercase bold big-text" >Delete Account</span>
+                  <div class="separator"></div>
+                </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Email'">
-                Welcome from user email settings
+                <div class="secondSplitterHeader mb-8">
+                  <span class="uppercase bold big-text" >Email</span>
+                  <div class="separator"></div>
+                </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Notifications'">
-                Welcome from user notifications settings
+                <div class="secondSplitterHeader mb-8">
+                  <span class="uppercase bold big-text" >Notifications</span>
+                  <div class="separator"></div>
+                </div>
               </template>
             </SplitterPanel>
         </Splitter>
@@ -103,6 +147,8 @@ import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
+import Password from 'primevue/password';
+import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
@@ -129,6 +175,10 @@ const newUserData = ref({
   biography: userData.biography,
   profilePhoto: userData.profilePhoto
 });
+
+const currentPassword = ref("");
+const repeatedCurrentPassword = ref("");
+const newPassword = ref("");
 
 const handleRoutering = (label: string | ((...args: any) => string) | undefined) => {
   var elementSelected = "";
@@ -209,14 +259,88 @@ const updateProfile = async () => {
       })
     } else {
       Swal.fire({
-        title: "Good job!",
-        text: "You clicked the button!",
+        title: "Great!",
+        text: "Your account have been updated!",
         icon: "success"
       });
     }
   } else {
     router.push('/');
   }
+}
+
+const isCorrectPassword = (password: string) => {
+  const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  return securityPasswordRegex.test(password);
+}
+
+const changePassword = async () => {
+  if (currentPassword.value == "" || repeatedCurrentPassword.value == "" || newPassword.value == "") {
+    Swal.fire({
+      title: 'Error!',
+      text: 'All fields must be filled.',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+    })
+    return;
+  } else {
+    if (currentPassword.value !== repeatedCurrentPassword.value) {
+      Swal.fire({
+      title: 'Error!',
+      text: 'Olds passwords could not be different.',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+      })
+      return;
+    } else if (currentPassword.value === newPassword.value) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Could not use old password again. Try a new password!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    } else if(!isCorrectPassword(newPassword.value)) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Password is weakness!! Do it better!!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    } else {
+      const changePasswordRequiredData = {
+        currentPassword: currentPassword.value,
+        newPassword: newPassword.value
+      }
+      const passwordChanged = await fetch(API_URI + `/changePassword/${userData.id}`, {
+        method: 'PATCH',
+        headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(changePasswordRequiredData),
+      })
+      if (!passwordChanged.ok) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Server can not proccess your petition.',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+      } else {
+        Swal.fire({
+          title: "Great!",
+          text: "Your password have been changed!",
+          icon: "success"
+        });
+      }
+    }
+  }
+}
+
+const checkPassword = ():boolean => {
+  return currentPassword.value == repeatedCurrentPassword.value
 }
 
 const items = ref([
@@ -351,6 +475,23 @@ const items = ref([
   margin-right: 20px;
 }
 
+.mt-12 {
+  margin-top: 12px;
+}
+
+.mt-0 {
+  margin-top: 0px;
+}
+
+.ml-2 {
+  margin-left: 20px;
+}
+
+.pl-2 {
+  padding: 2px;
+}
+
+
 .userProfileSettingsform {
   display: flex;
   flex-direction: column;
@@ -431,9 +572,28 @@ button.p-button.p-component.customSettingsButton:hover {
   transform: scale(1);
 }
 
+.p-password.p-component.p-inputwrapper.settingCustomPassword {
+  max-width: 15.8rem;
+}
+
+.p-password.p-component.p-inputwrapper.settingCustomPassword input.p-inputtext.p-component.p-password-input {
+  margin: 0px;
+  max-width: 24rem;
+  border: 1px solid #c7c7c7;
+  background-color: transparent;
+
+}
+
 .p-button-label {
   font-weight: bold;
   /* text-transform: uppercase; */
+}
+
+.error-message {
+  color: red !important;
+  margin-top: 0px !important;
+  margin-bottom: 2px;
+  text-align: left !important;
 }
 
 
