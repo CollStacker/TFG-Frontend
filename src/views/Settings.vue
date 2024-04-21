@@ -99,7 +99,7 @@
                         <template #footer>
                             <Divider />
                             <p class="mt-2">Suggestions</p>
-                            <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                            <ul class="pl-2 ml-20 mt-0" style="line-height: 1.5">
                                 <li>At least one lowercase</li>
                                 <li>At least one uppercase</li>
                                 <li>At least one numeric</li>
@@ -117,8 +117,28 @@
               </template>
               <template v-if="secondSplitterDisplay == 'Delete Account'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text" >Delete Account</span>
+                  <span class="uppercase bold big-text red-text" >Delete Account</span>
                   <div class="separator"></div>
+                </div>
+                <div style="display:flex">
+                  <div style="flex: 1; margin-right: 20px;">
+                    <div class="userProfileSettingsform mb-8">
+                      <label>Deleting your account means loose all your data inside the application. As well as the elements shared with the rest of the application users. Make sure you are safe performing this action</label>
+                    </div>
+                    <div class="mb-8 align-horizontal">
+                      <Checkbox v-model="deleteAccCheckBox" inputId="deleteAccCheckbox" :binary="true"/>
+                      <label class="ml-4">  
+                        Are you sure you want to <label class="bold red-text uppercase">delete</label> your account?
+                      </label>
+                    </div>
+                    <div v-if="deleteAccCheckBox === true" class="userProfileSettingsform mb-8">
+                      <label>{{ "If you are sure to delete your account then write ('" + userData.username + "')."  }}</label>
+                      <InputText class="customSettingsInputText" v-model="deleteAccConfirmated" placeholder="Username"/>
+                    </div>
+                    <div class="mb-15 mt-12">
+                      <Button class="deleteAccountButton" label="Delete account" @click="" :disabled="!(deleteAccConfirmated === userData.username && deleteAccConfirmated !== '')"/>
+                    </div>
+                  </div>
                 </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Email'">
@@ -152,6 +172,7 @@ import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+import Checkbox from 'primevue/checkbox';
 import Dialog from 'primevue/dialog';
 import Menu from 'primevue/menu';
 import { ref } from "vue";
@@ -162,191 +183,11 @@ import Swal from 'sweetalert2'
 
 const router = useRouter();
 const authStore = userAuthentication();
-const secondSplitterDisplay = ref("User Profile");
-
-const dialogVisible = ref(false);
-const userData = authStore.getUserData();
-
-const newUserData = ref({
-  username: userData.username,
-  email: userData.email,
-  name: userData.name,
-  surnames: userData.surnames,
-  biography: userData.biography,
-  profilePhoto: userData.profilePhoto
-});
-
-const currentPassword = ref("");
-const repeatedCurrentPassword = ref("");
-const newPassword = ref("");
-
-const handleRoutering = (label: string | ((...args: any) => string) | undefined) => {
-  var elementSelected = "";
-  if (label !== undefined) {
-    elementSelected = label.toString();
-  }
-  switch (elementSelected) {
-    case 'User Profile':
-      secondSplitterDisplay.value = elementSelected;
-      break;
-    case 'Change Password':
-      secondSplitterDisplay.value = elementSelected;
-      break;
-    case 'Delete Account':
-      secondSplitterDisplay.value = elementSelected;
-      break;
-    case 'Email':
-      secondSplitterDisplay.value = elementSelected;
-      break;
-    case 'Notifications':
-      secondSplitterDisplay.value = elementSelected;
-      break;
-    default:
-      break;
-  }
-}
-
-const selectProfilePhoto = (pictureSelected: String) => {
-  switch (pictureSelected) {
-    case 'femaleYoung':
-      newUserData.value.profilePhoto = 'femaleYoung';
-      dialogVisible.value = false;
-    break;
-    case 'femaleAdult':
-      newUserData.value.profilePhoto = 'femaleAdult';
-      dialogVisible.value = false;
-    break;
-    case 'femaleOld':
-      newUserData.value.profilePhoto = 'femaleOld';
-      dialogVisible.value = false;
-    break;
-    case 'maleYoung':
-      newUserData.value.profilePhoto = 'maleYoung';
-      dialogVisible.value = false;
-    break;
-    case 'maleAdult':
-      newUserData.value.profilePhoto = 'maleAdult';
-      dialogVisible.value = false;
-    break;
-    case 'maleOld':
-      newUserData.value.profilePhoto = 'maleOld';
-      dialogVisible.value = false;
-    break;
-    default:
-      newUserData.value.profilePhoto = "defaultProfilePhoto";
-      dialogVisible.value = false
-    break;
-  }
-}
-
-const updateProfile = async () => {
-  const userAuthenticated = await authStore.checkToken();
-  if (userAuthenticated) {
-    const updateUser = await fetch(API_URI + `/updateUser/${userData.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-      },
-      body: JSON.stringify(newUserData.value),
-    });
-    if (!updateUser.ok) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'User couldnt be updated',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      })
-    } else {
-      Swal.fire({
-        title: "Great!",
-        text: "Your account have been updated!",
-        icon: "success"
-      });
-    }
-  } else {
-    router.push('/');
-  }
-}
-
-const isCorrectPassword = (password: string) => {
-  const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
-  return securityPasswordRegex.test(password);
-}
-
-const changePassword = async () => {
-  if (currentPassword.value == "" || repeatedCurrentPassword.value == "" || newPassword.value == "") {
-    Swal.fire({
-      title: 'Error!',
-      text: 'All fields must be filled.',
-      icon: 'error',
-      confirmButtonText: 'Ok'
-    })
-    return;
-  } else {
-    if (currentPassword.value !== repeatedCurrentPassword.value) {
-      Swal.fire({
-      title: 'Error!',
-      text: 'Olds passwords could not be different.',
-      icon: 'error',
-      confirmButtonText: 'Ok'
-      })
-      return;
-    } else if (currentPassword.value === newPassword.value) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Could not use old password again. Try a new password!',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      })
-      return;
-    } else if(!isCorrectPassword(newPassword.value)) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Password is weakness!! Do it better!!',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      })
-      return;
-    } else {
-      const changePasswordRequiredData = {
-        currentPassword: currentPassword.value,
-        newPassword: newPassword.value
-      }
-      const passwordChanged = await fetch(API_URI + `/changePassword/${userData.id}`, {
-        method: 'PATCH',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-        },
-        body: JSON.stringify(changePasswordRequiredData),
-      })
-      if (!passwordChanged.ok) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Server can not proccess your petition.',
-          icon: 'error',
-          confirmButtonText: 'Ok'
-        })
-      } else {
-        Swal.fire({
-          title: "Great!",
-          text: "Your password have been changed!",
-          icon: "success"
-        });
-      }
-    }
-  }
-}
-
-const checkPassword = ():boolean => {
-  return currentPassword.value == repeatedCurrentPassword.value
-}
 
 const items = ref([
     {
-        label: 'Account',
-        items: [
+      label: 'Account',
+      items: [
             {
                 label: 'User Profile',
                 icon: 'pi pi-user'
@@ -376,6 +217,194 @@ const items = ref([
     }
 ]);
 
+// UPDATE USER DATA
+
+const secondSplitterDisplay = ref("User Profile");
+const dialogVisible = ref(false);
+const userData = authStore.getUserData();
+
+const newUserData = ref({
+  username: userData.username,
+  email: userData.email,
+  name: userData.name,
+  surnames: userData.surnames,
+  biography: userData.biography,
+  profilePhoto: userData.profilePhoto
+});
+
+const handleRoutering = (label: string | ((...args: any) => string) | undefined) => {
+  var elementSelected = "";
+  if (label !== undefined) {
+    elementSelected = label.toString();
+  }
+  switch (elementSelected) {
+    case 'User Profile':
+      secondSplitterDisplay.value = elementSelected;
+      break;
+      case 'Change Password':
+        secondSplitterDisplay.value = elementSelected;
+        break;
+    case 'Delete Account':
+      secondSplitterDisplay.value = elementSelected;
+      break;
+      case 'Email':
+        secondSplitterDisplay.value = elementSelected;
+        break;
+        case 'Notifications':
+          secondSplitterDisplay.value = elementSelected;
+          break;
+          default:
+            break;
+          }
+        }
+        
+        const selectProfilePhoto = (pictureSelected: String) => {
+          switch (pictureSelected) {
+            case 'femaleYoung':
+              newUserData.value.profilePhoto = 'femaleYoung';
+              dialogVisible.value = false;
+              break;
+              case 'femaleAdult':
+                newUserData.value.profilePhoto = 'femaleAdult';
+                dialogVisible.value = false;
+                break;
+                case 'femaleOld':
+                  newUserData.value.profilePhoto = 'femaleOld';
+                  dialogVisible.value = false;
+                  break;
+                  case 'maleYoung':
+                    newUserData.value.profilePhoto = 'maleYoung';
+                    dialogVisible.value = false;
+                    break;
+                    case 'maleAdult':
+                      newUserData.value.profilePhoto = 'maleAdult';
+                      dialogVisible.value = false;
+                      break;
+                      case 'maleOld':
+                        newUserData.value.profilePhoto = 'maleOld';
+      dialogVisible.value = false;
+      break;
+      default:
+        newUserData.value.profilePhoto = "defaultProfilePhoto";
+        dialogVisible.value = false
+        break;
+      }
+    }
+    
+    const updateProfile = async () => {
+      const userAuthenticated = await authStore.checkToken();
+      if (userAuthenticated) {
+        const updateUser = await fetch(API_URI + `/updateUser/${userData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(newUserData.value),
+    });
+    if (!updateUser.ok) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'User couldnt be updated',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    } else {
+      Swal.fire({
+        title: "Great!",
+        text: "Your account have been updated!",
+        icon: "success"
+      });
+    }
+  } else {
+    router.push('/');
+  }
+}
+
+// CHANGE PASSWORD 
+
+const currentPassword = ref("");
+const repeatedCurrentPassword = ref("");
+const newPassword = ref("");
+
+const isCorrectPassword = (password: string) => {
+  const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+  return securityPasswordRegex.test(password);
+}
+
+const changePassword = async () => {
+  if (currentPassword.value == "" || repeatedCurrentPassword.value == "" || newPassword.value == "") {
+    Swal.fire({
+      title: 'Error!',
+      text: 'All fields must be filled.',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+    })
+    return;
+  } else {
+    if (currentPassword.value !== repeatedCurrentPassword.value) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Olds passwords could not be different.',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    } else if (currentPassword.value === newPassword.value) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Could not use old password again. Try a new password!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    } else if(!isCorrectPassword(newPassword.value)) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Password is weakness!! Do it better!!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+      return;
+    } else {
+      const changePasswordRequiredData = {
+        currentPassword: currentPassword.value,
+        newPassword: newPassword.value
+      }
+      const passwordChanged = await fetch(API_URI + `/changePassword/${userData.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(changePasswordRequiredData),
+      })
+      if (!passwordChanged.ok) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Server can not proccess your petition.',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+      } else {
+        Swal.fire({
+          title: "Great!",
+          text: "Your password have been changed!",
+          icon: "success"
+        });
+      }
+    }
+  }
+}
+
+const checkPassword = ():boolean => {
+  return currentPassword.value == repeatedCurrentPassword.value
+}
+
+// DELETE ACCOUNT 
+
+const deleteAccCheckBox = ref(false);
+const deleteAccConfirmated = ref("");
 </script>
 
 <style>
@@ -483,7 +512,7 @@ const items = ref([
   margin-top: 0px;
 }
 
-.ml-2 {
+.ml-20 {
   margin-left: 20px;
 }
 
@@ -491,6 +520,13 @@ const items = ref([
   padding: 2px;
 }
 
+.red-text {
+  color: rgb(246, 71, 71);
+}
+
+.ml-4 {
+  margin-left: 4px;
+}
 
 .userProfileSettingsform {
   display: flex;
@@ -562,7 +598,6 @@ section img:hover {
 button.p-button.p-component.customSettingsButton {
   background-color: #333;
   border: 2px solid #333;
-  border: none;
 }
 
 button.p-button.p-component.customSettingsButton:hover {
@@ -570,6 +605,17 @@ button.p-button.p-component.customSettingsButton:hover {
   border: 2px solid #333;
   background-color: white;
   transform: scale(1);
+}
+
+button.p-button.p-component.deleteAccountButton {
+  background-color: rgb(246, 71, 71);
+  border: 2px solid rgb(246, 71, 71);
+}
+
+button.p-button.p-component.deleteAccountButton:hover {
+  color: rgb(246, 71, 71);
+  border: 2px solid rgb(246, 71, 71);
+  background-color: white;
 }
 
 .p-password.p-component.p-inputwrapper.settingCustomPassword {
@@ -596,5 +642,9 @@ button.p-button.p-component.customSettingsButton:hover {
   text-align: left !important;
 }
 
+.align-horizontal {
+  display: flex;
+  align-items: center;
+}
 
 </style>
