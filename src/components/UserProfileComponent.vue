@@ -28,9 +28,9 @@
                 <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
               </div>
             </div>
-            <div class="biografyFormGroup">
+            <div class="biografyFormGroup" v-if="userData.biography">
               <div class="formGroup">
-                <span class="formGroupInputText">Biography</span>
+                <span class="formGroupInputText">About me</span>
                 <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
               </div>
             </div>
