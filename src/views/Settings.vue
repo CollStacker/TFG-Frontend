@@ -89,11 +89,6 @@
                       <Password class="settingCustomPassword" v-model="currentPassword" toggleMask :feedback="false" />
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Repeat current password</span>
-                      <Password class="settingCustomPassword" v-model="repeatedCurrentPassword" toggleMask :feedback="false" />
-                      <p class="error-message" v-if="!checkPassword() && repeatedCurrentPassword.length > 0">Password does not match</p>
-                    </div>
-                    <div class="userProfileSettingsform mb-8">
                       <span class="uppercase bold">New password</span>
                       <Password class="settingCustomPassword" v-model="newPassword" toggleMask >
                         <template #footer>
@@ -108,6 +103,11 @@
                             </ul>
                         </template>
                     </Password>
+                    </div>
+                    <div class="userProfileSettingsform mb-8">
+                      <span class="uppercase bold">Repeat new password</span>
+                      <Password class="settingCustomPassword" v-model="repeatedNewPassword" toggleMask :feedback="false" />
+                      <p class="error-message" v-if="!checkPassword() && repeatedNewPassword.length > 0">Password does not match</p>
                     </div>
                     <div class="mb-15 mt-12">
                       <Button class="customSettingsButton" label="Change password" @click="changePassword()"/>
@@ -241,48 +241,48 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
     case 'User Profile':
       secondSplitterDisplay.value = elementSelected;
       break;
-      case 'Change Password':
-        secondSplitterDisplay.value = elementSelected;
-        break;
+    case 'Change Password':
+      secondSplitterDisplay.value = elementSelected;
+    break;
     case 'Delete Account':
       secondSplitterDisplay.value = elementSelected;
-      break;
-      case 'Email':
-        secondSplitterDisplay.value = elementSelected;
-        break;
-        case 'Notifications':
+    break;
+    case 'Email':
+      secondSplitterDisplay.value = elementSelected;
+    break;
+    case 'Notifications':
           secondSplitterDisplay.value = elementSelected;
-          break;
-          default:
-            break;
-          }
-        }
+    break;
+    default:
+      break;
+  }
+}
         
-        const selectProfilePhoto = (pictureSelected: String) => {
-          switch (pictureSelected) {
-            case 'femaleYoung':
-              newUserData.value.profilePhoto = 'femaleYoung';
-              dialogVisible.value = false;
-              break;
-              case 'femaleAdult':
-                newUserData.value.profilePhoto = 'femaleAdult';
-                dialogVisible.value = false;
-                break;
-                case 'femaleOld':
-                  newUserData.value.profilePhoto = 'femaleOld';
-                  dialogVisible.value = false;
-                  break;
-                  case 'maleYoung':
-                    newUserData.value.profilePhoto = 'maleYoung';
-                    dialogVisible.value = false;
-                    break;
-                    case 'maleAdult':
-                      newUserData.value.profilePhoto = 'maleAdult';
-                      dialogVisible.value = false;
-                      break;
-                      case 'maleOld':
-                        newUserData.value.profilePhoto = 'maleOld';
-      dialogVisible.value = false;
+  const selectProfilePhoto = (pictureSelected: String) => {
+    switch (pictureSelected) {
+      case 'femaleYoung':
+        newUserData.value.profilePhoto = 'femaleYoung';
+        dialogVisible.value = false;
+      break;
+      case 'femaleAdult':
+        newUserData.value.profilePhoto = 'femaleAdult';
+        dialogVisible.value = false;
+      break;
+      case 'femaleOld':
+        newUserData.value.profilePhoto = 'femaleOld';
+        dialogVisible.value = false;
+      break;
+      case 'maleYoung':
+        newUserData.value.profilePhoto = 'maleYoung';
+        dialogVisible.value = false;
+      break;
+      case 'maleAdult':
+        newUserData.value.profilePhoto = 'maleAdult';
+        dialogVisible.value = false;
+      break;
+      case 'maleOld':
+          newUserData.value.profilePhoto = 'maleOld';
+        dialogVisible.value = false;
       break;
       default:
         newUserData.value.profilePhoto = "defaultProfilePhoto";
@@ -324,8 +324,8 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
 // CHANGE PASSWORD 
 
 const currentPassword = ref("");
-const repeatedCurrentPassword = ref("");
 const newPassword = ref("");
+const repeatedNewPassword = ref("");
 
 const isCorrectPassword = (password: string) => {
   const securityPasswordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
@@ -333,7 +333,7 @@ const isCorrectPassword = (password: string) => {
 }
 
 const changePassword = async () => {
-  if (currentPassword.value == "" || repeatedCurrentPassword.value == "" || newPassword.value == "") {
+  if (currentPassword.value == "" || repeatedNewPassword.value == "" || newPassword.value == "") {
     Swal.fire({
       title: 'Error!',
       text: 'All fields must be filled.',
@@ -342,10 +342,10 @@ const changePassword = async () => {
     })
     return;
   } else {
-    if (currentPassword.value !== repeatedCurrentPassword.value) {
+    if (newPassword.value !== repeatedNewPassword.value) {
       Swal.fire({
         title: 'Error!',
-        text: 'Olds passwords could not be different.',
+        text: 'Passwords does not match!',
         icon: 'error',
         confirmButtonText: 'Ok'
       })
@@ -398,7 +398,7 @@ const changePassword = async () => {
 }
 
 const checkPassword = ():boolean => {
-  return currentPassword.value == repeatedCurrentPassword.value
+  return newPassword.value == repeatedNewPassword.value
 }
 
 // DELETE ACCOUNT 
