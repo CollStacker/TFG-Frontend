@@ -105,6 +105,11 @@ import Textarea from 'primevue/textarea';
 import { useToast } from "primevue/usetoast";
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { userAuthentication } from '@/store/userAuth.store';
+import Swal from 'sweetalert2'
+import { API_URI } from '@/types/env';
+
+const authStore = userAuthentication();
 
 const router = useRouter();
 const toast = useToast();
@@ -123,7 +128,9 @@ const signUpForm = ref({
   surnames: '',
   profilePhoto: '',
   biography: '',
+  additionalProp1: {},
 });
+
 const repeatedPassword = ref('');
 const registerStep = ref(0);
 const signInForm = ref({email: '', password: ''});
@@ -131,31 +138,77 @@ const photoSelected = ref(false);
 const licenseAndConditionsReaded = ref(false);
 const dialogVisible = ref(false);
 
-const handleSignUp = () => {
-  console.log('Sign up form submitted:', signUpForm.value);
+const handleSignUp = async () => {
+  let errorFounded = false;
   if(signUpForm.value.profilePhoto === '') {
-    signUpForm.value.profilePhoto = 'defaultProfilePhoto'
+    signUpForm.value.profilePhoto = 'defaultProfilePhoto';
+    errorFounded = true;
   }
   if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+    errorFounded = true;
   }
   if (!licenseAndConditionsReaded.value) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Please accept the terms and conditions of use first.', life: 3000 });
-  } else  {
-    // crear cuenta y si todo ha salido bien, refrescar pagina
-    registerStep.value = 0; //!DE MOMENTO MANTENER, SE BORRARA CUANDO SE TENGA LA FUNCIONALIDAD
+    errorFounded = true;
+  } 
+  if (errorFounded) {
+    registerStep.value = 0;
+  } else {
+    const userRegistered = await fetch(API_URI + `/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(signUpForm.value),
+    });
+    if(!userRegistered.ok) {
+      Swal.fire({
+      title: 'Error!',
+      text: 'Bad Request!. Probably Email or Username already exists, change it and try it again!',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+      })
+    }
+    Swal.fire({
+      icon: "success",
+      title: "Your account has been created",
+      showConfirmButton: false,
+      timer: 1700
+    });
+    setTimeout(function() {
+      window.location.reload();
+    }, 1700);
   }
+
 };
 
-const handleSignIn = () => {
+const handleSignIn = async () => {
+  let errorFounded = false;
   if (signInForm.value.email === '' || signInForm.value.password === '' ) {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+    errorFounded = true;
   }
   if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+    errorFounded = true;
   }
-  console.log('Sign in form submitted:', signInForm.value);
-  router.push('/main')
+  if (errorFounded) {
+    return;
+  } else {
+    const response = await authStore.login(signInForm.value);
+    if (response === "Succes") {
+      //console.log(authStore.getUserData());
+      router.push('/main')
+    } else if (response === "Error") {
+      Swal.fire({
+      title: 'Error!',
+      text: 'Wrong credentials. Try it again!!',
+      icon: 'error',
+      confirmButtonText: 'Ok'
+      })
+    }
+  }
 };
 
 const toggleSignIn = () => {
@@ -300,8 +353,10 @@ a {
 
 button {
   border-radius: 20px;
-  border: 1px solid #FF4B2B;
-  background-color: #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
+  /* background-color: #FF4B2B; */
+  background-color: #333;
   color: #FFFFFF;
   font-size: 12px;
   font-weight: bold;
@@ -312,9 +367,11 @@ button {
 }
 
 button:hover {
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   background-color: #FFFFFF;
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   transform: scale(1.05);
 }
 
@@ -440,9 +497,12 @@ form {
 }
 
 .overlay {
-  background: #FF416C;
+  /* background: #FF416C;
   background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background: linear-gradient(to right, #FF4B2B, #FF416C); */
+  background: #333;
+  background: -webkit-linear-gradient(to right, #333, #767676);
+  background: linear-gradient(to right, #131313, #666666);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -535,16 +595,20 @@ footer a {
   color: #FFFFFF;
   margin-top: 10px;
   background-color: #FF4B2B;
-  border: 1px solid #FF4B2B;
+  background-color: #333;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   padding: 8px;
   border-radius: 20px;
   margin-left: 206px;
 }
 
 .customNextStepButton:hover {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   background-color: #FFFFFF;
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   transform: scale(1.07);
 }
 
@@ -569,17 +633,21 @@ footer a {
 .customPreviousStepButton {
   color: #FFFFFF;
   margin-top: 10px;
-  background-color: #FF4B2B;
-  border: 1px solid #FF4B2B;
+  /* background-color: #FF4B2B; */
+  background-color: #333;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   padding: 8px;
   border-radius: 20px;
   margin-right: 0;
 }
 
 .customPreviousStepButton:hover {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
   background-color: #FFFFFF;
-  border: 1px solid #FF4B2B;
+  /* border: 1px solid #FF4B2B; */
+  border: 1px solid #333;
   transform: scale(1.07);
 }
 
@@ -617,7 +685,8 @@ footer a {
 }
 
 .licenseCheckBox a {
-  color: #FF4B2B;
+  /* color: #FF4B2B; */
+  color: #333;
 }
 
 section {
