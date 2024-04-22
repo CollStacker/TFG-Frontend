@@ -136,7 +136,7 @@
                       <InputText class="customSettingsInputText" v-model="deleteAccConfirmated" placeholder="Username"/>
                     </div>
                     <div class="mb-15 mt-12">
-                      <Button class="deleteAccountButton" label="Delete account" @click="" :disabled="!(deleteAccConfirmated === userData.username && deleteAccConfirmated !== '')"/>
+                      <Button class="deleteAccountButton" label="Delete account" @click="deleteAccount()" :disabled="!(deleteAccConfirmated === userData.username && deleteAccConfirmated !== '')"/>
                     </div>
                   </div>
                 </div>
@@ -367,31 +367,36 @@ const changePassword = async () => {
       })
       return;
     } else {
-      const changePasswordRequiredData = {
-        currentPassword: currentPassword.value,
-        newPassword: newPassword.value
-      }
-      const passwordChanged = await fetch(API_URI + `/changePassword/${userData.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.getToken()}`,
-        },
-        body: JSON.stringify(changePasswordRequiredData),
-      })
-      if (!passwordChanged.ok) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Server can not proccess your petition.',
-          icon: 'error',
-          confirmButtonText: 'Ok'
+      const userAuthenticated = await authStore.checkToken();
+      if (!userAuthenticated) {
+        router.push('/')
+      } else {    
+        const changePasswordRequiredData = {
+          currentPassword: currentPassword.value,
+          newPassword: newPassword.value
+        }
+        const passwordChanged = await fetch(API_URI + `/changePassword/${userData.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+          body: JSON.stringify(changePasswordRequiredData),
         })
-      } else {
-        Swal.fire({
-          title: "Great!",
-          text: "Your password have been changed!",
-          icon: "success"
-        });
+        if (!passwordChanged.ok) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Server can not proccess your petition.',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        } else {
+          Swal.fire({
+            title: "Great!",
+            text: "Your password have been changed!",
+            icon: "success"
+          });
+        }
       }
     }
   }
@@ -405,6 +410,39 @@ const checkPassword = ():boolean => {
 
 const deleteAccCheckBox = ref(false);
 const deleteAccConfirmated = ref("");
+
+const deleteAccount = async () => {
+  const userAuthenticated = await authStore.checkToken();
+  if (!userAuthenticated) {
+    router.push('/')
+  } else {
+    const userDeleted = await fetch(API_URI + `/user/${userData.id}`,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    });
+    if(userDeleted.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Your account is being deleted!",
+        showConfirmButton: false,
+        timer: 1700
+      });
+      setTimeout(function() {
+        router.push('/');
+      }, 1700);
+    } else {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Server can not proccess your petition.Try it again!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    }
+  }
+}
 </script>
 
 <style>
