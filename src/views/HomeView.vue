@@ -345,7 +345,7 @@ span {
 }
 
 a {
-  color: #333;
+  color: #FF4B2B;
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
@@ -686,7 +686,7 @@ footer a {
 
 .licenseCheckBox a {
   /* color: #FF4B2B; */
-  color: #333;
+  color: #FF4B2B;
 }
 
 section {
