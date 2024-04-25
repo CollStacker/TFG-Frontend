@@ -4,11 +4,10 @@
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="collectionsMainContent">
-        <h1 class="test">Hello from collections page</h1>
+        <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton"> Create collection</Button>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
-    
   </div>
 </template>
 
@@ -16,6 +15,14 @@
 import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
+import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const createCollection = () => {
+  router.push('/collectionForm')
+}
 </script>
 
 <style>
@@ -67,5 +74,16 @@ body {
   margin: 0;
 }
 
+button.p-button.p-component.customCreateCollectionButton {
+  background-color: #333;
+  border: 2px solid #333;
+}
+
+button.p-button.p-component.customCreateCollectionButton:hover {
+  color: #333;
+  border: 2px solid #333;
+  background-color: white;
+  transform: scale(1);
+}
 
 </style>

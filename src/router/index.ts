@@ -44,6 +44,11 @@ const router = createRouter({
       name: 'privacyPolicities',
       component: () => import('../views/PrivacyPolicies.vue')
     },
+    {
+      path: '/collectionForm',
+      name: 'collectionForm',
+      component: () => import('../views/CollectionForm.vue')
+    },
   ]
 })
 
