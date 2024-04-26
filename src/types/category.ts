@@ -1,4 +1,4 @@
-export interface CategoryInterface {
+export default interface CategoryInterface {
   _id?: string
   name: string
   description?: string
