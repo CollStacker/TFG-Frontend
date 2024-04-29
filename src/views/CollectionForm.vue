@@ -1,4 +1,5 @@
 <template>
+  <Toast/>
   <div class="collectionsFormContainer"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsFormContent">
@@ -28,9 +29,21 @@
                   <div class="collectionform mb-8">
                     <div class="title-wrapper">
                       <span class="uppercase bold fs-b">Collection image</span>
-                      <FileUpload name="demo[]" url="/api/upload" @upload="onAdvancedUpload()" :multiple="true" accept="image/*" :maxFileSize="1000000">
+                      <!-- {{ "lenght" + collectionFormData.frontPage.length }} -->
+                      <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
+                        @select="upload($event)">
                         <template #empty>
-                          <p>Drag and drop files to here to upload.</p>
+                          <p v-if="collectionFormData.frontPage.length === 0">Drag and drop files to here to upload.</p>
+                        </template>
+                        <template #content>
+                          <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
+                          <div v-if="collectionFormData.frontPage.length > 0" style="display:flex; align-items: center;">
+                            <div style="display:flex;">
+                              <img v-if="collectionFormData.frontPage" :src="collectionFormData.frontPage" alt="fileUpload" style="width: 64px" />
+                              <p v-if="collectionFormData.frontPage">{{ imgSize }} KB</p>
+                          </div>
+                          <i class="pi pi-times" @click="deleteUploadImg" style="margin-left: 10px;"></i>
+                        </div>
                         </template>
                       </FileUpload>
                     </div>
@@ -91,10 +104,6 @@ const createCollection = () => {
 
 }
 
-const onAdvancedUpload = () => {
-  toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-};
-
 const collectionFormStep = ref(0);
 const handleNextStep = () => {
   if(collectionFormStep.value === 0) {
@@ -109,6 +118,36 @@ const handleNextStep = () => {
 const previousCollectionStep = () => {
   collectionFormStep.value -= 1;
 }
+
+
+const imgSize = ref(0.0);
+const upload = (e: any) => {
+  const file = e.files[0];
+  console.log(file)
+  if(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => { 
+      if (typeof reader.result === 'string') {
+        const base64String = reader.result;
+        
+        const base64Data = base64String.split(',')[1];
+        const base64Size = base64Data.length; 
+        const estimatedFileSize = (base64Size * 3) / 4;
+        // meter en imgSize el valor en kbs de estimatedFileSize
+        imgSize.value = estimatedFileSize/1024;
+
+        collectionFormData.value.frontPage = base64String;
+        console.log(collectionFormData.value)
+      };
+    }
+  }
+}
+
+const deleteUploadImg = () => {
+  collectionFormData.value.frontPage = '';
+}
+
 </script>
 
 <style>
