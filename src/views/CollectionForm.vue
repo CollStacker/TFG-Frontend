@@ -40,7 +40,7 @@
                           <div v-if="collectionFormData.frontPage.length > 0" style="display:flex; align-items: center;">
                             <div style="display:flex;">
                               <img v-if="collectionFormData.frontPage" :src="collectionFormData.frontPage" alt="fileUpload" style="width: 64px" />
-                              <p v-if="collectionFormData.frontPage">{{ imgSize }} KB</p>
+                              <p v-if="collectionFormData.frontPage" style="margin-left: 10px;">{{ imgSize }} KB</p>
                           </div>
                           <i class="pi pi-times" @click="deleteUploadImg" style="margin-left: 10px;"></i>
                         </div>

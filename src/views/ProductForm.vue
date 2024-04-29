@@ -37,9 +37,20 @@
                   </div>
                   <div class="productForm mb-8">
                     <div class="title-wrapper">
-                      <FileUpload name="demo[]" url="/api/upload" @upload="onAdvancedUpload()" :multiple="true" accept="image/*" :maxFileSize="1000000">
+                      <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
+                        @select="upload($event)">
                         <template #empty>
-                          <p>Drag and drop files to here to upload.</p>
+                          <p v-if="productData.image.length === 0">Drag and drop files to here to upload.</p>
+                        </template>
+                        <template #content>
+                          <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
+                          <div v-if="productData.image.length > 0" style="display:flex; align-items: center;">
+                            <div style="display:flex;">
+                              <img v-if="productData.image" :src="productData.image" alt="fileUpload" style="width: 64px" />
+                              <p v-if="productData.image" style="margin-left: 10px;">{{ imgSize }} KB</p>
+                          </div>
+                          <i class="pi pi-times" @click="deleteUploadImg" style="margin-left: 10px;"></i>
+                        </div>
                         </template>
                       </FileUpload>
                     </div>
@@ -144,6 +155,33 @@ const customField = ref({
 })
 
 const customFields = ref<CustomFieldsInterface[]>([]);
+
+const imgSize = ref(0.0);
+const upload = (e: any) => {
+  const file = e.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => { 
+      if (typeof reader.result === 'string') {
+        const base64String = reader.result;
+        
+        const base64Data = base64String.split(',')[1];
+        const base64Size = base64Data.length; 
+        const estimatedFileSize = (base64Size * 3) / 4;
+        // meter en imgSize el valor en kbs de estimatedFileSize
+        imgSize.value = estimatedFileSize/1024;
+
+        productData.value.image = base64String;
+        console.log(productData.value)
+      };
+    }
+  }
+}
+
+const deleteUploadImg = () => {
+  productData.value.image = '';
+}
 
 const createProduct = () => {
 
