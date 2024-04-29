@@ -84,7 +84,9 @@ import InputSwitch from 'primevue/inputswitch';
 import { ref } from 'vue';
 import { userAuthentication } from '@/store/userAuth.store';
 import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2'
 import { useToast } from "primevue/usetoast";
+import { API_URI } from '@/types/env';
 
 const toast = useToast();
 const router = useRouter();
@@ -96,12 +98,45 @@ const collectionForm = ref(true);
 const collectionFormData = ref({
   title: '',
   description: '',
+  tag: '',
   frontPage: '',
   ownerId: userData.id,
 });
 
-const createCollection = () => {
+const clearFormData = () => {
+  collectionFormData.value.tag = '';
+  collectionFormData.value.title = '';
+  collectionFormData.value.description = '';
+  collectionFormData.value.frontPage = '';
+}
 
+const createCollection = async () => {
+  if(await authStore.checkToken()) {
+    const collectionSaved = await fetch(API_URI + `/collections`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(collectionFormData.value),
+    })
+    if(!collectionSaved.ok) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something were wrong in the creation of your collection. Try it later!',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    } else {
+      clearFormData();
+      toast.add({ severity: 'success', summary: 'Collection created', detail: 'Your collection has been created.', life: 3000 });
+      setTimeout(function() {
+        router.push('/collections')
+      }, 1200);
+    }
+  } else {
+    router.push('/');
+  }
 }
 
 const collectionFormStep = ref(0);
