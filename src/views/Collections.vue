@@ -5,6 +5,8 @@
       <NavBar class="customNavBar"></NavBar>
       <div class ="collectionsMainContent">
         <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton"> Create collection</Button>
+        <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button>
+
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -22,6 +24,10 @@ const router = useRouter();
 
 const createCollection = () => {
   router.push('/collectionForm')
+}
+
+const createProduct = () => {
+  router.push('/productForm')
 }
 </script>
 

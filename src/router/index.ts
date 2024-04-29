@@ -49,6 +49,11 @@ const router = createRouter({
       name: 'collectionForm',
       component: () => import('../views/CollectionForm.vue')
     },
+    {
+      path: '/productForm',
+      name: 'productForm',
+      component: () => import('../views/ProductForm.vue')
+    },
   ]
 })
 
