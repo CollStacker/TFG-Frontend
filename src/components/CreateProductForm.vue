@@ -1,105 +1,106 @@
 <template>
-      <div class="productFormMainContent"> 
-        <div class="productsFormContainer">
-          <Toast/>
-          <div class="container" :class="{ 'right-panel-active': productForm }">
-            <!-- product form -->
-            <div class="form-container sign-up-container">
-              <form @submit.prevent="createProduct">
-                <template id="createProductFormStep1" v-if="productFormStep === 0">
-                  <div class="productFormHeader">
-                    <h1 class="uppercase bold big-text">Create a product</h1>
-                    <div class="separator mb-15"></div>
-                  </div>
-                  <div class="productForm mb-8">
-                    <div class="title-wrapper">
-                      <span class="uppercase bold fs-b"><label class="red-text">* </label>Product Name</span>
-                      <InputText class="biggerInputText" v-model="productData.name" placeholder="Product Name"/>
-                    </div>
-                  </div>
-                  <div class="productForm mb-8">
-                    <div class="title-wrapper">
-                      <span class="uppercase bold fs-b">Description</span>
-                      <Textarea class="biggerInputText" v-model="productData.description" placeholder="Product Name" autoResize maxlength="350"/>
-                    </div>
-                  </div>
-                  <small>{{`${productData.description.length}/350`}}</small>
-                  <i class="customNextStepButton pi pi-arrow-right" @click="handleNextStep"></i>
-                </template>
-                <template id="createProductFormStep2" v-if="productFormStep === 1">
-                  <div class="productFormHeader">
-                    <h1 class="uppercase bold big-text">Insert an image</h1>
-                    <div class="separator mb-15"></div>
-                  </div>
-                  <div class="productForm mb-8">
-                    <div class="title-wrapper">
-                      <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
-                        @select="upload($event)">
-                        <template #empty>
-                          <p v-if="productData.image.length === 0">Drag and drop files to here to upload.</p>
-                        </template>
-                        <template #content>
-                          <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
-                          <div v-if="productData.image.length > 0" style="display:flex; align-items: center;">
-                            <div style="display:flex;">
-                              <img v-if="productData.image" :src="productData.image" alt="fileUpload" style="width: 64px" />
-                              <p v-if="productData.image" style="margin-left: 10px;">{{ imgSize }} KB</p>
-                          </div>
-                          <i class="pi pi-times" @click="deleteUploadImg" style="margin-left: 10px;"></i>
-                        </div>
-                        </template>
-                      </FileUpload>
-                    </div>
-                  </div>
-                  <div class="button-container">
-                    <i class="customPreviousStepButton pi pi-arrow-left" @click="previousProductStep"></i>
-                    <i class="customNextStepButton pi pi-arrow-right" @click="handleNextStep"></i>
-                    <!-- <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button> -->
-                  </div>
-                </template>
-                <template id="createProductFormStep3" v-if="productFormStep === 2">
-                  <div class="productFormHeader">
-                    <h1 class="uppercase bold big-text">Insert custom fields</h1>
-                    <div class="separator mb-15"></div>
-                  </div>
-                  <div class="productForm mb-8">
-                    <div class="title-wrapper">
-                      <span class="uppercase bold fs-b">Custom fields</span>
-                      <Dialog v-model:visible="customFieldsDialogVisible" modal header="CUSTOM FIELDS LIST" class="customFieldsDialog" :style="{ width: '60rem', height: '28rem' }">
-                        <div class="separator mb-15"></div>
-                        <DataTable :value="customFields" paginator :rows="4" tableStyle="min-width: 50rem">
-                          <Column field="key" header="Name"></Column>
-                          <Column field="value" header="Value"></Column>
-                        </DataTable>
-                      </Dialog>
-                      <InputText class="biggerInputText" v-model="customField.key" placeholder="Field name"/>
-                      <InputText class="biggerInputText" v-model="customField.value" placeholder="Field value"/>
-                      <Button class="addCustomFieldButton pi pi-plus" label="ADD CUSTOM FIELD" @click="addCustomField"/>
-                      <Button class="addCustomFieldButton pi pi-eye" label="CHECK CUSTOM FIELDS" @click="customFieldsDialogVisible = true" :disabled="customFields.length === 0"/>
-                    </div>
-                  </div>
-                  <div class="button-container">
-                    <i class="customPreviousStepButton pi pi-arrow-left" @click="previousProductStep"></i>
-                    <!-- create collection button-->
-                    <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button>
-                  </div>
-                </template>
-              </form>
-            </div>
-            <div class="overlay-container">
-              <div class="overlay">
-                <!-- Left panel-->
-                <div class="overlay-panel overlay-left">
-                  <h1>Hey there, Treasure Hunter!</h1>
-                  <p>Let's create a collection together, give it a name and if you wish, insert an image</p>
+  <div class="productFormMainContent"> 
+    <div class="productsFormContainer">
+      <Toast/>
+      <div class="container" :class="{ 'right-panel-active': productForm }">
+        <!-- product form -->
+        <div class="form-container sign-up-container">
+          <form @submit.prevent="createProduct">
+            <template id="createProductFormStep1" v-if="productFormStep === 0">
+              <div class="productFormHeader">
+                <h1 class="uppercase bold big-text">Create a product</h1>
+                <div class="separator mb-15"></div>
+              </div>
+              <div class="productForm mb-8">
+                <div class="title-wrapper">
+                  <span class="uppercase bold fs-b"><label class="red-text">* </label>Product Name</span>
+                  <InputText class="biggerInputText" v-model="productData.name" placeholder="Product Name"/>
                 </div>
               </div>
+              <div class="productForm mb-8">
+                <div class="title-wrapper">
+                  <span class="uppercase bold fs-b">Description</span>
+                  <Textarea class="biggerInputText" v-model="productData.description" placeholder="Product Name" autoResize maxlength="350"/>
+                </div>
+              </div>
+              <small>{{`${productData.description.length}/350`}}</small>
+              <i class="customNextStepButton pi pi-arrow-right" @click="handleNextStep"></i>
+            </template>
+            <template id="createProductFormStep2" v-if="productFormStep === 1">
+              <div class="productFormHeader">
+                <h1 class="uppercase bold big-text">Insert an image</h1>
+                <div class="separator mb-15"></div>
+              </div>
+              <div class="productForm mb-8">
+                <div class="title-wrapper">
+                  <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
+                    @select="upload($event)">
+                    <template #empty>
+                      <p v-if="productData.image.length === 0">Drag and drop files to here to upload.</p>
+                    </template>
+                    <template #content>
+                      <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
+                      <div v-if="productData.image.length > 0" style="display:flex; align-items: center;">
+                        <div style="display:flex;">
+                          <img v-if="productData.image" :src="productData.image" alt="fileUpload" style="width: 64px" />
+                          <p v-if="productData.image" style="margin-left: 10px;">{{ imgSize }} KB</p>
+                      </div>
+                      <i class="pi pi-times" @click="deleteUploadImg" style="margin-left: 10px;"></i>
+                    </div>
+                    </template>
+                  </FileUpload>
+                </div>
+              </div>
+              <div class="button-container">
+                <i class="customPreviousStepButton pi pi-arrow-left" @click="previousProductStep"></i>
+                <i class="customNextStepButton pi pi-arrow-right" @click="handleNextStep"></i>
+                <!-- <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button> -->
+              </div>
+            </template>
+            <template id="createProductFormStep3" v-if="productFormStep === 2">
+              <div class="productFormHeader">
+                <h1 class="uppercase bold big-text">Insert custom fields</h1>
+                <div class="separator mb-15"></div>
+              </div>
+              <div class="productForm mb-8">
+                <div class="title-wrapper">
+                  <span class="uppercase bold fs-b">Custom fields</span>
+                  <Dialog v-model:visible="customFieldsDialogVisible" modal header="CUSTOM FIELDS LIST" class="customFieldsDialog" :style="{ width: '60rem', height: '28rem' }">
+                    <div class="separator mb-15"></div>
+                    <DataTable :value="customFields" paginator :rows="4" tableStyle="min-width: 50rem">
+                      <Column field="key" header="Name"></Column>
+                      <Column field="value" header="Value"></Column>
+                    </DataTable>
+                  </Dialog>
+                  <InputText class="biggerInputText" v-model="customField.key" placeholder="Field name"/>
+                  <InputText class="biggerInputText" v-model="customField.value" placeholder="Field value"/>
+                  <Button class="addCustomFieldButton pi pi-plus" label="ADD CUSTOM FIELD" @click="addCustomField"/>
+                  <Button class="addCustomFieldButton pi pi-eye" label="CHECK CUSTOM FIELDS" @click="customFieldsDialogVisible = true" :disabled="customFields.length === 0"/>
+                </div>
+              </div>
+              <div class="button-container">
+                <i class="customPreviousStepButton pi pi-arrow-left" @click="previousProductStep"></i>
+                <!-- create collection button-->
+                <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button>
+              </div>
+            </template>
+          </form>
+        </div>
+        <div class="overlay-container">
+          <div class="overlay">
+            <!-- Left panel-->
+            <div class="overlay-panel overlay-left">
+              <h1>Hey there, Treasure Hunter!</h1>
+              <p>Let's create a collection together, give it a name and if you wish, insert an image</p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </template>
-<script lang="ts" setup >
+
+<script lang="ts" setup>
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable';
@@ -259,13 +260,6 @@ const customFieldsDialogVisible = ref(false);
   bottom: 0;
   width: 100%;
   height: 50px;
-}
-
-.productFormMainContent {
-  margin: 69px 0 50px;
-  background-color: #f3f2f2;
-  min-height: calc(100vh - 69px - 50px);
-  padding: 70px;
 }
 
 body {

@@ -1,5 +1,10 @@
 <template>
   <Toast/>
+  <Dialog v-model:visible="openCreateProductDialog" modal header=" " :style="{ width: '75rem', height: '48rem' , overflow: 'hidden' }">
+    <div style="overflow: hidden;">
+      <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" />
+    </div>
+  </Dialog>
   <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
     <div style="padding-left: 14px;">
       <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
@@ -99,6 +104,7 @@ import FileUpload from 'primevue/fileupload';
 import { useRouter } from 'vue-router';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
+import CreateProductForm from '@/components/CreateProductForm.vue';
 
 const toast = useToast();
 const router = useRouter();
