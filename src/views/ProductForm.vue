@@ -215,8 +215,13 @@ const addCustomField = () => {
     type: customField.value.type,
     productId: customField.value.productId
   } 
-  customFields.value.push(tmpCustomFieldData);
-  clearCustomFieldData();
+  if (tmpCustomFieldData.key == '' || tmpCustomFieldData.value == '') {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
+    return;
+  } else {
+    customFields.value.push(tmpCustomFieldData);
+    clearCustomFieldData();
+  }
 }
 
 const clearCustomFieldData = () => {
