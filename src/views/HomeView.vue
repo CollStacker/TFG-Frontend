@@ -64,7 +64,7 @@
           <h1 class="sing-in-title">Sign in</h1>
           <InputText v-model="signInForm.email" placeholder="Email account" />
           <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
-          <a href="#">Forgot your password?</a>
+          <a href="#" style="color: #333">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
       </div>

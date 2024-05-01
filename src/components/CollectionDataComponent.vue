@@ -39,7 +39,8 @@
   <div style="display: flex;">
     <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
     <div style="margin-left: auto;">
-      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true"></Button>
+      <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
+      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
       <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
     </div>
   </div>
@@ -270,6 +271,10 @@ const onInit = () => {
 const onBeforeSlide = () => {
   // console.log('calling before slide');
 };
+
+// PRODUCT
+
+const openCreateProductDialog = ref(false)
 
 </script>
 

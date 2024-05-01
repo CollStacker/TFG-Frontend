@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button>
+        <!-- <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button> -->
       </div>
       <div class ="collectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
         <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
@@ -142,9 +142,9 @@ const createCollection = () => {
   router.push('/collectionForm')
 }
 
-const createProduct = () => {
-  router.push('/productForm')
-}
+// const createProduct = () => {
+//   router.push('/productForm')
+// }
 
 const emitCloseCollectionComponent = () => {
   showCollectionView.value = true;
