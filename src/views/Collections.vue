@@ -3,7 +3,7 @@
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
-      <div class ="collectionsMainContent">
+      <div class ="collectionsMainContent" v-if="showCollectionView == true">
         <div v-if="collelctionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
           <div>
             <h1 class="collectionCounterNumber">{{ collelctionNum }}</h1>
@@ -34,7 +34,7 @@
               <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
                 class="imageContainer" v-for="(collection,index) in collections" :key="index">
                   <a v-if="collection.frontPage !== ''" style="margin:2px" :href="collection.frontPage">
-                    <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" />
+                    <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
                   </a>
                   <a v-else style="margin:2px" href="../assets/imgs/logo.png">
                     <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" />
@@ -44,6 +44,9 @@
           </div>
         </div>
         <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button>
+      </div>
+      <div class ="collectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
+        <CollectionDataComponent :collection="collectionToOpen" />
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -59,6 +62,8 @@ import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2'
 import { ref, onMounted  } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
+import { type CollectionInterface } from '@/types/collection';
+import CollectionDataComponent from '@/components/CollectionDataComponent.vue';
 
 // GALERY
 import Lightgallery from 'lightgallery/vue';
@@ -85,8 +90,10 @@ const onBeforeSlide = () => {
 const authStore = userAuthentication();
 const router = useRouter();
 
-const collelctionNum = ref(0);
+const showCollectionView = ref(true);
+const showCollectionDataComponent = ref(false)
 
+const collelctionNum = ref(0);
 const collections = ref();
 
 onMounted(async () => {
@@ -118,6 +125,13 @@ const getCollectionData = async () => {
       collelctionNum.value = collections.value.length;
     }
   }
+}
+
+const collectionToOpen = ref<CollectionInterface>();
+const openCollectionData = (collection: CollectionInterface) => {
+  collectionToOpen.value = collection;
+  showCollectionView.value = false;
+  showCollectionDataComponent.value = true;
 }
 
 const createCollection = () => {
