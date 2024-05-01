@@ -248,7 +248,17 @@ const createProduct = () => {
 
 .image-container {
   display: inline-block;
-  margin: 4px;
+}
+
+.image-container img {
+  transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+  filter: brightness(90%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .collectionBody{
