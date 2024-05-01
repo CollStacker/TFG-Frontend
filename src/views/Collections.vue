@@ -4,9 +4,9 @@
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="collectionsMainContent">
-        <div v-if="tmpNumColls == 1" class="numCollsText" style="display: flex; align-items: center;">
+        <div v-if="collelctionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ tmpNumColls }}</h1>
+            <h1 class="collectionCounterNumber">{{ collelctionNum }}</h1>
             <h1 class="collectionCounterText"> Collection</h1>
           </div>
           <div style="margin-left: auto;">
@@ -15,7 +15,7 @@
         </div>
         <div v-else class="numCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ tmpNumColls }}</h1>
+            <h1 class="collectionCounterNumber">{{ collelctionNum }}</h1>
             <h1 class="collectionCounterText"> Collections</h1>
           </div>
           <div style="margin-left: auto;">
@@ -31,15 +31,14 @@
           </div>
           <div class="collectionListContainerBorder">
             <div class="collectionListContainer">
-              <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide">
-                <div class="image-container" v-for="(collection,index) in collections" :key="index">
+              <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
+                class="imageContainer" v-for="(collection,index) in collections" :key="index">
                   <a v-if="collection.frontPage !== ''" style="margin:2px" :href="collection.frontPage">
                     <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" />
                   </a>
                   <a v-else style="margin:2px" href="../assets/imgs/logo.png">
                     <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" />
                   </a>
-                </div>
               </lightgallery>
             </div>
           </div>
@@ -86,7 +85,7 @@ const onBeforeSlide = () => {
 const authStore = userAuthentication();
 const router = useRouter();
 
-const tmpNumColls = ref(0);
+const collelctionNum = ref(0);
 
 const collections = ref();
 
@@ -116,6 +115,7 @@ const getCollectionData = async () => {
       });
     } else {
       collections.value = await response.json();
+      collelctionNum.value = collections.value.length;
     }
   }
 }
@@ -246,15 +246,15 @@ const createProduct = () => {
   margin: 10px; 
 }
 
-.image-container {
+.imageContainer {
   display: inline-block;
 }
 
-.image-container img {
+.imageContainer img {
   transition: transform 0.3s ease;
 }
 
-.image-container img:hover {
+.imageContainer img:hover {
   cursor: pointer;
   transform: scale(1.02);
   filter: brightness(90%);
