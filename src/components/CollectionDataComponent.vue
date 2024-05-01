@@ -1,5 +1,17 @@
 <template>
-  <!-- {{ props.collection }} -->
+  <Toast/>
+  <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
+    <div style="padding-left: 14px;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
+        <label class="uppercase bold">Category name</label>
+        <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newCategoryName"/>
+      </div>
+      <div style="display: flex; justify-content: end;">
+        <Button type="button" label="Cancel" severity="secondary" @click="openAddCategoriesDialog = false"></Button>
+        <Button type="button" label="Save" @click="addCategorie()" style="margin-left: 5px;"></Button>
+      </div>
+    </div>
+  </Dialog>
   <Dialog v-model:visible="editCollection" modal header="Edit collection" :style="{ width: '30rem' }">
     <div style="padding-left: 16px;">
       <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
@@ -19,7 +31,7 @@
         <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" customUpload auto chooseLabel="Browse" @select="upload($event)"/>
       </div>
     </div>
-    <div style="display: flex; justify-content: end;" class="flex justify-content-end gap-2">
+    <div style="display: flex; justify-content: end;">
       <Button type="button" label="Cancel" @click="editCollection = false"></Button>
       <Button type="button" label="Save" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
     </div>
@@ -27,7 +39,7 @@
   <div style="display: flex;">
     <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
     <div style="margin-left: auto;">
-      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORIES"></Button>
+      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true"></Button>
       <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
     </div>
   </div>
@@ -43,12 +55,16 @@ import Swal from 'sweetalert2'
 import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
 import { type CollectionInterface } from '@/types/collection';
+import { type CategoryInterface } from '@/types/category'
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import { useRouter } from 'vue-router';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const router = useRouter();
 const authStore = userAuthentication();
 const props = defineProps({
@@ -63,6 +79,33 @@ const emitCloseCollectionComponent = () => {
   emits("emitCloseCollectionComponent");
 }
 
+onMounted(async () => {
+  await getCollectionCategories();
+});
+
+const collectionCategories = ref<CategoryInterface[]>();
+const getCollectionCategories = async () => {
+  if(!await authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const categories = await fetch(API_URI + `/categories/bycollection/${props.collection ? props.collection._id : ''}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if (!categories.ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Couldn't get categories",
+        showConfirmButton: false,
+      });
+    } else {
+      collectionCategories.value = await categories.json();
+    }
+  }
+}
 
 const editCollection = ref(false);
 const newTitle = ref("");
@@ -128,6 +171,47 @@ const upload = (e: any) => {
         newFrontPage.value = reader.result;
       };
     }
+  }
+}
+
+const openAddCategoriesDialog = ref(false);
+const newCategory = ref<CategoryInterface>({
+  name: '',
+  description: '',
+  parentId: '',
+  collectionId: props.collection ? props.collection._id : '',
+})
+const newCategoryName = ref("");
+
+const addCategorie = async () => {
+  if(newCategoryName.value !== "") {
+    newCategory.value.name = newCategoryName.value;
+    if(!await authStore.checkToken()) {
+      router.push('/');
+    } else {
+      const response = await fetch(API_URI + `/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(newCategory.value),
+      })
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "Something were wrong in the insertion of the category.",
+          showConfirmButton: false,
+        });
+      } else {
+        newCategoryName.value = "";
+        await getCollectionCategories();
+        openAddCategoriesDialog.value = false;
+        console.log(collectionCategories.value)
+      }
+    }
+  } else {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name is a mandatory field.', life: 3000 });
   }
 }
 
