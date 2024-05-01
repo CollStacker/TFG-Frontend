@@ -25,8 +25,10 @@
     </div>
   </Dialog>
   <div style="display: flex;">
+    <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
     <div style="margin-left: auto;">
-      <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true"/>
+      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORIES"></Button>
+      <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
     </div>
   </div>
   <div class="collectionContainer">
@@ -54,6 +56,13 @@ const props = defineProps({
     type: Object
   }
 })
+
+const emits = defineEmits(["emitCloseCollectionComponent"]);
+
+const emitCloseCollectionComponent = () => {
+  emits("emitCloseCollectionComponent");
+}
+
 
 const editCollection = ref(false);
 const newTitle = ref("");
@@ -144,6 +153,7 @@ const upload = (e: any) => {
 
 <style>
 
+button.p-button.p-component.addCategoriesButton,
 button.p-button.p-component.editCollectionButton {
   background-color: #333;
   border: 2px solid #333;
@@ -151,10 +161,16 @@ button.p-button.p-component.editCollectionButton {
   height: 50px;
 }
 
+button.p-button.p-component.addCategoriesButton span {
+  font-family: "Inter var", sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
 button.p-button.p-component.editCollectionButton span{
   display: none;
 }
-
+button.p-button.p-component.addCategoriesButton:hover,
 button.p-button.p-component.editCollectionButton:hover {
   color: #333;
   border: 2px solid #333;

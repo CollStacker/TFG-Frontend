@@ -1,5 +1,5 @@
 <template>
-  <div class="collectionsContainer"> 
+  <div class="collectionsContainer" :key="refreshComponent"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
@@ -46,7 +46,7 @@
         <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button>
       </div>
       <div class ="collectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
-        <CollectionDataComponent :collection="collectionToOpen" />
+        <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -89,6 +89,7 @@ const onBeforeSlide = () => {
 
 const authStore = userAuthentication();
 const router = useRouter();
+const refreshComponent = ref(0)
 
 const showCollectionView = ref(true);
 const showCollectionDataComponent = ref(false)
@@ -140,6 +141,12 @@ const createCollection = () => {
 
 const createProduct = () => {
   router.push('/productForm')
+}
+
+const emitCloseCollectionComponent = () => {
+  showCollectionView.value = true;
+  showCollectionDataComponent.value = false;
+  refreshComponent.value += 1;
 }
 </script>
 
