@@ -33,11 +33,11 @@
             <div class="collectionListContainer">
               <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
                 class="imageContainer" v-for="(collection,index) in collections" :key="index">
-                  <a v-if="collection.frontPage !== ''" style="margin:2px" :href="collection.frontPage">
+                  <a v-if="collection.frontPage !== ''" style="margin:2px">
                     <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
                   </a>
-                  <a v-else style="margin:2px" href="../assets/imgs/logo.png">
-                    <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" />
+                  <a v-else style="margin:2px">
+                    <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
                   </a>
               </lightgallery>
             </div>
@@ -78,11 +78,11 @@ import { API_URI } from '@/types/env';
 const plugins = [lgThumbnail, lgZoom];
 
 const onInit = () => {
-  console.log('lightGallery has been initialized');
+  // console.log('lightGallery has been initialized');
 };
 
 const onBeforeSlide = () => {
-  console.log('sdsa');
+  // console.log('sdsa');
 };
 
 // SCRIPT
@@ -160,7 +160,6 @@ const emitCloseCollectionComponent = () => {
   height: 200px;
   max-width: 200px;
   max-height: 200px;
-
 }
 </style>
 
@@ -231,7 +230,6 @@ const emitCloseCollectionComponent = () => {
 .separator {
   border-bottom: 2px solid #555555;
   width: 50%;
-  
 }
 
 .collectionContainterHeader {
@@ -315,6 +313,11 @@ button.p-button.p-component.customCreateCollectionButton:hover {
   border: 2px solid #333;
   background-color: white;
   transform: scale(1);
+}
+
+.customHeaderText {
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 </style>

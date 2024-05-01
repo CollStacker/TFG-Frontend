@@ -43,8 +43,36 @@
       <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
     </div>
   </div>
-  <div class="collectionContainer">
-    <h1> KLK ESTA PASANDO AQUI</h1>  
+  <div class="collectionContainer" v-if="props.collection" style="margin-top: 20px; margin-bottom: 20px;">
+    <div class="collectionDataContainer">
+      <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
+        <a v-if="props.collection.frontPage !== ''" :href="props.collection.frontPage">
+          <img alt="Collection image" :src="props.collection.frontPage" class="lightGalleryImg"/>
+        </a>
+        <a v-else href="../assets/imgs/logo.png">
+          <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
+        </a>
+      </lightgallery>
+      <div class="collectionInformation" style="margin-left: 5px;">
+        <h1 class="bold mb-2" >{{ props.collection.title }}</h1>
+        <div class="collectionDescription mb-2">
+          <span>{{ props.collection.description }}</span>
+        </div>
+        <div class="badgeContainer">
+          <div v-if="collectionCategories && collectionCategories.length > 0" v-for="(category, index) in collectionCategories"> 
+            <Badge :value="category.name" severity="contrast"></Badge>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="collectionContainer" >
+    <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
+      <h1 class="uppercase bold big-text customHeaderText">Products</h1>
+    </div>
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <div class="separator"></div>
+    </div> 
   </div>
 </template>
 
@@ -58,6 +86,7 @@ import { type CollectionInterface } from '@/types/collection';
 import { type CategoryInterface } from '@/types/category'
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import Badge from 'primevue/badge';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import { useRouter } from 'vue-router';
@@ -215,9 +244,62 @@ const addCategorie = async () => {
   }
 }
 
+// GALERY
+import Lightgallery from 'lightgallery/vue';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+
+const plugins = [lgThumbnail, lgZoom];
+
+const onInit = () => {
+  // console.log('lightGallery has been initialized');
+};
+
+const onBeforeSlide = () => {
+  // console.log('calling before slide');
+};
+
 </script>
 
 <style scoped>
+
+.lightGalleryImg {
+  width: 200px;
+  height: 200px;
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.collectionDataContainer {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+  padding: 10px;
+}
+
+.customHeaderText {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.separator {
+  border-bottom: 2px solid #555555;
+  width: 50%;
+}
+
+.collectionInformation .collectionDescription {
+  max-width: 950px;
+  /* break workd*/
+  word-wrap: break-word;
+}
+
+.mb-2 {
+  margin-bottom: 2px;
+}
 
 .collectionContainer {
   background-color: white;
@@ -231,6 +313,14 @@ const addCategorie = async () => {
 
 .bold {
   font-weight: bold;
+}
+
+.badgeContainer {
+  display: flex;
+}
+
+.badgeContainer > div {
+  margin-right: 8px;
 }
 
 </style>
