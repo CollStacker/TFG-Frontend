@@ -73,6 +73,11 @@
     <div style="display: flex; justify-content: center; margin-bottom: 20px;">
       <div class="separator"></div>
     </div> 
+    <div v-if="!collectionProducts" class="noProductsContainer">
+      <span>There are no products in this collection!!</span>
+    </div>
+    <div v-else> 
+    </div>
   </div>
 </template>
 
@@ -84,6 +89,7 @@ import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
 import { type CollectionInterface } from '@/types/collection';
 import { type CategoryInterface } from '@/types/category'
+import { type ProductInterface } from '@/types/product';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
@@ -244,6 +250,8 @@ const addCategorie = async () => {
   }
 }
 
+const collectionProducts = ref<ProductInterface[]>();
+
 // GALERY
 import Lightgallery from 'lightgallery/vue';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -321,6 +329,18 @@ const onBeforeSlide = () => {
 
 .badgeContainer > div {
   margin-right: 8px;
+}
+
+.noProductsContainer {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  height: 100%; /* Opcional, ajusta la altura según sea necesario */
+}
+
+.noProductsContainer span {
+  font-size: 20px;
+  margin-bottom: 30px;
 }
 
 </style>

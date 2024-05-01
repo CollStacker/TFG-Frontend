@@ -4,9 +4,9 @@
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="collectionsMainContent" v-if="showCollectionView == true">
-        <div v-if="collelctionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
+        <div v-if="collectionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ collelctionNum }}</h1>
+            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
             <h1 class="collectionCounterText"> Collection</h1>
           </div>
           <div style="margin-left: auto;">
@@ -15,7 +15,7 @@
         </div>
         <div v-else class="numCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ collelctionNum }}</h1>
+            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
             <h1 class="collectionCounterText"> Collections</h1>
           </div>
           <div style="margin-left: auto;">
@@ -30,16 +30,19 @@
             <div class="separator"></div>
           </div>
           <div class="collectionListContainerBorder">
-            <div class="collectionListContainer">
+            <div class="collectionListContainer" v-if="collectionNum > 0">
               <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
                 class="imageContainer" v-for="(collection,index) in collections" :key="index">
-                  <a v-if="collection.frontPage !== ''" style="margin:2px">
+                  <a v-if="collection.frontPage !== ''" style="margin:2px" :href="collection.frontPage">
                     <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
                   </a>
                   <a v-else style="margin:2px">
                     <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
                   </a>
               </lightgallery>
+            </div>
+            <div v-else class="collectionListContainer" style="margin-bottom: 30px;">
+              <span style="font-size: 20px;">You dont have any collection yet!!</span>
             </div>
           </div>
         </div>
@@ -94,7 +97,7 @@ const refreshComponent = ref(0)
 const showCollectionView = ref(true);
 const showCollectionDataComponent = ref(false)
 
-const collelctionNum = ref(0);
+const collectionNum = ref(0);
 const collections = ref();
 
 onMounted(async () => {
@@ -123,7 +126,7 @@ const getCollectionData = async () => {
       });
     } else {
       collections.value = await response.json();
-      collelctionNum.value = collections.value.length;
+      collectionNum.value = collections.value.length;
     }
   }
 }
