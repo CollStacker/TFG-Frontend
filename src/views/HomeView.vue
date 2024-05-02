@@ -64,7 +64,7 @@
           <h1 class="sing-in-title">Sign in</h1>
           <InputText v-model="signInForm.email" placeholder="Email account" />
           <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
-          <a href="#">Forgot your password?</a>
+          <a href="#" style="color: #333">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
       </div>
@@ -198,7 +198,6 @@ const handleSignIn = async () => {
   } else {
     const response = await authStore.login(signInForm.value);
     if (response === "Succes") {
-      //console.log(authStore.getUserData());
       router.push('/main')
     } else if (response === "Error") {
       Swal.fire({
@@ -345,7 +344,7 @@ span {
 }
 
 a {
-  color: #333;
+  color: #FF4B2B;
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
@@ -686,7 +685,7 @@ footer a {
 
 .licenseCheckBox a {
   /* color: #FF4B2B; */
-  color: #333;
+  color: #FF4B2B;
 }
 
 section {

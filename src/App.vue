@@ -26,8 +26,8 @@ input.p-inputtext.p-component.p-password-input {
 }
 
 .p-checkbox.p-highlight .p-checkbox-box {
-  background-color: #FF4B2B;
-  border-color: #FF4B2B;
+  background-color: #333;
+  border-color: #333;
 }
 
 .p-icon.p-input-icon {

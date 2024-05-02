@@ -1,4 +1,4 @@
-import { type CategoryInterface }  from "./category.d";
+import { type CategoryInterface }  from "./category";
 import { type ProductInterface } from "./product";
 import { type UserInterface } from "./user";
 import { type CollectionInterface }  from "./collection";
