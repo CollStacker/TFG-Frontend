@@ -158,7 +158,6 @@ const previousCollectionStep = () => {
 const imgSize = ref(0.0);
 const upload = (e: any) => {
   const file = e.files[0];
-  console.log(file)
   if(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -173,7 +172,6 @@ const upload = (e: any) => {
         imgSize.value = estimatedFileSize/1024;
 
         collectionFormData.value.frontPage = base64String;
-        console.log(collectionFormData.value)
       };
     }
   }

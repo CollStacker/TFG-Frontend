@@ -81,11 +81,11 @@ import { API_URI } from '@/types/env';
 const plugins = [lgThumbnail, lgZoom];
 
 const onInit = () => {
-  // console.log('lightGallery has been initialized');
+
 };
 
 const onBeforeSlide = () => {
-  // console.log('sdsa');
+  
 };
 
 // SCRIPT

@@ -163,7 +163,6 @@ const upload = (e: any) => {
         imgSize.value = estimatedFileSize/1024;
 
         productData.value.image = base64String;
-        console.log(productData.value)
       };
     }
   }

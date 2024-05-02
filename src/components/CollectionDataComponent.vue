@@ -95,7 +95,6 @@ import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
 import { type CollectionInterface } from '@/types/collection';
 import { type CategoryInterface } from '@/types/category'
-import { type ProductInterface } from '@/types/product';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
@@ -105,6 +104,7 @@ import { useRouter } from 'vue-router';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import CreateProductForm from '@/components/CreateProductForm.vue';
+import { type WholeProductDataInterface } from '@/types/product';
 
 const toast = useToast();
 const router = useRouter();
@@ -123,6 +123,7 @@ const emitCloseCollectionComponent = () => {
 
 onMounted(async () => {
   await getCollectionCategories();
+  await getCollectionProducts();
 });
 
 const collectionCategories = ref<CategoryInterface[]>();
@@ -145,6 +146,62 @@ const getCollectionCategories = async () => {
       });
     } else {
       collectionCategories.value = await categories.json();
+    }
+  }
+}
+
+const collectionProducts = ref<WholeProductDataInterface[]>();
+const getCollectionProducts = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const response = await fetch(API_URI + `/products/byCollectionId/${props.collection ? props.collection._id : ''}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if (!response.ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Couldn't get products",
+        showConfirmButton: false,
+      });
+    } else {
+      collectionProducts.value = await response.json();
+      getProductCustomFields();
+    }
+  }
+}
+
+const getProductCustomFields = async () => {
+  if(collectionProducts.value) {
+    if(collectionProducts.value.length > 0) {
+      let index = 0;
+      for(const product of collectionProducts.value) {
+        const response = await fetch(API_URI + `/product-fields/${product._id}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        })
+        if (!response.ok) {
+          Swal.fire({
+            icon: "error",
+            title: `Couldn't get products fields of product ${product.name}`,
+            showConfirmButton: false,
+          });
+        } else {
+          const productFields = await response.json();
+          if (productFields) {
+            collectionProducts.value[index].customFields = productFields;
+          }
+        }
+        index += 1;
+      }
+      console.log(collectionProducts.value);
     }
   }
 }
@@ -249,15 +306,12 @@ const addCategorie = async () => {
         newCategoryName.value = "";
         await getCollectionCategories();
         openAddCategoriesDialog.value = false;
-        console.log(collectionCategories.value)
       }
     }
   } else {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name is a mandatory field.', life: 3000 });
   }
 }
-
-const collectionProducts = ref<ProductInterface[]>();
 
 // GALERY
 import Lightgallery from 'lightgallery/vue';
@@ -271,19 +325,21 @@ import 'lightgallery/css/lg-zoom.css';
 const plugins = [lgThumbnail, lgZoom];
 
 const onInit = () => {
-  // console.log('lightGallery has been initialized');
+
 };
 
 const onBeforeSlide = () => {
-  // console.log('calling before slide');
+
 };
 
 // PRODUCT
 
 const openCreateProductDialog = ref(false)
 
-const closeProductDialog = () => {
+const closeProductDialog = async () => {
   openCreateProductDialog.value = false;
+  // Update collection products
+  await getCollectionProducts();
 }
 
 </script>

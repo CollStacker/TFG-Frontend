@@ -198,7 +198,6 @@ const handleSignIn = async () => {
   } else {
     const response = await authStore.login(signInForm.value);
     if (response === "Succes") {
-      //console.log(authStore.getUserData());
       router.push('/main')
     } else if (response === "Error") {
       Swal.fire({

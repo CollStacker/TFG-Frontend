@@ -201,7 +201,6 @@ const createProduct = async () => {
       });
     } else {
       productSaved.value = await response.json();
-      // console.log(productSaved.value);
       if (customFields.value.length > 0) {
         for (const customField of customFields.value) {
           if (productSaved.value?._id) {
