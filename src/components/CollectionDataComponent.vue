@@ -254,6 +254,9 @@ const saveNewCollectionData = async () => {
         newDescription.value !== '' ? props.collection.description = newDescription.value : props.collection.description = props.collection.description;
         newFrontPage.value !== '' ? props.collection.frontPage = newFrontPage.value  : props.collection.frontPage = props.collection.frontPage;
         editCollection.value = false;
+        newTitle.value = '';
+        newDescription.value = '';
+        newFrontPage.value = '';
       }
     } 
 
