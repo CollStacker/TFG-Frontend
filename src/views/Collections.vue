@@ -33,10 +33,10 @@
             <div class="collectionListContainer" v-if="collectionNum > 0">
               <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
                 class="imageContainer" v-for="(collection,index) in collections" :key="index">
-                  <a v-if="collection.frontPage !== ''" style="margin:2px" :href="collection.frontPage">
+                  <a v-if="collection.frontPage !== ''" style="margin:2px" :data-src="collection.frontPage">
                     <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
                   </a>
-                  <a v-else style="margin:2px">
+                  <a v-else style="margin:2px" data-src="../assets/imgs/logo_without_background.png">
                     <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
                   </a>
               </lightgallery>
