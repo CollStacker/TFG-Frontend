@@ -82,7 +82,25 @@
     <div v-if="!collectionProducts" class="noProductsContainer">
       <span>There are no products in this collection!!</span>
     </div>
-    <div v-else> 
+    <div v-else class="collectionListContainerBorder"> 
+      <div class="collectionListContainer">
+        <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
+          <a v-for="(product, index) in collectionProducts" :href="product.image ? product.image : '../assets/imgs/logo_without_background.png'" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
+            <div class="productOverlay">
+              <h3>{{ product.name }}</h3>
+              <p>{{ product.description }}</p>
+              <div v-if="product.customFields">
+                <div v-for="customField in product.customFields" style="display: flex; justify-content: center;">
+                  <p class="bold customFieldKey">{{ customField.key}}:</p>
+                  <p> {{ customField.value }}</p>
+                </div>
+              </div>
+            </div>
+            <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image" />
+            <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png" />
+          </a>
+        </lightgallery>
+      </div>
     </div>
   </div>
 </template>
@@ -201,7 +219,6 @@ const getProductCustomFields = async () => {
         }
         index += 1;
       }
-      console.log(collectionProducts.value);
     }
   }
 }
@@ -326,14 +343,37 @@ import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 
 const plugins = [lgThumbnail, lgZoom];
+let lightGallery: any = null;
 
-const onInit = () => {
+const gallerySettings = {
+  speed: 500,
+  plugins: [lgZoom, lgThumbnail],
+};
 
+const onInit = (detail:any) => {
+  lightGallery = detail.instance;
 };
 
 const onBeforeSlide = () => {
 
 };
+
+//
+//collectionProducts.value ? collectionProducts.value[currentIndex].name : ''
+//collectionProducts.value ? collectionProducts.value[currentIndex].description : ''
+// const onAfterSlide = (index: number) => {
+//   const currentSubHtml = document.getElementsByClassName(`lg-sub-html-${index}`);
+//   console.log(currentSubHtml)
+//   if (currentSubHtml) {
+//     if (collectionProducts.value) {
+//       const currentProduct = collectionProducts.value[index];
+//       currentSubHtml.innerHTML = `
+//         <h3>${currentProduct.name}</h3>
+//         <p>${currentProduct.description}</p>
+//       `;
+//     }
+//   }
+// };
 
 // PRODUCT
 
@@ -415,6 +455,67 @@ const closeProductDialog = async () => {
 .noProductsContainer span {
   font-size: 20px;
   margin-bottom: 30px;
+}
+
+.collectionListContainerBorder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+}
+
+.collectionListContainer {
+  text-align: center;
+  margin: 10px; 
+}
+
+.imageContainer {
+  display: inline-block;
+}
+
+.productLink {
+  position: relative;
+  display: inline-block;
+}
+
+.productOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden; 
+}
+
+.productLink:hover .productOverlay {
+  opacity: 1;
+  /* transform: scale(1.5) */
+}
+
+.productOverlay h3,
+.productOverlay p {
+  margin: 0;
+  font-size: 18px;
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  color: #333;
+}
+
+.productOverlay p {
+  font-size: 14px;
+}
+
+.productOverlay h3 {
+  font-weight: bold;
+}
+
+.productOverlay .customFieldKey {
+  overflow: visible; 
 }
 
 </style>
