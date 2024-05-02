@@ -3,7 +3,6 @@ export interface ProductInterface {
   name: string
   description: string
   image?: string
-  releaseYear?: string
-  brand?: string
+  publicationDate?: Date
   collectionId: string
 }

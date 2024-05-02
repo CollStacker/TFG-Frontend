@@ -2,7 +2,7 @@
   <Toast/>
   <Dialog v-model:visible="openCreateProductDialog" modal header=" " :style="{ width: '75rem', height: '48rem' , overflow: 'hidden' }">
     <div style="overflow: hidden;">
-      <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" />
+      <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" @closeProductDialog="closeProductDialog()"/>
     </div>
   </Dialog>
   <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
@@ -281,6 +281,10 @@ const onBeforeSlide = () => {
 // PRODUCT
 
 const openCreateProductDialog = ref(false)
+
+const closeProductDialog = () => {
+  openCreateProductDialog.value = false;
+}
 
 </script>
 

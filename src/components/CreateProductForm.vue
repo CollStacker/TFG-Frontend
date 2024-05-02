@@ -104,31 +104,38 @@
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';   
-import Row from 'primevue/row';                   
+import Column from 'primevue/column';                  
 import Toast from 'primevue/toast';
 import Button from 'primevue/button';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import { ref } from 'vue';
 import { userAuthentication } from '@/store/userAuth.store';
-import { useRouter } from 'vue-router';
 import { useToast } from "primevue/usetoast";
+import { useRouter } from 'vue-router';
+import { type ProductInterface } from '@/types/product';
+import { API_URI } from '@/types/env';
+import Swal from 'sweetalert2'
 
 const toast = useToast();
-const router = useRouter();
 const authStore = userAuthentication();
+const router = useRouter();
 
 const userData = authStore.getUserData();
 const productForm = ref(true);
+
+const props = defineProps({
+  collectionId: String,
+})
+
+const emits = defineEmits(["closeProductDialog"])
 
 const productData = ref({
   name: '',
   description: '',
   image: '',
   publicationDate: new Date(),
-  collectionId: ''// SACAR LA ID DE UN PROP DE LA COLECCION EN LA QUE SE CREE
+  collectionId: props.collectionId
 })
 
 interface CustomFieldsInterface {
@@ -174,13 +181,32 @@ const deleteUploadImg = () => {
   productData.value.image = '';
 }
 
-const createProduct = () => {
-
+const productSaved = ref<ProductInterface>();
+const createProduct = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const response = await fetch(API_URI + `/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(productData.value),
+    })
+    if(!response.ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Something were wrong in the insertion of the product.",
+        showConfirmButton: false,
+      });
+    } else {
+      productSaved.value = await response.json();
+      console.log(productSaved.value);
+    }
+  }
+  // closeProductDialog();
 }
-
-const onAdvancedUpload = () => {
-  toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-};
 
 const productFormStep = ref(0);
 const handleNextStep = () => {
@@ -218,6 +244,10 @@ const addCustomField = () => {
 const clearCustomFieldData = () => {
   customField.value.key = '';
   customField.value.value = '';
+}
+
+const closeProductDialog = () => {
+  emits("closeProductDialog");
 }
 
 const customFieldsDialogVisible = ref(false);
