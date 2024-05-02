@@ -171,7 +171,6 @@ const upload = (e: any) => {
         imgSize.value = estimatedFileSize/1024;
 
         productData.value.image = base64String;
-        console.log(productData.value)
       };
     }
   }
@@ -202,10 +201,32 @@ const createProduct = async () => {
       });
     } else {
       productSaved.value = await response.json();
-      console.log(productSaved.value);
+      // console.log(productSaved.value);
+      if (customFields.value.length > 0) {
+        for (const customField of customFields.value) {
+          if (productSaved.value?._id) {
+            customField.productId = productSaved.value?._id;
+          }
+        }
+        const response = await fetch(API_URI + `/product-fields-many`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+          body: JSON.stringify(customFields.value),
+        })
+        if (!response.ok) {
+          Swal.fire({
+            icon: "error",
+            title: "Something were wrong in the insertion of custom fields into the product.",
+            showConfirmButton: false,
+          });
+        }
+      }
+      closeProductDialog();
     }
   }
-  // closeProductDialog();
 }
 
 const productFormStep = ref(0);
