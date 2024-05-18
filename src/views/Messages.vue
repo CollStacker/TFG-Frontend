@@ -4,9 +4,39 @@
     <div class="messagesContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="messagesMainContent">
-        <h1 class="test">Hello from messages page</h1>
-        {{ friendRequestsRelevantData.length }}
-        {{friendRequestsRelevantData}}
+        <div class="friendRequestContainer">
+          <span class="uppercase bold big-text">Friend Requests</span>
+          <div class="ccseparator"></div>
+          <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
+            <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
+              <div class="friendRequestData">
+                <img v-if="friendRequest.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                <img v-if="friendRequest.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                <img v-if="friendRequest.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                <span class="ml-12 largeText">{{ friendRequest.username }}</span>
+                <div class="button-container">
+                  <Button class="customAcceptRequestButton pi pi-plus" label=" Accept"></Button>
+                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Refuse"></Button>
+                </div>
+              </div>
+              <Divider />
+            </div>
+          </template>
+          <template v-else>
+            <div class="p-5">
+              <span class="largeText">Sorry, you currently have no friend requests! </span>
+            </div>
+          </template>
+        </div>
+        <div class="friendListContainer">
+          <span class="uppercase bold big-text">Friend List</span>
+          <div class="ccseparator"></div>
+        </div>
+        <!-- {{ friendRequestsRelevantData.length }}
+        {{friendRequestsRelevantData}} -->
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -25,6 +55,8 @@ import { API_URI } from '@/types/env';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import { type UserInterface } from '@/types/user';
+import Divider from 'primevue/divider';
+import Button from 'primevue/button';
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -75,7 +107,7 @@ const getFriendRequestRelevantData = async () => {
           },
         })
         if(!response.ok) {
-          
+
         } else {
           friendRequestsRelevantData.value.push(await response.json())
         }
@@ -130,11 +162,115 @@ const getFriendRequestRelevantData = async () => {
   margin: 69px 0 50px;
   background-color: #f3f2f2;
   min-height: calc(100vh - 69px - 50px);
+  padding: 48px;
+}
+
+.friendRequestContainer {
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.friendListContainer {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 10px;
 }
 
 body {
   margin: 0;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.big-text {
+  font-size: 30px;
+}
+
+.ccseparator {
+  border-bottom: 0.1px solid #555555;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.friendRequestWrapper {
+  margin-bottom: 16px;
+}
+
+.friendRequestData {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+
+.friendRequestData img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.ml-12 {
+  margin-left: 12px;
+}
+
+.largeText {
+  font-size: 25px;
+}
+
+.p-5 {
+  padding: 5px;
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  margin-left: auto; /* Asegura que los botones se alineen a la derecha */
+}
+
+button.p-button.p-component.customAcceptRequestButton {
+  background-color: #333;
+  border: 2px solid #333;
+  border-radius: 10px;
+  height: 40px;
+}
+
+button.p-button.p-component.customAcceptRequestButton:hover {
+  color: #333;
+  border: 2px solid #333;
+  background-color: white;
+  transform: scale(1);
+}
+
+button.p-button.p-component.customRefuseRequestButton {
+  background-color: #FF4B2B;
+  border: 2px solid #FF4B2B;
+  border-radius: 10px;
+  height: 40px;
+}
+
+button.p-button.p-component.customRefuseRequestButton:hover {
+  color: #FF4B2B;
+  border: 2px solid #FF4B2B;
+  background-color: white;
+  transform: scale(1);
+}
+button.p-button.p-component.customAcceptRequestButton span,
+button.p-button.p-component.customRefuseRequestButton span {
+  font-weight: bold;
+  font-size: 16px;
+  font-family: "Inter var", sans-serif;
+  margin-left: 5px;
+}
 
 </style>
