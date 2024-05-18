@@ -102,25 +102,29 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
 
 const currentUser = ref<string>("")
 const searchUser = async () => {
-  if(currentUser.value !== "") {
-    // process data
-    const foundedUser = await fetch(API_URI + `/findUser/${currentUser.value}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-      },
-    })
-    if (!foundedUser.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
-    } else {
-      const foundedUserJSON = await foundedUser.json();
-      authStore.setFoundedUserData(foundedUserJSON);
-      router.push('/userFounded')
+  if(!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    if(currentUser.value !== "") {
+      // process data
+      const foundedUser = await fetch(API_URI + `/findUser/${currentUser.value}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+      })
+      if (!foundedUser.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
+      } else {
+        const foundedUserJSON = await foundedUser.json();
+        authStore.setFoundedUserData(foundedUserJSON);
+        router.push('/userFounded')
+      }
+  
+      // Reset of currenUser ref var
+      currentUser.value = "";
     }
-
-    // Reset of currenUser ref var
-    currentUser.value = "";
   }
 }
 
