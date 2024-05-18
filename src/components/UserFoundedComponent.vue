@@ -2,7 +2,7 @@
   <Toast/>
   <div class="userProfileComponentContainer">
     <div class="userProfileComponentColumn">
-      <div class="userFoundedButtonsContainer">
+      <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
         <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
       </div>
       <div class="userProfileComponentCard"> 
