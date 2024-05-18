@@ -1,40 +1,41 @@
 <template>
+  <Toast/>
   <div class="userProfileComponentContainer">
     <div class="userProfileComponentColumn">
       <div class="userFoundedButtonsContainer">
-        <Button class="customAddFriendButton pi pi-plus" label=" Add friend"></Button>
+        <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
       </div>
       <div class="userProfileComponentCard"> 
         <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
         <div class="cardBody littleProfile textCenter">
           <div class="proImg ">
-            <img v-if="userData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
-            <img v-if="userData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-            <img v-if="userData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+            <img v-if="foundedUserData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
           </div>
-          <span class="usernameText" >{{userData.username}}</span>
-          <div class="userDataContainer">
-            <div class="userDataText">
+          <span class="usernameText" >{{foundedUserData.username}}</span>
+          <div class="foundedUserDataContainer">
+            <div class="foundedUserDataText">
               <div class="formGroup">
                 <span class="formGroupInputText">Email</span>
-                <InputText class="customUserProfileInputText" v-model="userData.email" :disabled="inputTextEditable" />
+                <InputText class="customUserProfileInputText" v-model="foundedUserData.email" :disabled="inputTextEditable" />
               </div>
               <div class="formGroup">
                 <span class="formGroupInputText">Name</span>
-                <InputText class="customUserProfileInputText" v-model="userData.name" :disabled="inputTextEditable" />  
+                <InputText class="customUserProfileInputText" v-model="foundedUserData.name" :disabled="inputTextEditable" />  
               </div>
               <div class="formGroup">
                 <span class="formGroupInputText">Surnames</span>
-                <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
+                <InputText class="customUserProfileInputText" v-model="foundedUserData.surnames" :disabled="inputTextEditable" />
               </div>
             </div>
-            <div class="biografyFormGroup" v-if="userData.biography">
+            <div class="biografyFormGroup" v-if="foundedUserData.biography">
               <div class="formGroup">
                 <span class="formGroupInputText">About me</span>
-                <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
+                <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize />
               </div>
             </div>
           </div>
@@ -51,11 +52,44 @@ import Textarea from 'primevue/textarea';
 import { ref } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
+import { API_URI } from '@/types/env';
 
 const authStore = userAuthentication();
+const router = useRouter();
+const toast = useToast();
 
 const inputTextEditable = ref(true)
-const userData = ref(authStore.getFoundedUserData());
+const foundedUserData = ref(authStore.getFoundedUserData());
+const currentUserData = ref(authStore.getUserData());
+
+const sendFriendRequest = async () => {
+  if(!await authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const friendRequestBody = {
+      userId: currentUserData.value.id,
+      requestUserId: foundedUserData.value.id
+    }
+    const friendshipRequest = await fetch(API_URI + `/friendRequest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(friendRequestBody)
+    })
+    if(!friendshipRequest.ok) {
+      const e = await friendshipRequest.json();
+      toast.add({ severity: 'error', summary: 'Error Message', detail: e.error.message, life: 3000 });
+    } else {
+      console.log(friendshipRequest)
+    }
+  }
+}
+
 </script>
 
 <style>
@@ -121,14 +155,14 @@ const userData = ref(authStore.getFoundedUserData());
   margin-bottom: 40px;
 }
 
-.userDataContainer {
+.foundedUserDataContainer {
   display: block;
   margin-top: 0em;
   unicode-bidi: isolate; 
   margin-top: 30px;
 }
 
-.userDataText {
+.foundedUserDataText {
   display: flex;
   flex-wrap: wrap;
 }
@@ -185,5 +219,19 @@ button.p-button.p-component.customAddFriendButton span {
   font-size: 16px;
   font-family: "Inter var", sans-serif;
   margin-left: 5px;
+}
+
+button.p-button.p-component.customAddFriendButton {
+  background-color: #333;
+  border: 2px solid #333;
+  border-radius: 50px;
+  height: 50px;
+}
+
+button.p-button.p-component.customAddFriendButton:hover {
+  color: #333;
+  border: 2px solid #333;
+  background-color: white;
+  transform: scale(1);
 }
 </style>
