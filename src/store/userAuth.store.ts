@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { API_URI } from '@/types/env';
+import { type UserInterface } from '../types/user';
 
 export const userAuthentication = defineStore({
   id: 'authentication',
@@ -13,7 +14,19 @@ export const userAuthentication = defineStore({
     surnames: "",
     profilePhoto: "",
     biography: "",
-    loginError: false
+    loginError: false,
+
+    // INFORMATION WHEN FINDING A USER
+    userFound: false,
+    user: {
+      id: "",
+      username: "",
+      email: "",
+      name: "",
+      surnames: "",
+      profilePhoto: "",
+      biography: "",
+    },
   }),
   actions: {
     getAuthentication(): boolean {
@@ -97,6 +110,19 @@ export const userAuthentication = defineStore({
         }
       }
       return false;
+    },
+    setFoundedUserData(foundedUser: UserInterface) {
+      this.userFound = true;
+      this.user.id = foundedUser.id;
+      this.user.biography = foundedUser.biography; 
+      this.user.name = foundedUser.name; 
+      this.user.username = foundedUser.username; 
+      this.user.surnames = foundedUser.surnames; 
+      this.user.profilePhoto = foundedUser.profilePhoto; 
+      this.user.email = foundedUser.email;
+    },
+    getFoundedUserData() {
+      return this.user;
     },
   },
 })

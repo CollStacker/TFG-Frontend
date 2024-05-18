@@ -113,9 +113,10 @@ const searchUser = async () => {
     })
     if (!foundedUser.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
+    } else {
+      const foundedUserJSON = await foundedUser.json();
+      authStore.setFoundedUserData(foundedUserJSON);
     }
-    console.log(foundedUser)
-    console.log(await foundedUser.json())
 
     // Reset of currenUser ref var
     currentUser.value = "";
