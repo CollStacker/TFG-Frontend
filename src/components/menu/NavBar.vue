@@ -2,6 +2,7 @@
   <div class="navBarContainer">
     <Menubar :model="items" class="customNavBar">
       <template #start>
+        <Toast/>
         <div class="searchInputText">
           <span class="customSearchLogo pi pi-search"></span>
           <InputText v-model="currentUser" placeholder="Search" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
@@ -27,7 +28,10 @@ import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import { API_URI } from '@/types/env';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const authStore = userAuthentication();
 
 const router = useRouter();
@@ -107,6 +111,9 @@ const searchUser = async () => {
         'Authorization': `Bearer ${authStore.getToken()}`,
       },
     })
+    if (!foundedUser.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
+    }
     console.log(foundedUser)
     console.log(await foundedUser.json())
 
