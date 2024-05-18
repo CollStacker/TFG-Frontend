@@ -4,7 +4,7 @@
       <template #start>
         <div class="searchInputText">
           <span class="customSearchLogo pi pi-search"></span>
-          <InputText placeholder="Search" type="text" class="customNavBarInputText" />
+          <InputText v-model="currentUser" placeholder="Search" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
         </div>
       </template>
       <template #item="{item, props, hasSubmenu, root}">
@@ -26,6 +26,7 @@ import Badge from 'primevue/badge';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
+import { API_URI } from '@/types/env';
 
 const authStore = userAuthentication();
 
@@ -92,6 +93,25 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
       break;
     default:
       break;
+  }
+}
+
+const currentUser = ref<string>("")
+const searchUser = async () => {
+  if(currentUser.value !== "") {
+    // process data
+    const foundedUser = await fetch(API_URI + `/findUser/${currentUser.value}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    console.log(foundedUser)
+    console.log(await foundedUser.json())
+
+    // Reset of currenUser ref var
+    currentUser.value = "";
   }
 }
 
