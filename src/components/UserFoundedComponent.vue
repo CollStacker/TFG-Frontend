@@ -1,10 +1,13 @@
 <template>
   <div class="userProfileComponentContainer">
     <div class="userProfileComponentColumn">
+      <div class="userFoundedButtonsContainer">
+        <Button class="customAddFriendButton pi pi-plus" label=" Add friend"></Button>
+      </div>
       <div class="userProfileComponentCard"> 
         <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
         <div class="cardBody littleProfile textCenter">
-          <div class="proImg">
+          <div class="proImg ">
             <img v-if="userData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
             <img v-if="userData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
             <img v-if="userData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
@@ -47,6 +50,7 @@ import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import { ref } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
+import Button from 'primevue/button';
 
 const authStore = userAuthentication();
 
@@ -168,5 +172,18 @@ textarea.p-inputtextarea.p-inputtext.customUserProfileTextArea {
   border: 1px solid #b9b9b9;
   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #EEEEEE;
+}
+
+.userFoundedButtonsContainer {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: end;
+}
+
+button.p-button.p-component.customAddFriendButton span {
+  font-weight: bold;
+  font-size: 16px;
+  font-family: "Inter var", sans-serif;
+  margin-left: 5px;
 }
 </style>
