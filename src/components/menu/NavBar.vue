@@ -116,6 +116,7 @@ const searchUser = async () => {
     } else {
       const foundedUserJSON = await foundedUser.json();
       authStore.setFoundedUserData(foundedUserJSON);
+      router.push('/userFounded')
     }
 
     // Reset of currenUser ref var

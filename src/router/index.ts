@@ -54,6 +54,11 @@ const router = createRouter({
       name: 'productForm',
       component: () => import('../views/ProductForm.vue')
     },
+    {
+      path: '/userFounded',
+      name: 'userFounded',
+      component: () => import('../views/UserFounded.vue')
+    },
   ]
 })
 
