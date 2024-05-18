@@ -12,7 +12,7 @@
         <a v-ripple class="customNavbarItem flex align-items-center" v-bind="props.action" @click="handleNavbar(item.label)">
           <span :class="item.icon" />
           <span class="customNavbarText">{{ item.label }}</span>
-          <Badge v-if="item.badge" class="customNavbarBadge" severity="contrast" :value="item.badge" />
+          <Badge v-if="item.badge && friendRequests && friendRequests.length > 0" class="customNavbarBadge" severity="contrast" :value="friendRequests.length" />
           <i v-if="hasSubmenu" :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
         </a>
       </template>
@@ -24,7 +24,7 @@
 import Menubar from 'primevue/menubar';
 import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import { API_URI } from '@/types/env';
@@ -35,9 +35,37 @@ const toast = useToast();
 const authStore = userAuthentication();
 
 const router = useRouter();
+
+onMounted(async () => {
+  await getFriendRequest();
+});
+
+const friendRequests = ref<{_id: string, userId: string, requestUserId: string}[]>();
+const getFriendRequest = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const response = await fetch(API_URI + `/friendRequest/${authStore.getUserData().id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if(!response.ok) {
+      const e = await response.json();
+      console.log(e);
+    } else {
+      const foundedFriendRequests = await response.json();
+      friendRequests.value = foundedFriendRequests;
+      console.log(friendRequests.value)
+    }
+  }
+}
+
 const items = ref([
     {
-        label: '',
+        label: 'Messages',
         icon: 'pi pi-comments',
         badge: 2
     },
@@ -76,11 +104,11 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
     itemSelected = label.toString();
   }
   switch (itemSelected) {
-    case 'Notification':
-      
+    case 'Messages':
+      router.push('/messages')
       break;
     case 'My profile':
-      router.push('userProfile')
+      router.push('/userProfile')
       break;
     case 'Help':
       
