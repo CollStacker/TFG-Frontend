@@ -10,6 +10,10 @@
           <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
         </a>
       </lightgallery>
+      <h1 class="bold mb-2" >{{ props.selectedProduct.name }}</h1>
+      <div class="collectionDescription mb-2">
+        <span>{{ props.selectedProduct.description }}</span>
+      </div>
     </div>
   </div>
   <!-- {{ props.selectedProduct }} -->
@@ -74,7 +78,14 @@ const onBeforeSlide = () => {
 
 .productDataContainer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 20px;
+}
+
+.collectionInformation .collectionDescription {
+  max-width: 950px;
+  word-wrap: break-word;
 }
 </style>
