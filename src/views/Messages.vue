@@ -33,11 +33,34 @@
           </template>
         </div>
         <div class="friendListContainer">
-          <span class="uppercase bold big-text">Friend List</span>
+          <span class="uppercase bold big-text">Friends List</span>
           <div class="ccseparator"></div>
+          <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
+            <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
+              <div class="friendRequestData">
+                <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                <span class="ml-12 largeText">{{ friend.username }}</span>
+                <div class="button-container">
+                  <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click=""></Button>
+                  <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click=""></Button>
+                </div>
+              </div>
+              <Divider />
+            </div>
+          </template>
+          <template v-else>
+            <div class="p-5">
+              <span class="largeText">Sorry, you currently have no friends! </span>
+            </div>
+          </template>
         </div>
-        {{ friendList }}
-        {{ friendListRelevantData }}
+        <!-- {{ friendList }}
+        {{ friendListRelevantData }} -->
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -375,6 +398,11 @@ button.p-button.p-component.customRefuseRequestButton span {
   font-size: 16px;
   font-family: "Inter var", sans-serif;
   margin-left: 5px;
+}
+
+button.p-button.p-component.customAcceptRequestButton.spanDisplayNone span,
+button.p-button.p-component.customRefuseRequestButton.spanDisplayNone span {
+  display: none;
 }
 
 </style>
