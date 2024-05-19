@@ -2,18 +2,6 @@
   <div class="foundedUserCollectionsContainer" :key="refreshComponent" v-if="props.foundedUser"> 
     <div class="foundedUsercollectionsContent">
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == true">
-        <div v-if="collectionNum == 1" class="foundedUsernumCollsText" style="display: flex; align-items: center;">
-          <div>
-            <h1 class="foundedUsercollectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="foundedUsercollectionCounterText"> Collection</h1>
-          </div>
-        </div>
-        <div v-else class="foundedUsernumCollsText" style="display: flex; align-items: center;">
-          <div>
-            <h1 class="foundedUsercollectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="foundedUsercollectionCounterText"> Collections</h1>
-          </div>
-        </div>
         <div class="foundedUsercollectionContainer" style="margin-top: 20px;">
           <div class="foundedUsercollectionContainterHeader" style="display: flex; justify-content: center;">
             <h1 class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }} collections</h1>
