@@ -14,6 +14,17 @@
       <div class="collectionDescription mb-2">
         <span>{{ props.selectedProduct.description }}</span>
       </div>
+      <div v-if="props.selectedProduct.customFields">
+        <h1>Product Features:</h1>
+        <div class="centered">
+          <div class="customFieldscontainer">
+            <div class="row" v-for="field in props.selectedProduct.customFields" :key="field.key">
+              <span class="fieldSize bold mr-5">{{ field.key + ": "}}</span>
+              <span class="fieldSize">{{ field.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- {{ props.selectedProduct }} -->
@@ -84,8 +95,35 @@ const onBeforeSlide = () => {
   padding: 20px;
 }
 
-.collectionInformation .collectionDescription {
+.collectionDescription {
   max-width: 950px;
   word-wrap: break-word;
+}
+
+.fieldSize {
+  font-size: 20px;
+  display: inline-block;
+}
+
+.centered {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+}
+.customFieldscontainer {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; 
+  justify-content: center;  */
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  text-align: left; 
+}
+
+.mr-5 {
+  margin-right: 5px;
 }
 </style>
