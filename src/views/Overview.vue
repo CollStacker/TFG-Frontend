@@ -4,7 +4,7 @@
     <div class="overViewContent">
       <NavBar class="customNavBar"></NavBar>
       <div class ="overViewMainContent">
-        <h1 class="test">Hello from main page</h1>
+        <OverviewComponent></OverviewComponent>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -16,6 +16,7 @@
 import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
+import OverviewComponent from '@/components/OverviewComponent.vue'
 </script>
 
 <style>
@@ -61,6 +62,7 @@ import Footer from '@/components/menu/Footer.vue';
   margin: 69px 0 50px;
   background-color: #f3f2f2;
   min-height: calc(100vh - 69px - 50px);
+  padding: 48px;
 }
 
 body {
