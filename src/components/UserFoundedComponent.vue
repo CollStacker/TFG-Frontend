@@ -44,6 +44,7 @@
       </div>
     </div>
   </div>
+  <UserFoundedCollectionsComponent :foundedUser="foundedUserData"/>
 </template>
 
 <script setup lang="ts">
@@ -56,6 +57,7 @@ import { useRouter } from 'vue-router';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import { API_URI } from '@/types/env';
+import UserFoundedCollectionsComponent from './UserFoundedCollectionsComponent.vue'
 
 const authStore = userAuthentication();
 const router = useRouter();
