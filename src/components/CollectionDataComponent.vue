@@ -1,108 +1,113 @@
 <template>
   <Toast/>
-  <Dialog v-model:visible="openCreateProductDialog" modal header=" " :style="{ width: '75rem', height: '48rem' , overflow: 'hidden' }">
-    <div style="overflow: hidden;">
-      <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" @closeProductDialog="closeProductDialog()"/>
-    </div>
-  </Dialog>
-  <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
-    <div style="padding-left: 14px;">
-      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
-        <label class="uppercase bold">Category name</label>
-        <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newCategoryName"/>
+  <template v-if="showProducts === true">
+    <Dialog v-model:visible="openCreateProductDialog" modal header=" " :style="{ width: '75rem', height: '48rem' , overflow: 'hidden' }">
+      <div style="overflow: hidden;">
+        <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" @closeProductDialog="closeProductDialog()"/>
       </div>
-      <div style="display: flex; justify-content: end;">
-        <Button type="button" label="Cancel" severity="secondary" @click="openAddCategoriesDialog = false"></Button>
-        <Button type="button" label="Save" @click="addCategorie()" style="margin-left: 5px;"></Button>
-      </div>
-    </div>
-  </Dialog>
-  <Dialog v-model:visible="editCollection" modal header="Edit collection" :style="{ width: '30rem' }">
-    <div style="padding-left: 16px;">
-      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
-        <label for="username" class="uppercase bold">Title</label>
-        <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newTitle"/>
-      </div>
-      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;">
-        <label for="username" class="uppercase bold">Description</label>
-        <Textarea id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newDescription" auto-resize :maxlength="350"/>
-        <div style="display: flex; justify-content: center; align-items: center;">
-          {{ newDescription.length + "/350" }}
+    </Dialog>
+    <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
+      <div style="padding-left: 14px;">
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
+          <label class="uppercase bold">Category name</label>
+          <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newCategoryName"/>
+        </div>
+        <div style="display: flex; justify-content: end;">
+          <Button type="button" label="Cancel" severity="secondary" @click="openAddCategoriesDialog = false"></Button>
+          <Button type="button" label="Save" @click="addCategorie()" style="margin-left: 5px;"></Button>
         </div>
       </div>
-      <div>
-        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;"></div>
-        <label for="username" class="uppercase bold">Image</label>
-        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" customUpload auto chooseLabel="Browse" @select="upload($event)"/>
-      </div>
-    </div>
-    <div style="display: flex; justify-content: end;">
-      <Button type="button" label="Cancel" @click="editCollection = false"></Button>
-      <Button type="button" label="Save" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
-    </div>
-  </Dialog>
-  <div style="display: flex;">
-    <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
-    <div style="margin-left: auto;">
-      <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
-      <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
-      <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
-    </div>
-  </div>
-  <div class="collectionContainer" v-if="props.collection" style="margin-top: 20px; margin-bottom: 20px;">
-    <div class="collectionDataContainer">
-      <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
-        <a v-if="props.collection.frontPage !== ''" :href="props.collection.frontPage">
-          <img alt="Collection image" :src="props.collection.frontPage" class="lightGalleryImg"/>
-        </a>
-        <a v-else href="../assets/imgs/logo.png">
-          <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
-        </a>
-      </lightgallery>
-      <div class="collectionInformation" style="margin-left: 5px;">
-        <h1 class="bold mb-2" >{{ props.collection.title }}</h1>
-        <div class="collectionDescription mb-2">
-          <span>{{ props.collection.description }}</span>
+    </Dialog>
+    <Dialog v-model:visible="editCollection" modal header="Edit collection" :style="{ width: '30rem' }">
+      <div style="padding-left: 16px;">
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
+          <label for="username" class="uppercase bold">Title</label>
+          <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newTitle"/>
         </div>
-        <div class="badgeContainer">
-          <div v-if="collectionCategories && collectionCategories.length > 0" v-for="(category, index) in collectionCategories"> 
-            <Badge :value="category.name" severity="contrast"></Badge>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;">
+          <label for="username" class="uppercase bold">Description</label>
+          <Textarea id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newDescription" auto-resize :maxlength="350"/>
+          <div style="display: flex; justify-content: center; align-items: center;">
+            {{ newDescription.length + "/350" }}
           </div>
         </div>
+        <div>
+          <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;"></div>
+          <label for="username" class="uppercase bold">Image</label>
+          <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" customUpload auto chooseLabel="Browse" @select="upload($event)"/>
+        </div>
       </div>
-    </div> 
-  </div>
-  <div class="collectionContainer" >
-    <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-      <h1 class="uppercase bold big-text customHeaderText">Products</h1>
+      <div style="display: flex; justify-content: end;">
+        <Button type="button" label="Cancel" @click="editCollection = false"></Button>
+        <Button type="button" label="Save" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
+      </div>
+    </Dialog>
+    <div style="display: flex;">
+      <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
+      <div style="margin-left: auto;">
+        <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
+        <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
+        <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
+      </div>
     </div>
-    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-      <div class="separator"></div>
-    </div> 
-    <div v-if="!collectionProducts" class="noProductsContainer">
-      <span>There are no products in this collection!!</span>
-    </div>
-    <div v-else class="collectionListContainerBorder"> 
-      <div class="collectionListContainer">
-        <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
-          <a v-for="(product, index) in collectionProducts" :href="product.image ? product.image : '../assets/imgs/logo_without_background.png'" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
-            <div class="productOverlay">
-              <h3>{{ product.name }}</h3>
-              <p>{{ product.description }}</p>
-              <div v-if="product.customFields">
-                <div v-for="customField in product.customFields" style="display: flex; justify-content: center;">
-                  <p class="bold customFieldKey">{{ customField.key}}:</p>
-                  <p> {{ customField.value }}</p>
-                </div>
-              </div>
-            </div>
-            <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image" />
-            <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png" />
+    <div class="collectionContainer" v-if="props.collection" style="margin-top: 20px; margin-bottom: 20px;">
+      <div class="collectionDataContainer">
+        <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
+          <a v-if="props.collection.frontPage !== ''" :href="props.collection.frontPage">
+            <img alt="Collection image" :src="props.collection.frontPage" class="lightGalleryImg"/>
+          </a>
+          <a v-else href="../assets/imgs/logo.png">
+            <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
           </a>
         </lightgallery>
+        <div class="collectionInformation" style="margin-left: 5px;">
+          <h1 class="bold mb-2" >{{ props.collection.title }}</h1>
+          <div class="collectionDescription mb-2">
+            <span>{{ props.collection.description }}</span>
+          </div>
+          <div class="badgeContainer">
+            <div v-if="collectionCategories && collectionCategories.length > 0" v-for="(category, index) in collectionCategories"> 
+              <Badge :value="category.name" severity="contrast"></Badge>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+    <div class="collectionContainer" >
+      <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
+        <h1 class="uppercase bold big-text customHeaderText">Products</h1>
+      </div>
+      <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <div class="separator"></div>
+      </div> 
+      <div v-if="!collectionProducts" class="noProductsContainer">
+        <span>There are no products in this collection!!</span>
+      </div>
+      <div v-else class="collectionListContainerBorder"> 
+        <div class="collectionListContainer">
+          <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
+            <a v-for="(product, index) in collectionProducts" :href="product.image ? product.image : '../assets/imgs/logo_without_background.png'" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
+              <div class="productOverlay">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <div v-if="product.customFields">
+                  <div v-for="customField in product.customFields" style="display: flex; justify-content: center;">
+                    <p class="bold customFieldKey">{{ customField.key}}:</p>
+                    <p> {{ customField.value }}</p>
+                  </div>
+                </div>
+              </div>
+              <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image" />
+              <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png" />
+            </a>
+          </lightgallery>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-if="showProducts === false && showProductData === true"> 
+    <ProductDataComponent/>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -123,6 +128,7 @@ import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import CreateProductForm from '@/components/CreateProductForm.vue';
 import { type WholeProductDataInterface } from '@/types/product';
+import ProductDataComponent from './ProductDataComponent.vue'
 
 const toast = useToast();
 const router = useRouter();
@@ -132,6 +138,7 @@ const props = defineProps({
     type: Object
   }
 })
+
 
 const emits = defineEmits(["emitCloseCollectionComponent"]);
 
@@ -143,6 +150,16 @@ onMounted(async () => {
   await getCollectionCategories();
   await getCollectionProducts();
 });
+
+const showProducts = ref<boolean>(true);
+const showProductData = ref<boolean>(false);
+const selectedProduct = ref<WholeProductDataInterface>();
+
+const openProductComponent = (product: WholeProductDataInterface) => {
+  selectedProduct.value = product;
+  showProducts.value = false;
+  showProductData.value = true;
+}
 
 const collectionCategories = ref<CategoryInterface[]>();
 const getCollectionCategories = async () => {
