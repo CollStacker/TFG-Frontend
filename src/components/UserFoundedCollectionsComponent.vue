@@ -27,6 +27,7 @@
           </div>
         </div>
       </div>
+      {{ collectionNum  }}
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
         <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
       </div>
@@ -70,16 +71,16 @@ const showCollectionView = ref(true);
 const showCollectionDataComponent = ref(false)
 
 const collectionNum = ref(0);
-const collections = ref();
+const collections = ref<CollectionInterface[]>();
 
 onMounted(async () => {
+  console.log(props.foundedUser)
   await getCollectionData();
 })
 
+
 const getCollectionData = async () => {
-  console.log(props.foundedUser)
   if(props.foundedUser) {
-    console.log(props.foundedUser)
     if (!await authStore.checkToken()) {
       router.push('/');
     } else {
@@ -99,7 +100,9 @@ const getCollectionData = async () => {
         });
       } else {
         collections.value = await response.json();
-        console.log(collections.value)
+        if(collections.value) {
+          collectionNum.value = collections.value.length
+        }
       }
     }
   }

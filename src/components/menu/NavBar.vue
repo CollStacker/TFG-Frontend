@@ -54,11 +54,9 @@ const getFriendRequest = async () => {
     })
     if(!response.ok) {
       const e = await response.json();
-      console.log(e);
     } else {
       const foundedFriendRequests = await response.json();
       friendRequests.value = foundedFriendRequests;
-      console.log(friendRequests.value)
     }
   }
 }
