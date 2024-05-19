@@ -1,21 +1,23 @@
 <template>
   <Toast/>
   <template v-if="last20Products && last20Products.length > 0">
-    <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-        <div class="userPublication">
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-          <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
-        </div>
-        <div>
-          <img v-if="product.image" :src="product.image" class="productImg">
-          <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
-          <h1 class="bold productTitle">{{ product.name }}</h1>
-        </div>
+    <div class="overviewMainContainer">
+      <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
+          <div class="userPublication">
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+            <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
+          </div>
+          <div>
+            <img v-if="product.image" :src="product.image" class="productImg">
+            <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
+            <h1 class="bold productTitle">{{ product.name }}</h1>
+          </div>
+      </div>
     </div>
   </template>
   <template v-else>
@@ -96,6 +98,19 @@ const findProductsOwners = async() => {
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  margin-bottom: 20px; 
+  max-width: 600px;
+  max-height: 1000px;
+  padding: 10px 20px 10px 20px;
+}
+
+.overviewMainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
 }
 
 .userPublication {
