@@ -27,9 +27,8 @@
           </div>
         </div>
       </div>
-      {{ collectionNum  }}
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
-        <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
+        <CollectionDataComponent :collection="collectionToOpen" :readOnly="readOnly" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
       </div>
     </div>
   </div>
@@ -66,6 +65,8 @@ const plugins = [lgThumbnail, lgZoom];
 const authStore = userAuthentication();
 const router = useRouter();
 const refreshComponent = ref(0)
+
+const readOnly = ref<boolean>(true);
 
 const showCollectionView = ref(true);
 const showCollectionDataComponent = ref(false)

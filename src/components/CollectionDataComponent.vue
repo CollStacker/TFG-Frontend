@@ -44,7 +44,7 @@
     </Dialog>
     <div style="display: flex;">
       <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
-      <div style="margin-left: auto;">
+      <div style="margin-left: auto;" v-if="!props.readOnly">
         <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
         <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
         <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
@@ -136,6 +136,9 @@ const authStore = userAuthentication();
 const props = defineProps({
   collection: {
     type: Object
+  },
+  readOnly: {
+    type: Boolean
   }
 })
 
