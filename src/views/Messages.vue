@@ -1,4 +1,5 @@
 <template>
+  <Toast/>
   <div class="messagesContainer"> 
     <SideBar class="sidebar"></SideBar>
     <div class="messagesContent">
@@ -18,8 +19,8 @@
                 <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                 <span class="ml-12 largeText">{{ friendRequest.username }}</span>
                 <div class="button-container">
-                  <Button class="customAcceptRequestButton pi pi-plus" label=" Accept"></Button>
-                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Refuse"></Button>
+                  <Button class="customAcceptRequestButton pi pi-plus" label=" Accept" @click="acceptFriendRequest(friendRequest.id)"></Button>
+                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Refuse" @click="refuseFriendRequest(friendRequest.id)"></Button>
                 </div>
               </div>
               <Divider />
@@ -116,6 +117,59 @@ const getFriendRequestRelevantData = async () => {
   }
 }
 
+const acceptFriendRequest = async (requesterId: string) => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const acceptRequestBody = {
+      userId: authStore.getUserData().id,
+      requestUserId:requesterId,
+    }
+    const response = await fetch(API_URI + `/acceptRequest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(acceptRequestBody)
+    })
+    if(!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed accepting friend request.', life: 3000 });
+    } else {
+      friendRequests.value = [];
+      friendRequestsRelevantData.value = [];
+      await getFriendRequest();
+      await getFriendRequestRelevantData();
+    }
+  }
+}
+
+const refuseFriendRequest = async (requesterId: string) => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const refuseRequestBody = {
+      userId: authStore.getUserData().id,
+      requestUserId:requesterId,
+    }
+    const response = await fetch(API_URI + `/refuseRequest`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(refuseRequestBody)
+    });
+    if(!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed refusing friend request.', life: 3000 });
+    } else {
+      friendRequests.value = [];
+      friendRequestsRelevantData.value = [];
+      await getFriendRequest();
+      await getFriendRequestRelevantData();
+    }
+  }
+}
 
 </script>
 
