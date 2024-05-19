@@ -87,7 +87,7 @@
         <div class="collectionListContainer">
           <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
             <a v-for="(product, index) in collectionProducts" :href="product.image ? product.image : '../assets/imgs/logo_without_background.png'" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
-              <div class="productOverlay">
+              <div class="productOverlay" @click="openProductComponent(product)">
                 <h3>{{ product.name }}</h3>
                 <p>{{ product.description }}</p>
                 <div v-if="product.customFields">
@@ -97,8 +97,8 @@
                   </div>
                 </div>
               </div>
-              <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image" />
-              <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png" />
+              <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image"/>
+              <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png"/>
             </a>
           </lightgallery>
         </div>
@@ -106,7 +106,7 @@
     </div>
   </template>
   <template v-if="showProducts === false && showProductData === true"> 
-    <ProductDataComponent/>
+    <ProductDataComponent :selectedProduct="selectedProduct" @emitCloseProductComponent="closeProductComponent()"/>
   </template>
 </template>
 
@@ -159,6 +159,11 @@ const openProductComponent = (product: WholeProductDataInterface) => {
   selectedProduct.value = product;
   showProducts.value = false;
   showProductData.value = true;
+}
+
+const closeProductComponent = () => {
+  showProducts.value = true;
+  showProductData.value = false;
 }
 
 const collectionCategories = ref<CategoryInterface[]>();
