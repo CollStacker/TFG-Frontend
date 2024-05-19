@@ -71,6 +71,7 @@ import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
+import { type ProductInterface } from '@/types/product';
 
 const toast = useToast();
 const router = useRouter();
@@ -88,15 +89,55 @@ const emitCloseProductComponent = () => {
   emits("emitCloseProductComponent");
 }
 
-const newDescription = ref<string>("");
 const newProductName = ref<string>("");
+const newDescription = ref<string>("");
 const newImage = ref<string>("");
-const saveNewProductData = () => {
+
+const saveNewProductData = async () => {
+  if (props.selectedProduct) {
+    const newProductData = {
+      _id: props.selectedProduct._id,
+      name: newProductName.value !== "" ? newProductName.value : props.selectedProduct.name,
+      description: newDescription.value !== "" ? newDescription.value : props.selectedProduct.description,
+      image: newImage.value !== "" ? newImage.value : props.selectedProduct.image,
+      publicationDate: props.selectedProduct.publicationDate,
+      collectionId: props.selectedProduct.collectionId,
+    } 
+    if(! await authStore.checkToken()) {
+      router.push('/');
+    } else {
+      const response = await fetch(API_URI + `/products/${props.selectedProduct ? props.selectedProduct._id : ''}`,{
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(newProductData),
+      })
+      if(!response.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed editing product', life: 3000 });
+      } else {
+        updateProduct();
+        clearData();
+        editProduct.value = false;
+      }
+    } 
+  }
 
 }
 
 const updateProduct = () => {
-  
+  if(props.selectedProduct) {
+    newProductName.value !== "" ? props.selectedProduct.name = newProductName.value : props.selectedProduct.name = props.selectedProduct.name;
+    newDescription.value !== "" ? props.selectedProduct.description = newDescription.value : props.selectedProduct.description = props.selectedProduct.description;
+    newImage.value !== "" ? props.selectedProduct.image = newImage.value : props.selectedProduct.image = props.selectedProduct.image;
+  }
+}
+
+const clearData = () => {
+  newDescription.value = "";
+  newProductName.value = "";
+  newImage.value = "";
 }
 
 const upload = (e: any) => {
@@ -120,6 +161,7 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
+import { API_URI } from '@/types/env';
 
 const plugins = [lgThumbnail, lgZoom];
 let lightGallery: any = null;
