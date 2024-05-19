@@ -36,12 +36,11 @@
           <span class="uppercase bold big-text">Friend List</span>
           <div class="ccseparator"></div>
         </div>
-        <!-- {{ friendRequestsRelevantData.length }}
-        {{friendRequestsRelevantData}} -->
+        {{ friendList }}
+        {{ friendListRelevantData }}
       </div>
       <Footer class="customFooter"></Footer>
     </div>
-    
   </div>
 </template>
 
@@ -67,11 +66,26 @@ const router = useRouter();
 
 const friendRequests = ref<{_id: string, userId: string, requestUserId: string}[]>();
 const friendRequestsRelevantData = ref<UserInterface[]>([]);
+const friendList = ref<string[]>();
+const friendListRelevantData = ref<UserInterface[]>([]);
 
 onMounted(async () => {
   await getFriendRequest();
   await getFriendRequestRelevantData();
+  await getFriendList();
+  await getFriendListRelevantData();
 });
+
+const resetInformation = async () => {
+  friendRequests.value = [];
+  friendList.value = [];
+  friendListRelevantData.value = [];
+  friendRequestsRelevantData.value = [];
+  await getFriendRequest();
+  await getFriendRequestRelevantData();
+  await getFriendList();
+  await getFriendListRelevantData();
+}
 
 const getFriendRequest = async () => {
   if (!await authStore.checkToken()) {
@@ -136,10 +150,7 @@ const acceptFriendRequest = async (requesterId: string) => {
     if(!response.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed accepting friend request.', life: 3000 });
     } else {
-      friendRequests.value = [];
-      friendRequestsRelevantData.value = [];
-      await getFriendRequest();
-      await getFriendRequestRelevantData();
+      await resetInformation();
     }
   }
 }
@@ -163,10 +174,49 @@ const refuseFriendRequest = async (requesterId: string) => {
     if(!response.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed refusing friend request.', life: 3000 });
     } else {
-      friendRequests.value = [];
-      friendRequestsRelevantData.value = [];
-      await getFriendRequest();
-      await getFriendRequestRelevantData();
+      await resetInformation();
+    }
+  }
+}
+
+const getFriendList = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const response = await fetch(API_URI + `/getFriends/${authStore.getUserData().id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if(!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed finding friends.', life: 3000 });
+    } else {
+      friendList.value = await response.json();
+    }
+  }
+}
+
+const getFriendListRelevantData = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    if(friendList.value && friendList.value.length > 0) {
+      for (const friendId of friendList.value) {
+        const response = await fetch(API_URI + `/findUserById/${friendId}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        })
+        if(!response.ok) {
+
+        } else {
+          friendListRelevantData.value.push(await response.json())
+        }
+      }
     }
   }
 }
