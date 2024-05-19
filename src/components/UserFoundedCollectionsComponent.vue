@@ -26,7 +26,6 @@
             </div>
           </div>
         </div>
-        <!-- <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button> -->
       </div>
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
         <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
@@ -172,7 +171,7 @@ const emitCloseCollectionComponent = () => {
 .foundedUsercollectionsMainContent {
   margin: 0px;
   background-color: #f3f2f2;
-  min-height: calc(100vh - 69px - 50px);
+  margin-bottom: 55px;
   padding-left: 48px;
   padding-right: 48px;
 }
