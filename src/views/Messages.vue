@@ -47,7 +47,7 @@
                 <span class="ml-12 largeText">{{ friend.username }}</span>
                 <div class="button-container">
                   <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click=""></Button>
-                  <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click=""></Button>
+                  <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
                 </div>
               </div>
               <Divider />
@@ -240,6 +240,30 @@ const getFriendListRelevantData = async () => {
           friendListRelevantData.value.push(await response.json())
         }
       }
+    }
+  }
+}
+
+const deleteFriend = async (friendId: string) => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const deleteFriendRequestBody = {
+      userId: authStore.getUserData().id,
+      friendId: friendId,
+    }
+    const response =  await fetch(API_URI + `/deleteFriend`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(deleteFriendRequestBody),
+    });
+    if (!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed deleting friend.', life: 3000 });
+    } else {
+      await resetInformation();
     }
   }
 }
