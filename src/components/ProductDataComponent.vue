@@ -26,7 +26,7 @@
   </Dialog>
   <div style="display: flex;">
     <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseProductComponent()"/>
-      <div style="margin-left: auto;">
+      <div style="margin-left: auto;" v-if="!props.readOnly">
         <Button class="editCollectionButton pi pi-pencil" @click="editProduct = true" style="margin-left: 10px;"/>
       </div>
     </div>
@@ -79,6 +79,9 @@ const authStore = userAuthentication();
 const props = defineProps({
   selectedProduct: {
     type: Object
+  },
+  readOnly: {
+    type: Boolean
   }
 })
 const emits = defineEmits(["emitCloseProductComponent"])

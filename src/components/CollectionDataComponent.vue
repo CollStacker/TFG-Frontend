@@ -106,7 +106,7 @@
     </div>
   </template>
   <template v-if="showProducts === false && showProductData === true"> 
-    <ProductDataComponent :selectedProduct="selectedProduct" @emitCloseProductComponent="closeProductComponent()"/>
+    <ProductDataComponent :selectedProduct="selectedProduct" :readOnly="props.readOnly" @emitCloseProductComponent="closeProductComponent()"/>
   </template>
 </template>
 
