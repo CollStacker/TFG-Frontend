@@ -6,7 +6,7 @@
       <NavBar class="customNavBar"></NavBar>
       <div class ="messagesMainContent">
         <div class="friendRequestContainer">
-          <span class="uppercase bold big-text">Friend Requests</span>
+          <span class="uppercase bold big-text pl-7">Friend Requests</span>
           <div class="ccseparator"></div>
           <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
             <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
@@ -20,7 +20,7 @@
                 <span class="ml-12 largeText">{{ friendRequest.username }}</span>
                 <div class="button-container">
                   <Button class="customAcceptRequestButton pi pi-plus" label=" Accept" @click="acceptFriendRequest(friendRequest.id)"></Button>
-                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Refuse" @click="refuseFriendRequest(friendRequest.id)"></Button>
+                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Decline" @click="refuseFriendRequest(friendRequest.id)"></Button>
                 </div>
               </div>
               <Divider />
@@ -33,7 +33,7 @@
           </template>
         </div>
         <div class="friendListContainer">
-          <span class="uppercase bold big-text">Friends List</span>
+          <span class="uppercase bold big-text pl-7">Friends List</span>
           <div class="ccseparator"></div>
           <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
             <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
@@ -427,6 +427,10 @@ button.p-button.p-component.customRefuseRequestButton span {
 button.p-button.p-component.customAcceptRequestButton.spanDisplayNone span,
 button.p-button.p-component.customRefuseRequestButton.spanDisplayNone span {
   display: none;
+}
+
+.pl-7 {
+  padding-left: 7px;
 }
 
 </style>
