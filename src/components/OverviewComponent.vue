@@ -1,19 +1,25 @@
 <template>
-  <div class="overviewComponentContainer">
-    <!-- {{ last20Products?.length }} -->
-    <!-- {{ last20ProductsUser }} -->
-    <div v-for="(product,index) in last20Products">
-      <div class="userPublication">
-        <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-        <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-        <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-        <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-        <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-        <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-      </div>
-
+  <Toast/>
+  <template v-if="last20Products && last20Products.length > 0">
+    <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
+      <!-- {{ last20Products?.length }} -->
+      <!-- {{ last20ProductsUser }} -->
+        <div class="userPublication">
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+          <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
+        </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="overviewComponentContainer">
+      <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -86,6 +92,7 @@ const findProductsOwners = async() => {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
 }
 
 .userPublication {
@@ -99,5 +106,13 @@ const findProductsOwners = async() => {
   height: 60px;
   border-radius: 50%;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.ml-12 {
+  margin-left: 12px;
+}
+
+.largeText {
+  font-size: 25px;
 }
 </style>
