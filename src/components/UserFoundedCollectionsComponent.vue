@@ -77,7 +77,9 @@ onMounted(async () => {
 })
 
 const getCollectionData = async () => {
+  console.log(props.foundedUser)
   if(props.foundedUser) {
+    console.log(props.foundedUser)
     if (!await authStore.checkToken()) {
       router.push('/');
     } else {
@@ -97,7 +99,7 @@ const getCollectionData = async () => {
         });
       } else {
         collections.value = await response.json();
-        collectionNum.value = collections.value.length;
+        console.log(collections.value)
       }
     }
   }

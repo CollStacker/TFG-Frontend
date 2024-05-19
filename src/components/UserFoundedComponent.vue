@@ -1,7 +1,7 @@
 <template>
   <Toast/>
-  <div class="userProfileComponentContainer">
-    <div class="userProfileComponentColumn">
+  <div class="foundedUserProfileComponentContainer">
+    <div class="foundedUserProfileComponentColumn">
       <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
         <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
       </div>
@@ -95,7 +95,7 @@ const sendFriendRequest = async () => {
 </script>
 
 <style>
-.userProfileComponentContainer {
+.foundedUserProfileComponentContainer {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
@@ -139,7 +139,7 @@ const sendFriendRequest = async () => {
   text-align: center;
 }
 
-.userProfileComponentColumn {
+.foundedUserProfileComponentColumn {
   flex: 0 0 auto;
   width: 100%;
 }
