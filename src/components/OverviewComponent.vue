@@ -2,8 +2,6 @@
   <Toast/>
   <template v-if="last20Products && last20Products.length > 0">
     <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-      <!-- {{ last20Products?.length }} -->
-      <!-- {{ last20ProductsUser }} -->
         <div class="userPublication">
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
@@ -12,6 +10,11 @@
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
           <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
+        </div>
+        <div>
+          <img v-if="product.image" :src="product.image" class="productImg">
+          <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
+          <h1 class="bold productTitle">{{ product.name }}</h1>
         </div>
     </div>
   </template>
@@ -113,6 +116,20 @@ const findProductsOwners = async() => {
 }
 
 .largeText {
+  font-size: 25px;
+}
+
+.productImg {
+  width: 400px;
+  height: 400px;
+  max-width: 400px;
+  max-height: 400px;
+  border: 1px solid #9f9f9f;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.productTitle {
   font-size: 25px;
 }
 </style>
