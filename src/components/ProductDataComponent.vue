@@ -227,4 +227,12 @@ const onBeforeSlide = () => {
 .mr-5 {
   margin-right: 5px;
 }
+
+.lightGalleryImg {
+  width: 200px;
+  height: 200px;
+  max-width: 200px;
+  max-height: 200px;
+}
+
 </style>
