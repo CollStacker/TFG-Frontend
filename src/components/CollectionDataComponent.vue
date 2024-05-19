@@ -119,8 +119,8 @@ import Button from 'primevue/button';
 import { type CollectionInterface } from '@/types/collection';
 import { type CategoryInterface } from '@/types/category'
 import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
+import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import FileUpload from 'primevue/fileupload';
 import { useRouter } from 'vue-router';

@@ -1,5 +1,35 @@
 <template>
-  <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseProductComponent()"/>
+  <Toast/>
+  <Dialog v-model:visible="editProduct" modal header="Edit Product" :style="{ width: '30rem' }">
+    <div style="padding-left: 16px;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
+        <label  class="uppercase bold">Product Name</label>
+        <InputText class="editCollectioncustomInput" autocomplete="off" v-model="newProductName"/>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;">
+        <label for="username" class="uppercase bold">Description</label>
+        <Textarea id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newDescription" auto-resize :maxlength="350"/>
+        <div style="display: flex; justify-content: center; align-items: center;">
+          {{ newDescription.length + "/350" }}
+        </div>
+      </div>
+      <div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;"></div>
+        <label for="username" class="uppercase bold">Image</label>
+        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" customUpload auto chooseLabel="Browse" @select="upload($event)"/>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: end;">
+      <Button type="button" label="Cancel" @click="editProduct = false"></Button>
+      <Button type="button" label="Save" @click="saveNewProductData()" style="margin-left: 5px;"></Button>
+    </div>
+  </Dialog>
+  <div style="display: flex;">
+    <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseProductComponent()"/>
+      <div style="margin-left: auto;">
+        <Button class="editCollectionButton pi pi-pencil" @click="editProduct = true" style="margin-left: 10px;"/>
+      </div>
+    </div>
   <div class="productContainer" v-if="props.selectedProduct" style="margin-top: 20px; margin-bottom: 20px;">
     <div class="productDataContainer">
       <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
@@ -37,6 +67,10 @@ import { useToast } from "primevue/usetoast";
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import FileUpload from 'primevue/fileupload';
 
 const toast = useToast();
 const router = useRouter();
@@ -48,10 +82,35 @@ const props = defineProps({
 })
 const emits = defineEmits(["emitCloseProductComponent"])
 
+const editProduct = ref<boolean>(false);
+
 const emitCloseProductComponent = () => {
   emits("emitCloseProductComponent");
 }
 
+const newDescription = ref<string>("");
+const newProductName = ref<string>("");
+const newImage = ref<string>("");
+const saveNewProductData = () => {
+
+}
+
+const updateProduct = () => {
+  
+}
+
+const upload = (e: any) => {
+  const file = e.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => { 
+      if (typeof reader.result === 'string') {
+        newImage.value = reader.result;
+      };
+    }
+  }
+}
 
 // GALERY
 import Lightgallery from 'lightgallery/vue';
