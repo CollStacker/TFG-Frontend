@@ -86,7 +86,7 @@
       <div v-else class="collectionListContainerBorder"> 
         <div class="collectionListContainer">
           <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
-            <a v-for="(product, index) in collectionProducts" :href="product.image ? product.image : '../assets/imgs/logo_without_background.png'" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
+            <a v-for="(product, index) in collectionProducts" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
               <div class="productOverlay" @click="openProductComponent(product)">
                 <h3>{{ product.name }}</h3>
                 <p>{{ product.description }}</p>
