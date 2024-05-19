@@ -1,50 +1,52 @@
 <template>
   <Toast/>
-  <div class="foundedUserProfileComponentContainer">
-    <div class="foundedUserProfileComponentColumn">
-      <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
-        <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
-      </div>
-      <div class="userProfileComponentCard"> 
-        <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
-        <div class="cardBody littleProfile textCenter">
-          <div class="proImg ">
-            <img v-if="foundedUserData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
-            <img v-if="foundedUserData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-            <img v-if="foundedUserData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
-            <img v-if="foundedUserData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
-            <img v-if="foundedUserData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-            <img v-if="foundedUserData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
-          </div>
-          <span class="usernameText" >{{foundedUserData.username}}</span>
-          <div class="foundedUserDataContainer">
-            <div class="foundedUserDataText">
-              <div class="formGroup">
-                <span class="formGroupInputText">Email</span>
-                <InputText class="customUserProfileInputText" v-model="foundedUserData.email" :disabled="inputTextEditable" />
+  <div>
+    <div class="foundedUserProfileComponentContainer">
+      <div class="foundedUserProfileComponentColumn">
+        <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
+          <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
+        </div>
+        <div class="userProfileComponentCard"> 
+          <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
+          <div class="cardBody littleProfile textCenter">
+            <div class="proImg ">
+              <img v-if="foundedUserData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
+            </div>
+            <span class="usernameText" >{{foundedUserData.username}}</span>
+            <div class="foundedUserDataContainer">
+              <div class="foundedUserDataText">
+                <div class="formGroup">
+                  <span class="formGroupInputText">Email</span>
+                  <InputText class="customUserProfileInputText" v-model="foundedUserData.email" :disabled="inputTextEditable" />
+                </div>
+                <div class="formGroup">
+                  <span class="formGroupInputText">Name</span>
+                  <InputText class="customUserProfileInputText" v-model="foundedUserData.name" :disabled="inputTextEditable" />  
+                </div>
+                <div class="formGroup">
+                  <span class="formGroupInputText">Surnames</span>
+                  <InputText class="customUserProfileInputText" v-model="foundedUserData.surnames" :disabled="inputTextEditable" />
+                </div>
               </div>
-              <div class="formGroup">
-                <span class="formGroupInputText">Name</span>
-                <InputText class="customUserProfileInputText" v-model="foundedUserData.name" :disabled="inputTextEditable" />  
-              </div>
-              <div class="formGroup">
-                <span class="formGroupInputText">Surnames</span>
-                <InputText class="customUserProfileInputText" v-model="foundedUserData.surnames" :disabled="inputTextEditable" />
+              <div class="biografyFormGroup" v-if="foundedUserData.biography">
+                <div class="formGroup">
+                  <span class="formGroupInputText">About me</span>
+                  <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize />
+                </div>
               </div>
             </div>
-            <div class="biografyFormGroup" v-if="foundedUserData.biography">
-              <div class="formGroup">
-                <span class="formGroupInputText">About me</span>
-                <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize />
-              </div>
-            </div>
+  
           </div>
-
         </div>
       </div>
     </div>
+    <UserFoundedCollectionsComponent :foundedUser="foundedUserData"/>
   </div>
-  <UserFoundedCollectionsComponent :foundedUser="foundedUserData"/>
 </template>
 
 <script setup lang="ts">

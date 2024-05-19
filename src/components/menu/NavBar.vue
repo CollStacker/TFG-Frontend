@@ -36,6 +36,8 @@ const authStore = userAuthentication();
 
 const router = useRouter();
 
+const emits = defineEmits(["refreshPage"])
+
 onMounted(async () => {
   await getFriendRequest();
 });
@@ -145,6 +147,7 @@ const searchUser = async () => {
       } else {
         const foundedUserJSON = await foundedUser.json();
         authStore.setFoundedUserData(foundedUserJSON);
+        emits("refreshPage")
         router.push('/userFounded')
       }
   

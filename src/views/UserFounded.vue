@@ -2,9 +2,9 @@
   <div class="userProfileContainer"> 
     <SideBar class="sidebar"></SideBar>
     <div class="userProfileContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshPage="refreshPage()"></NavBar>
       <div class ="userProfileMainContent">
-        <UserFoundedComponent></UserFoundedComponent>
+        <UserFoundedComponent :key="userFoundedComponentKey"></UserFoundedComponent>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -17,6 +17,12 @@ import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
 import UserFoundedComponent from '@/components/UserFoundedComponent.vue';
+import {ref} from 'vue';
+
+const userFoundedComponentKey = ref<number>(0);
+const refreshPage = () => {
+  userFoundedComponentKey.value += 1;
+}
 </script>
 
 <style>
