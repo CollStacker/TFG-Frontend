@@ -1,46 +1,46 @@
 <template>
-  <div class="collectionsContainer" :key="refreshComponent" v-if="props.foundedUser"> 
-    <div class="collectionsContent">
-      <div class ="collectionsMainContent" v-if="showCollectionView == true">
-        <div v-if="collectionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
+  <div class="foundedUserCollectionsContainer" :key="refreshComponent" v-if="props.foundedUser"> 
+    <div class="foundedUsercollectionsContent">
+      <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == true">
+        <div v-if="collectionNum == 1" class="foundedUsernumCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="collectionCounterText"> Collection</h1>
+            <h1 class="foundedUsercollectionCounterNumber">{{ collectionNum }}</h1>
+            <h1 class="foundedUsercollectionCounterText"> Collection</h1>
           </div>
         </div>
-        <div v-else class="numCollsText" style="display: flex; align-items: center;">
+        <div v-else class="foundedUsernumCollsText" style="display: flex; align-items: center;">
           <div>
-            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="collectionCounterText"> Collections</h1>
+            <h1 class="foundedUsercollectionCounterNumber">{{ collectionNum }}</h1>
+            <h1 class="foundedUsercollectionCounterText"> Collections</h1>
           </div>
         </div>
-        <div class="collectionContainer" style="margin-top: 20px;">
-          <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-            <h1 class="uppercase bold big-text customHeaderText">{{ props.foundedUser.username }} collections</h1>
+        <div class="foundedUsercollectionContainer" style="margin-top: 20px;">
+          <div class="foundedUsercollectionContainterHeader" style="display: flex; justify-content: center;">
+            <h1 class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }} collections</h1>
           </div>
           <div style="display: flex; justify-content: center; margin-bottom: 20px;">
             <div class="separator"></div>
           </div>
-          <div class="collectionListContainerBorder">
-            <div class="collectionListContainer" v-if="collectionNum > 0">
-              <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
+          <div class="foundedUsercollectionListContainerBorder">
+            <div class="foundedUsercollectionListContainer" v-if="collectionNum > 0">
+              <lightgallery :settings="{ speed: 500, plugins: plugins }" 
                 class="imageContainer" v-for="(collection,index) in collections" :key="index">
                   <a v-if="collection.frontPage !== ''" style="margin:2px" :data-src="collection.frontPage">
-                    <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
+                    <img class="foundedUserlightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
                   </a>
                   <a v-else style="margin:2px" data-src="../assets/imgs/logo_without_background.png">
-                    <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
+                    <img class="foundedUserlightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
                   </a>
               </lightgallery>
             </div>
-            <div v-else class="collectionListContainer" style="margin-bottom: 30px;">
-              <span style="font-size: 20px;">You dont have any collection yet!!</span>
+            <div v-else class="foundedUsercollectionListContainer" style="margin-bottom: 30px;">
+              <span style="font-size: 20px;">{{ props.foundedUser.username }} doesn't have any collection yet!!</span>
             </div>
           </div>
         </div>
         <!-- <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button> -->
       </div>
-      <div class ="collectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
+      <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
         <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
       </div>
     </div>
@@ -48,10 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import SideBar from '@/components/menu/SideBar.vue';
-import NavBar from '@/components/menu/NavBar.vue';
-import Footer from '@/components/menu/Footer.vue';
-import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2'
 import { ref, onMounted  } from "vue";
@@ -77,14 +73,6 @@ import { API_URI } from '@/types/env';
 
 const plugins = [lgThumbnail, lgZoom];
 
-const onInit = () => {
-
-};
-
-const onBeforeSlide = () => {
-  
-};
-
 // SCRIPT
 
 const authStore = userAuthentication();
@@ -101,29 +89,29 @@ onMounted(async () => {
   await getCollectionData();
 })
 
-const userData = authStore.getUserData();
-
 const getCollectionData = async () => {
-  if (!await authStore.checkToken()) {
-    router.push('/');
-  } else {
-    const response = await fetch(API_URI + `/collections/user/${userData.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-      },
-    })
-    if (!response.ok) {
-      Swal.fire({
-        icon: "error",
-        title: "Failed to get collections",
-        showConfirmButton: false,
-        timer: 1700
-      });
+  if(props.foundedUser) {
+    if (!await authStore.checkToken()) {
+      router.push('/');
     } else {
-      collections.value = await response.json();
-      collectionNum.value = collections.value.length;
+      const response = await fetch(API_URI + `/collections/user/${props.foundedUser.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+      })
+      if (!response.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "Failed to get collections",
+          showConfirmButton: false,
+          timer: 1700
+        });
+      } else {
+        collections.value = await response.json();
+        collectionNum.value = collections.value.length;
+      }
     }
   }
 }
@@ -147,7 +135,7 @@ const emitCloseCollectionComponent = () => {
 @import 'lightgallery/css/lg-thumbnail.css';
 @import 'lightgallery/css/lg-zoom.css';
 
-.lightGalleryImg {
+.foundedUserlightGalleryImg {
   width: 200px;
   height: 200px;
   max-width: 200px;
@@ -156,12 +144,11 @@ const emitCloseCollectionComponent = () => {
 </style>
 
 <style>
-.collectionsContainer {
+.foundedUserCollectionsContainer {
   display: flex;
-  min-height: 100vh;
 }
 
-.collectionsContent {
+.foundedUsercollectionsContent {
   flex-grow: 1; 
   position: relative;
 }
@@ -194,14 +181,15 @@ const emitCloseCollectionComponent = () => {
   height: 50px;
 }
 
-.collectionsMainContent {
-  margin: 69px 0 50px;
+.foundedUsercollectionsMainContent {
+  margin: 0px;
   background-color: #f3f2f2;
   min-height: calc(100vh - 69px - 50px);
-  padding: 48px;
+  padding-left: 48px;
+  padding-right: 48px;
 }
 
-.collectionContainer {
+.foundedUsercollectionContainer {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -224,11 +212,11 @@ const emitCloseCollectionComponent = () => {
   width: 50%;
 }
 
-.collectionContainterHeader {
+.foundedUsercollectionContainterHeader {
   padding: 10px;
 }
 
-.numCollsText h1{
+.foundedUsernumCollsText h1{
   margin-top: 2px;
   margin-bottom: 2px;
 }
@@ -237,22 +225,22 @@ const emitCloseCollectionComponent = () => {
   margin-bottom: 10px;
 }
 
-.collectionCounterText {
+.foundedUsercollectionCounterText {
   font-size: 22px;
 }
 
-.collectionCounterNumber {
+.foundedUsercollectionCounterNumber {
   font-size: 40px;
   font-weight: bold;
 }
 
-.collectionListContainerBorder {
+.foundedUsercollectionListContainerBorder {
   display: flex;
   flex-wrap: wrap;
   justify-content: center; 
 }
 
-.collectionListContainer {
+.foundedUsercollectionListContainer {
   text-align: center;
   margin: 10px; 
 }
@@ -307,7 +295,7 @@ button.p-button.p-component.customCreateCollectionButton:hover {
   transform: scale(1);
 }
 
-.customHeaderText {
+.foundedUsercustomHeaderText {
   margin-top: 3px;
   margin-bottom: 3px;
 }

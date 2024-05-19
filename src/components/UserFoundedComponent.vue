@@ -100,6 +100,7 @@ const sendFriendRequest = async () => {
   padding: 0;
   font-family: Arial, sans-serif;
   padding: 3rem;
+  padding-bottom: 0;
   display: flex;
   justify-content: center; 
   align-items: center;
@@ -140,7 +141,7 @@ const sendFriendRequest = async () => {
 
 .userProfileComponentColumn {
   flex: 0 0 auto;
-  width: 66.666667%;
+  width: 100%;
 }
 
 @media (max-width: 991.98px) {
