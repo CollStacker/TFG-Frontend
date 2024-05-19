@@ -3,20 +3,21 @@
   <template v-if="last20Products && last20Products.length > 0">
     <div class="overviewMainContainer">
       <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-          <div class="userPublication">
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-            <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
-          </div>
-          <div>
-            <img v-if="product.image" :src="product.image" class="productImg">
-            <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
-            <h1 class="bold productTitle">{{ product.name }}</h1>
-          </div>
+        <div class="userPublication">
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+          <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
+          <span v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
+        </div>
+        <div class="productDataContainer">
+          <img v-if="product.image" :src="product.image" class="productImg">
+          <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
+          <h1 class="bold productTitle">{{ product.name }}</h1>
+        </div>
       </div>
     </div>
   </template>
@@ -90,6 +91,22 @@ const findProductsOwners = async() => {
     }
   }
 }
+
+function timeSince(date: string): string {
+  const now = new Date();
+  const pastDate = new Date(date);
+  const differenceInMilliseconds = now.getTime() - pastDate.getTime();
+
+  // Convertir la diferencia a horas y días
+  const hours = Math.floor(differenceInMilliseconds / (1000 * 60 * 60));
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  }
+}
 </script>
 
 <style scoped>
@@ -102,7 +119,7 @@ const findProductsOwners = async() => {
   flex-direction: column;
   align-items: center; 
   margin-bottom: 20px; 
-  max-width: 600px;
+  max-width: 420px;
   max-height: 1000px;
   padding: 10px 20px 10px 20px;
 }
@@ -146,5 +163,16 @@ const findProductsOwners = async() => {
 
 .productTitle {
   font-size: 25px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.productDataContainer {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
