@@ -3,7 +3,7 @@
   <template v-if="last20Products && last20Products.length > 0">
     <div class="overviewMainContainer">
       <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-        <div class="userDataContainer">
+        <div class="userDataContainer" v-if="last20ProductsUser[index]">
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
