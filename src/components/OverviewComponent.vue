@@ -3,7 +3,7 @@
   <template v-if="last20Products && last20Products.length > 0">
     <div class="overviewMainContainer">
       <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-        <div class="userPublication">
+        <div class="userDataContainer">
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
@@ -11,8 +11,8 @@
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
           <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
-          <span v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
         </div>
+        <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
         <div class="productDataContainer">
           <img v-if="product.image" :src="product.image" class="productImg">
           <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
@@ -45,6 +45,7 @@ const router = useRouter();
 onMounted(async () => {
   await findProducts();
   await findProductsOwners();
+  await reverseArrays();
 });
 
 const last20Products = ref<HomeViewProductDataInterface[]>();
@@ -107,6 +108,16 @@ function timeSince(date: string): string {
     return `${hours} hour${hours > 1 ? 's' : ''} ago`;
   }
 }
+
+const reverseArrays = () => {
+  if(last20Products.value) {
+    last20Products.value = last20Products.value.reverse();
+  }
+  if(last20ProductsUser.value) {
+    last20ProductsUser.value = last20ProductsUser.value.reverse();
+  }
+}
+
 </script>
 
 <style scoped>
@@ -130,13 +141,14 @@ function timeSince(date: string): string {
   align-items: center; 
 }
 
-.userPublication {
+.userDataContainer {
   display: flex;
   align-items: center;
-  padding: 6px;
+
+  margin-right: auto;
 }
 
-.userPublication img {
+.userDataContainer img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -168,11 +180,16 @@ function timeSince(date: string): string {
   margin-bottom: 10px;
   word-break: break-word;
   white-space: normal;
+  text-align: center;
 }
 
 .productDataContainer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.publicationDate {
+  margin-left: auto; 
 }
 </style>
