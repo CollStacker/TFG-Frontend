@@ -186,20 +186,47 @@ const redirectToUserPage = (currentUser: UserInterface) => {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
+.productImg:hover {
+  transform: scale(1.01);
+  cursor: pointer; 
+}
+
 .productTitle {
-  font-size: 25px;
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-  word-break: break-word;
-  white-space: normal;
-  text-align: center;
+    font-size: 25px;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+    word-break: break-word;
+    white-space: normal;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    cursor: pointer; 
+}
+
+.productTitle::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: black; 
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: bottom right;
+}
+
+.productTitle:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 .productDataContainer {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .publicationDate {
@@ -228,4 +255,5 @@ const redirectToUserPage = (currentUser: UserInterface) => {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
 </style>
