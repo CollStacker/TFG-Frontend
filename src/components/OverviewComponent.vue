@@ -10,7 +10,7 @@
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-          <span class="ml-12 largeText userNameSpan">{{ last20ProductsUser[index].username }}</span>
+          <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
         </div>
         <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
         <div class="productDataContainer">
@@ -116,6 +116,19 @@ const reverseArrays = () => {
   if(last20ProductsUser.value) {
     last20ProductsUser.value = last20ProductsUser.value.reverse();
   }
+}
+
+const redirectToUserPage = (currentUser: UserInterface) => {
+  authStore.setFoundedUserData({
+    id: currentUser.id,
+    username: currentUser.username,
+    name: currentUser.name,
+    surnames: currentUser.surnames,
+    email: currentUser.email,
+    biography: currentUser.biography,
+    profilePhoto: currentUser.profilePhoto
+  })
+  router.push('/userFounded');
 }
 
 </script>
