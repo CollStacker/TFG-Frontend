@@ -10,7 +10,7 @@
           <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
           <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-          <span class="ml-12 largeText">{{ last20ProductsUser[index].username }}</span>
+          <span class="ml-12 largeText userNameSpan">{{ last20ProductsUser[index].username }}</span>
         </div>
         <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
         <div class="productDataContainer">
@@ -191,5 +191,28 @@ const reverseArrays = () => {
 
 .publicationDate {
   margin-left: auto; 
+}
+
+.userNameSpan {
+  position: relative;
+  cursor: pointer; 
+}
+
+.userNameSpan::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: black;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: bottom right;
+}
+
+.userNameSpan:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 </style>
