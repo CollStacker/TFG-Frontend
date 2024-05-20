@@ -1,31 +1,36 @@
 <template>
   <Toast/>
-  <template v-if="last20Products && last20Products.length > 0">
-    <div class="overviewMainContainer">
-      <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-        <div class="userDataContainer" v-if="last20ProductsUser[index]">
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-          <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-          <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
-        </div>
-        <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
-        <div class="productDataContainer">
-          <img v-if="product.image" :src="product.image" class="productImg">
-          <img v-else src="../assets/imgs/logo_without_background.png" class="productImg">
-          <h1 class="bold productTitle">{{ product.name }}</h1>
+  <div v-if="!showProductInformation">
+    <template v-if="last20Products && last20Products.length > 0">
+      <div class="overviewMainContainer">
+        <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
+          <div class="userDataContainer" v-if="last20ProductsUser[index]">
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+            <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
+          </div>
+          <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
+          <div class="productDataContainer">
+            <img v-if="product.image" :src="product.image" class="productImg" @click="openProductDataComponent(product)">
+            <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
+            <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
+          </div>
         </div>
       </div>
-    </div>
-  </template>
-  <template v-else>
-    <div class="overviewComponentContainer">
-      <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
-    </div>
-  </template>
+    </template>
+    <template v-else>
+      <div class="overviewComponentContainer">
+        <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
+      </div>
+    </template>
+  </div>
+  <div v-else>
+    <ProductDataComponent :selectedProduct="selectedProduct" :readOnly="readOnly" @emitCloseProductComponent="closeProductComponent()"/>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -37,6 +42,8 @@ import { useRouter } from 'vue-router';
 import { type HomeViewProductDataInterface } from '@/types/product';
 import { type UserInterface } from '@/types/user';
 import { API_URI } from '@/types/env';
+import ProductDataComponent from './ProductDataComponent.vue';
+import { type WholeProductDataInterface } from '@/types/product';
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -50,6 +57,10 @@ onMounted(async () => {
 
 const last20Products = ref<HomeViewProductDataInterface[]>();
 const last20ProductsUser = ref<UserInterface[]>([]);
+
+const readOnly = ref<boolean>(true);
+const showProductInformation = ref(false);
+const selectedProduct = ref<WholeProductDataInterface>();
 
 const findProducts = async() => {
   if(!await authStore.checkToken()) {
@@ -109,7 +120,7 @@ function timeSince(date: string): string {
   }
 }
 
-const reverseArrays = () => {
+const reverseArrays = async () => {
   if(last20Products.value) {
     last20Products.value = last20Products.value.reverse();
   }
@@ -129,6 +140,39 @@ const redirectToUserPage = (currentUser: UserInterface) => {
     profilePhoto: currentUser.profilePhoto
   })
   router.push('/userFounded');
+}
+
+const openProductDataComponent = async (product: HomeViewProductDataInterface) => {
+  const productToOpen: WholeProductDataInterface = {
+    _id: product._id,
+    name: product.name,
+    description: product.description,
+    image: product.image, 
+    publicationDate: product.publicationDate, 
+    collectionId: '',
+  }
+  if (!authStore.checkToken()) {
+    router.push('/');
+  } {
+    const response = await fetch(API_URI + `/product-fields/${product._id}`,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    });
+    if(!response.ok) {
+
+    } else {
+      productToOpen.customFields = await response.json();
+    }
+  }
+  selectedProduct.value = productToOpen;
+  showProductInformation.value = true;
+}
+
+const closeProductComponent = () => {
+  showProductInformation.value =  false;
 }
 
 </script>
