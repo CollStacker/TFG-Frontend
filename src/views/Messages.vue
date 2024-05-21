@@ -4,63 +4,68 @@
     <SideBar class="sidebar"></SideBar>
     <div class="messagesContent">
       <NavBar class="customNavBar"></NavBar>
-      <div class ="messagesMainContent">
-        <div class="friendRequestContainer">
-          <span class="uppercase bold big-text pl-7">Friend Requests</span>
-          <div class="ccseparator"></div>
-          <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
-            <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
-              <div class="friendRequestData">
-                <img v-if="friendRequest.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-                <img v-if="friendRequest.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-                <img v-if="friendRequest.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-                <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-                <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-                <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-                <span class="ml-12 largeText">{{ friendRequest.username }}</span>
-                <div class="button-container">
-                  <Button class="customAcceptRequestButton pi pi-plus" label=" Accept" @click="acceptFriendRequest(friendRequest.id)"></Button>
-                  <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Decline" @click="refuseFriendRequest(friendRequest.id)"></Button>
+      <div v-if="isLoading" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+      <div v-else>
+        <div class ="messagesMainContent">
+          <div class="friendRequestContainer">
+            <span class="uppercase bold big-text pl-7">Friend Requests</span>
+            <div class="ccseparator"></div>
+            <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
+              <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
+                <div class="friendRequestData">
+                  <img v-if="friendRequest.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                  <img v-if="friendRequest.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                  <img v-if="friendRequest.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                  <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                  <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                  <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                  <span class="ml-12 largeText">{{ friendRequest.username }}</span>
+                  <div class="button-container">
+                    <Button class="customAcceptRequestButton pi pi-plus" label=" Accept" @click="acceptFriendRequest(friendRequest.id)"></Button>
+                    <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Decline" @click="refuseFriendRequest(friendRequest.id)"></Button>
+                  </div>
                 </div>
+                <Divider />
               </div>
-              <Divider />
-            </div>
-          </template>
-          <template v-else>
-            <div class="p-5">
-              <span class="largeText">Sorry, you currently have no friend requests! </span>
-            </div>
-          </template>
-        </div>
-        <div class="friendListContainer">
-          <span class="uppercase bold big-text pl-7">Friends List</span>
-          <div class="ccseparator"></div>
-          <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
-            <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
-              <div class="friendRequestData">
-                <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-                <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-                <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-                <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-                <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-                <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-                <span class="ml-12 largeText">{{ friend.username }}</span>
-                <div class="button-container">
-                  <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click=""></Button>
-                  <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
+            </template>
+            <template v-else>
+              <div class="p-5">
+                <span class="largeText">Sorry, you currently have no friend requests! </span>
+              </div>
+            </template>
+          </div>
+          <div class="friendListContainer">
+            <span class="uppercase bold big-text pl-7">Friends List</span>
+            <div class="ccseparator"></div>
+            <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
+              <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
+                <div class="friendRequestData">
+                  <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                  <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                  <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                  <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                  <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                  <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                  <span class="ml-12 largeText">{{ friend.username }}</span>
+                  <div class="button-container">
+                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click=""></Button>
+                    <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
+                  </div>
                 </div>
+                <Divider />
               </div>
-              <Divider />
-            </div>
-          </template>
-          <template v-else>
-            <div class="p-5">
-              <span class="largeText">Sorry, you currently have no friends! </span>
-            </div>
-          </template>
+            </template>
+            <template v-else>
+              <div class="p-5">
+                <span class="largeText">Sorry, you currently have no friends! </span>
+              </div>
+            </template>
+          </div>
+          <!-- {{ friendList }}
+          {{ friendListRelevantData }} -->
         </div>
-        <!-- {{ friendList }}
-        {{ friendListRelevantData }} -->
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -91,12 +96,14 @@ const friendRequests = ref<{_id: string, userId: string, requestUserId: string}[
 const friendRequestsRelevantData = ref<UserInterface[]>([]);
 const friendList = ref<string[]>();
 const friendListRelevantData = ref<UserInterface[]>([]);
+const isLoading = ref<boolean>(true);
 
 onMounted(async () => {
   await getFriendRequest();
   await getFriendRequestRelevantData();
   await getFriendList();
   await getFriendListRelevantData();
+  isLoading.value = false;
 });
 
 const resetInformation = async () => {
@@ -433,6 +440,39 @@ button.p-button.p-component.customRefuseRequestButton.spanDisplayNone span {
 
 .pl-7 {
   padding-left: 7px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #f3f3f3; 
+  border-top: 8px solid #333; 
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
 }
 
 </style>
