@@ -1,10 +1,10 @@
 <template>
-  <div class="overViewContainer"> 
+  <div class="userProfileContainer"> 
     <SideBar class="sidebar"></SideBar>
-    <div class="overViewContent">
-      <NavBar class="customNavBar"></NavBar>
-      <div class ="overViewMainContent">
-        <OverviewComponent></OverviewComponent>
+    <div class="userProfileContent">
+      <NavBar class="customNavBar" @refreshPage="refreshPage()"></NavBar>
+      <div class ="userProfileMainContent">
+        <UserFoundedComponent :key="userFoundedComponentKey"></UserFoundedComponent>
       </div>
       <Footer class="customFooter"></Footer>
     </div>
@@ -16,16 +16,22 @@
 import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
-import OverviewComponent from '@/components/OverviewComponent.vue'
+import UserFoundedComponent from '@/components/UserFoundedComponent.vue';
+import {ref} from 'vue';
+
+const userFoundedComponentKey = ref<number>(0);
+const refreshPage = () => {
+  userFoundedComponentKey.value += 1;
+}
 </script>
 
 <style>
-.overViewContainer {
+.userProfileContainer {
   display: flex;
   min-height: 100vh;
 }
 
-.overViewContent {
+.userProfileContent {
   flex-grow: 1; 
   position: relative;
 }
@@ -58,11 +64,10 @@ import OverviewComponent from '@/components/OverviewComponent.vue'
   height: 50px;
 }
 
-.overViewMainContent {
+.userProfileMainContent {
   margin: 69px 0 50px;
   background-color: #f3f2f2;
   min-height: calc(100vh - 69px - 50px);
-  padding: 48px;
 }
 
 body {

@@ -2,16 +2,17 @@
   <div class="navBarContainer">
     <Menubar :model="items" class="customNavBar">
       <template #start>
+        <Toast/>
         <div class="searchInputText">
           <span class="customSearchLogo pi pi-search"></span>
-          <InputText placeholder="Search" type="text" class="customNavBarInputText" />
+          <InputText v-model="currentUser" placeholder="Search" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
         </div>
       </template>
       <template #item="{item, props, hasSubmenu, root}">
         <a v-ripple class="customNavbarItem flex align-items-center" v-bind="props.action" @click="handleNavbar(item.label)">
           <span :class="item.icon" />
           <span class="customNavbarText">{{ item.label }}</span>
-          <Badge v-if="item.badge" class="customNavbarBadge" severity="contrast" :value="item.badge" />
+          <Badge v-if="item.badge && friendRequests && friendRequests.length > 0" class="customNavbarBadge" severity="contrast" :value="friendRequests.length" />
           <i v-if="hasSubmenu" :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
         </a>
       </template>
@@ -23,16 +24,48 @@
 import Menubar from 'primevue/menubar';
 import InputText from 'primevue/inputtext';
 import Badge from 'primevue/badge';
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
+import { API_URI } from '@/types/env';
+import Toast from 'primevue/toast';
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const authStore = userAuthentication();
 
 const router = useRouter();
+
+const emits = defineEmits(["refreshPage"])
+
+onMounted(async () => {
+  await getFriendRequest();
+});
+
+const friendRequests = ref<{_id: string, userId: string, requestUserId: string}[]>();
+const getFriendRequest = async () => {
+  if (!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const response = await fetch(API_URI + `/friendRequest/${authStore.getUserData().id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if(!response.ok) {
+      const e = await response.json();
+    } else {
+      const foundedFriendRequests = await response.json();
+      friendRequests.value = foundedFriendRequests;
+    }
+  }
+}
+
 const items = ref([
     {
-        label: '',
+        label: 'Messages',
         icon: 'pi pi-comments',
         badge: 2
     },
@@ -71,11 +104,11 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
     itemSelected = label.toString();
   }
   switch (itemSelected) {
-    case 'Notification':
-      
+    case 'Messages':
+      router.push('/messages')
       break;
     case 'My profile':
-      router.push('userProfile')
+      router.push('/userProfile')
       break;
     case 'Help':
       
@@ -92,6 +125,35 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
       break;
     default:
       break;
+  }
+}
+
+const currentUser = ref<string>("")
+const searchUser = async () => {
+  if(!await authStore.checkToken()) {
+    router.push('/')
+  } else {
+    if(currentUser.value !== "") {
+      // process data
+      const foundedUser = await fetch(API_URI + `/findUser/${currentUser.value}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+      })
+      if (!foundedUser.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
+      } else {
+        const foundedUserJSON = await foundedUser.json();
+        authStore.setFoundedUserData(foundedUserJSON);
+        emits("refreshPage")
+        router.push('/userFounded')
+      }
+  
+      // Reset of currenUser ref var
+      currentUser.value = "";
+    }
   }
 }
 

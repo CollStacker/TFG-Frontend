@@ -1,5 +1,5 @@
 export interface UserInterface {
-  _id?: string
+  id: string
   username: string //* Unique
   email: string //* Unique
   name: string

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { API_URI } from '@/types/env';
+import { type UserInterface } from '../types/user';
 
 export const userAuthentication = defineStore({
   id: 'authentication',
@@ -13,7 +14,21 @@ export const userAuthentication = defineStore({
     surnames: "",
     profilePhoto: "",
     biography: "",
-    loginError: false
+    loginError: false,
+
+    // friends
+    friends: [],
+    // INFORMATION WHEN FINDING A USER
+    userFound: false,
+    user: {
+      id: "",
+      username: "",
+      email: "",
+      name: "",
+      surnames: "",
+      profilePhoto: "",
+      biography: "",
+    },
   }),
   actions: {
     getAuthentication(): boolean {
@@ -32,6 +47,8 @@ export const userAuthentication = defineStore({
       this.surnames = "";
       this.profilePhoto = "";
       this.biography = "";
+      
+      this.friends = []
     },
     setUserData(userData: { biography: string, email: string, id: string,name: string, profilePhoto: string,surnames: string, username: string}) {
       this.id = userData.id;
@@ -80,6 +97,7 @@ export const userAuthentication = defineStore({
         }
         const userDataJSON = await userData.json();
         this.setUserData(userDataJSON);
+        this.findFriends();
         return "Succes";
       }
     },
@@ -98,5 +116,35 @@ export const userAuthentication = defineStore({
       }
       return false;
     },
+    setFoundedUserData(foundedUser: UserInterface) {
+      this.userFound = true;
+      this.user.id = foundedUser.id;
+      this.user.biography = foundedUser.biography; 
+      this.user.name = foundedUser.name; 
+      this.user.username = foundedUser.username; 
+      this.user.surnames = foundedUser.surnames; 
+      this.user.profilePhoto = foundedUser.profilePhoto; 
+      this.user.email = foundedUser.email;
+    },
+    getFoundedUserData() {
+      return this.user;
+    },
+    async findFriends() {
+      const response = await fetch(API_URI + `/getFriends/${this.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+      console.log(response)
+      console.log(response.json)
+      if(response.ok) {
+        this.friends = await response.json();
+      }
+    },
+    getFriends ():string[] {
+      return this.friends;
+    }
   },
 })
