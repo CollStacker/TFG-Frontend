@@ -134,7 +134,7 @@ const getCollectionData = async () => {
       });
     } else {
       collections.value = await response.json();
-      if(collectionNum.value) {
+      if(collections.value) {
         collectionNum.value = collections.value.length;
       }
     }
