@@ -1,35 +1,40 @@
 <template>
   <Toast/>
-  <div v-if="!showProductInformation">
-    <template v-if="last20Products && last20Products.length > 0">
-      <div class="overviewMainContainer">
-        <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
-          <div class="userDataContainer" v-if="last20ProductsUser[index]">
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-            <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-            <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
-          </div>
-          <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
-          <div class="productDataContainer">
-            <img v-if="product.image" :src="product.image" class="productImg" @click="openProductDataComponent(product)">
-            <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
-            <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <div class="overviewComponentContainer">
-        <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
-      </div>
-    </template>
+  <div v-if="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
   </div>
   <div v-else>
-    <ProductDataComponent :selectedProduct="selectedProduct" :readOnly="readOnly" @emitCloseProductComponent="closeProductComponent()"/>
+    <div v-if="!showProductInformation">
+      <template v-if="last20Products && last20Products.length > 0">
+        <div class="overviewMainContainer">
+          <div class="overviewComponentContainer" v-for="(product,index) in last20Products">
+            <div class="userDataContainer" v-if="last20ProductsUser[index]">
+              <img v-if="last20ProductsUser[index].profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+              <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
+            </div>
+            <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>
+            <div class="productDataContainer">
+              <img v-if="product.image" :src="product.image" class="productImg" @click="openProductDataComponent(product)">
+              <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
+              <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="overviewComponentContainer">
+          <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
+        </div>
+      </template>
+    </div>
+    <div v-else>
+      <ProductDataComponent :selectedProduct="selectedProduct" :readOnly="readOnly" @emitCloseProductComponent="closeProductComponent()"/>
+    </div>
   </div>
 </template>
 
@@ -53,10 +58,12 @@ onMounted(async () => {
   await findProducts();
   await findProductsOwners();
   await reverseArrays();
+  isLoading.value = false;
 });
 
 const last20Products = ref<HomeViewProductDataInterface[]>();
 const last20ProductsUser = ref<UserInterface[]>([]);
+const isLoading = ref<boolean>(true);
 
 const readOnly = ref<boolean>(true);
 const showProductInformation = ref(false);
@@ -298,6 +305,27 @@ const closeProductComponent = () => {
 .userNameSpan:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #333;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 </style>
