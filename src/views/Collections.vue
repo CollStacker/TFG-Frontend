@@ -3,50 +3,55 @@
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsContent">
       <NavBar class="customNavBar"></NavBar>
-      <div class ="collectionsMainContent" v-if="showCollectionView == true">
-        <div v-if="collectionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
-          <div>
-            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="collectionCounterText"> Collection</h1>
-          </div>
-          <div style="margin-left: auto;">
-            <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
-          </div>
-        </div>
-        <div v-else class="numCollsText" style="display: flex; align-items: center;">
-          <div>
-            <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-            <h1 class="collectionCounterText"> Collections</h1>
-          </div>
-          <div style="margin-left: auto;">
-            <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
-          </div>
-        </div>
-        <div class="collectionContainer" style="margin-top: 20px;">
-          <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-            <h1 class="uppercase bold big-text customHeaderText">My collections</h1>
-          </div>
-          <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-            <div class="separator"></div>
-          </div>
-          <div class="collectionListContainerBorder">
-            <div class="collectionListContainer" v-if="collectionNum > 0">
-              <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
-                class="imageContainer" v-for="(collection,index) in collections" :key="index">
-                  <a v-if="collection.frontPage !== ''" style="margin:2px" :data-src="collection.frontPage">
-                    <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
-                  </a>
-                  <a v-else style="margin:2px" data-src="../assets/imgs/logo_without_background.png">
-                    <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
-                  </a>
-              </lightgallery>
+      <div v-if="isLoading" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+      <div v-else>
+        <div class ="collectionsMainContent" v-if="showCollectionView == true">
+          <div v-if="collectionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
+            <div>
+              <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
+              <h1 class="collectionCounterText"> Collection</h1>
             </div>
-            <div v-else class="collectionListContainer" style="margin-bottom: 30px;">
-              <span style="font-size: 20px;">You dont have any collection yet!!</span>
+            <div style="margin-left: auto;">
+              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
             </div>
           </div>
+          <div v-else class="numCollsText" style="display: flex; align-items: center;">
+            <div>
+              <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
+              <h1 class="collectionCounterText"> Collections</h1>
+            </div>
+            <div style="margin-left: auto;">
+              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
+            </div>
+          </div>
+          <div class="collectionContainer" style="margin-top: 20px;">
+            <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
+              <h1 class="uppercase bold big-text customHeaderText">My collections</h1>
+            </div>
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+              <div class="separator"></div>
+            </div>
+            <div class="collectionListContainerBorder">
+              <div class="collectionListContainer" v-if="collectionNum > 0">
+                <lightgallery :settings="{ speed: 500, plugins: plugins }" :onInit="onInit" :onBeforeSlide="onBeforeSlide"
+                  class="imageContainer" v-for="(collection,index) in collections" :key="index">
+                    <a v-if="collection.frontPage !== ''" style="margin:2px" :data-src="collection.frontPage">
+                      <img class="lightGalleryImg" alt="img1" :src="collection.frontPage" @click="openCollectionData(collection)"/>
+                    </a>
+                    <a v-else style="margin:2px" data-src="../assets/imgs/logo_without_background.png">
+                      <img class="lightGalleryImg" alt="img2" src="../assets/imgs/logo_without_background.png" @click="openCollectionData(collection)" />
+                    </a>
+                </lightgallery>
+              </div>
+              <div v-else class="collectionListContainer" style="margin-bottom: 30px;">
+                <span style="font-size: 20px;">You dont have any collection yet!!</span>
+              </div>
+            </div>
+          </div>
+          <!-- <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button> -->
         </div>
-        <!-- <Button @click="createProduct" class="pi pi-plus customCreateCollectionButton"> Create Product</Button> -->
       </div>
       <div class ="collectionsMainContent" v-if="showCollectionView == false && showCollectionDataComponent == true" >
         <CollectionDataComponent :collection="collectionToOpen" @emitCloseCollectionComponent="emitCloseCollectionComponent()"/>
@@ -100,8 +105,11 @@ const showCollectionDataComponent = ref(false)
 const collectionNum = ref(0);
 const collections = ref();
 
+const isLoading = ref<boolean>(true);
+
 onMounted(async () => {
   await getCollectionData();
+  isLoading.value = false;
 })
 
 const userData = authStore.getUserData();
@@ -321,6 +329,39 @@ button.p-button.p-component.customCreateCollectionButton:hover {
 .customHeaderText {
   margin-top: 3px;
   margin-bottom: 3px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
+}
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #f3f3f3; 
+  border-top: 8px solid #333; 
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
 }
 
 </style>
