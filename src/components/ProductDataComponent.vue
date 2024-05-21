@@ -120,6 +120,7 @@ const saveNewProductData = async () => {
       if(!response.ok) {
         toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed editing product', life: 3000 });
       } else {
+        toast.add({ severity: 'success', summary: 'Product edited', detail: `Product: ${newProductData.name} has been edited.`, life: 3000 });
         updateProduct();
         clearData();
         editProduct.value = false;

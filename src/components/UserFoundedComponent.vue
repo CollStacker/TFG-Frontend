@@ -96,7 +96,7 @@ const sendFriendRequest = async () => {
       const e = await friendshipRequest.json();
       toast.add({ severity: 'error', summary: 'Error Message', detail: e.error.message, life: 3000 });
     } else {
-      // console.log(friendshipRequest)
+      toast.add({ severity: 'success', summary: 'Collection created', detail: 'Friend request has been sent.', life: 3000 });
     }
   }
 }

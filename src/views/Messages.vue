@@ -172,6 +172,7 @@ const acceptFriendRequest = async (requesterId: string) => {
     if(!response.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed accepting friend request.', life: 3000 });
     } else {
+      toast.add({ severity: 'success', summary: 'Succes message', detail: 'New friend added to list.', life: 3000 });
       await resetInformation();
     }
   }
@@ -196,6 +197,7 @@ const refuseFriendRequest = async (requesterId: string) => {
     if(!response.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed refusing friend request.', life: 3000 });
     } else {
+      toast.add({ severity: 'info', summary: 'Succes message', detail: 'Friend request refused.', life: 3000 });
       await resetInformation();
     }
   }
@@ -262,6 +264,7 @@ const deleteFriend = async (friendId: string) => {
     if (!response.ok) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed deleting friend.', life: 3000 });
     } else {
+      toast.add({ severity: 'info', summary: 'Succes message', detail: 'Friend deleted.', life: 3000 });
       await resetInformation();
     }
   }

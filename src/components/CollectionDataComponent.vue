@@ -349,6 +349,7 @@ const addCategorie = async () => {
         });
       } else {
         newCategoryName.value = "";
+        toast.add({ severity: 'success', summary: 'Categorie created', detail: `Categorie: ${newCategory.value.name} has been created.`, life: 3000 });
         await getCollectionCategories();
         openAddCategoriesDialog.value = false;
       }
