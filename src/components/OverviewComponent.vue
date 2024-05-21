@@ -312,20 +312,32 @@ const closeProductComponent = () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
 }
 
 .spinner {
-  border: 16px solid #f3f3f3;
-  border-top: 16px solid #333;
+  width: 80px;
+  height: 80px;
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #333; 
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
+  animation: spin 1.5s linear infinite;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
 }
 
 </style>
