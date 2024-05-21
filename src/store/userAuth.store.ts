@@ -124,5 +124,18 @@ export const userAuthentication = defineStore({
     getFoundedUserData() {
       return this.user;
     },
+    async getFriends():Promise<string[]> {
+      const response = await fetch(API_URI + `/getFriends/${this.$id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+      if(response.ok) {
+        return await response.json();
+      }
+      return [];
+    } 
   },
 })
