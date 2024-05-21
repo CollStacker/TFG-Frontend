@@ -16,6 +16,8 @@ export const userAuthentication = defineStore({
     biography: "",
     loginError: false,
 
+    // friends
+    friends: [],
     // INFORMATION WHEN FINDING A USER
     userFound: false,
     user: {
@@ -45,6 +47,8 @@ export const userAuthentication = defineStore({
       this.surnames = "";
       this.profilePhoto = "";
       this.biography = "";
+      
+      this.friends = []
     },
     setUserData(userData: { biography: string, email: string, id: string,name: string, profilePhoto: string,surnames: string, username: string}) {
       this.id = userData.id;
@@ -93,6 +97,7 @@ export const userAuthentication = defineStore({
         }
         const userDataJSON = await userData.json();
         this.setUserData(userDataJSON);
+        this.findFriends();
         return "Succes";
       }
     },
@@ -124,18 +129,22 @@ export const userAuthentication = defineStore({
     getFoundedUserData() {
       return this.user;
     },
-    async getFriends():Promise<string[]> {
-      const response = await fetch(API_URI + `/getFriends/${this.$id}`, {
+    async findFriends() {
+      const response = await fetch(API_URI + `/getFriends/${this.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.token}`,
         },
       })
+      console.log(response)
+      console.log(response.json)
       if(response.ok) {
-        return await response.json();
+        this.friends = await response.json();
       }
-      return [];
-    } 
+    },
+    getFriends ():string[] {
+      return this.friends;
+    }
   },
 })

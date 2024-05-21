@@ -3,8 +3,10 @@
   <div>
     <div class="foundedUserProfileComponentContainer">
       <div class="foundedUserProfileComponentColumn">
-        <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
-          <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
+        <div v-if="!checkAlreadyFriend()">
+          <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
+            <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
+          </div>
         </div>
         <div class="userProfileComponentCard"> 
           <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
@@ -52,7 +54,7 @@
 <script setup lang="ts">
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
 import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
@@ -68,6 +70,11 @@ const toast = useToast();
 const inputTextEditable = ref(true)
 const foundedUserData = ref(authStore.getFoundedUserData());
 const currentUserData = ref(authStore.getUserData());
+const friends = ref<string[]>(authStore.getFriends());
+
+const checkAlreadyFriend = ():boolean => {
+  return friends.value.includes(foundedUserData.value.id);
+}
 
 const sendFriendRequest = async () => {
   if(!await authStore.checkToken()) {
@@ -89,7 +96,7 @@ const sendFriendRequest = async () => {
       const e = await friendshipRequest.json();
       toast.add({ severity: 'error', summary: 'Error Message', detail: e.error.message, life: 3000 });
     } else {
-      console.log(friendshipRequest)
+      // console.log(friendshipRequest)
     }
   }
 }

@@ -75,7 +75,6 @@ const collectionNum = ref(0);
 const collections = ref<CollectionInterface[]>();
 
 onMounted(async () => {
-  console.log(props.foundedUser)
   await getCollectionData();
 })
 
