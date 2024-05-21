@@ -42,65 +42,70 @@
         <Button type="button" label="Save" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
       </div>
     </Dialog>
-    <div style="display: flex;">
-      <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
-      <div style="margin-left: auto;" v-if="!props.readOnly">
-        <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
-        <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
-        <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
-      </div>
+    <div v-if="isLoading" class="loading-spinner">
+      <div class="spinner"></div>
     </div>
-    <div class="collectionContainer" v-if="props.collection" style="margin-top: 20px; margin-bottom: 20px;">
-      <div class="collectionDataContainer">
-        <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
-          <a v-if="props.collection.frontPage !== ''" :href="props.collection.frontPage">
-            <img alt="Collection image" :src="props.collection.frontPage" class="lightGalleryImg"/>
-          </a>
-          <a v-else href="../assets/imgs/logo.png">
-            <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
-          </a>
-        </lightgallery>
-        <div class="collectionInformation" style="margin-left: 5px;">
-          <h1 class="bold mb-2" >{{ props.collection.title }}</h1>
-          <div class="collectionDescription mb-2">
-            <span>{{ props.collection.description }}</span>
-          </div>
-          <div class="badgeContainer">
-            <div v-if="collectionCategories && collectionCategories.length > 0" v-for="(category, index) in collectionCategories"> 
-              <Badge :value="category.name" severity="contrast"></Badge>
-            </div>
-          </div>
+    <div v-else>
+      <div style="display: flex;">
+        <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
+        <div style="margin-left: auto;" v-if="!props.readOnly">
+          <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
+          <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
+          <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
         </div>
-      </div> 
-    </div>
-    <div class="collectionContainer" >
-      <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-        <h1 class="uppercase bold big-text customHeaderText">Products</h1>
       </div>
-      <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-        <div class="separator"></div>
-      </div> 
-      <div v-if="!collectionProducts" class="noProductsContainer">
-        <span>There are no products in this collection!!</span>
-      </div>
-      <div v-else class="collectionListContainerBorder"> 
-        <div class="collectionListContainer">
-          <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
-            <a v-for="(product, index) in collectionProducts" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
-              <div class="productOverlay" @click="openProductComponent(product)">
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.description }}</p>
-                <div v-if="product.customFields">
-                  <div v-for="customField in product.customFields" style="display: flex; justify-content: center;">
-                    <p class="bold customFieldKey">{{ customField.key}}:</p>
-                    <p> {{ customField.value }}</p>
-                  </div>
-                </div>
-              </div>
-              <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image"/>
-              <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png"/>
+      <div class="collectionContainer" v-if="props.collection" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="collectionDataContainer">
+          <lightgallery :settings="{ speed: 500, plugins: plugins }" @init="onInit" @beforeSlide="onBeforeSlide" class="imageContainer">
+            <a v-if="props.collection.frontPage !== ''" :href="props.collection.frontPage">
+              <img alt="Collection image" :src="props.collection.frontPage" class="lightGalleryImg"/>
+            </a>
+            <a v-else href="../assets/imgs/logo.png">
+              <img alt="No image" src="../assets/imgs/logo_without_background.png" class="lightGalleryImg"/>
             </a>
           </lightgallery>
+          <div class="collectionInformation" style="margin-left: 5px;">
+            <h1 class="bold mb-2" >{{ props.collection.title }}</h1>
+            <div class="collectionDescription mb-2">
+              <span>{{ props.collection.description }}</span>
+            </div>
+            <div class="badgeContainer">
+              <div v-if="collectionCategories && collectionCategories.length > 0" v-for="(category, index) in collectionCategories"> 
+                <Badge :value="category.name" severity="contrast"></Badge>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+      <div class="collectionContainer" >
+        <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
+          <h1 class="uppercase bold big-text customHeaderText">Products</h1>
+        </div>
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <div class="separator"></div>
+        </div> 
+        <div v-if="!collectionProducts" class="noProductsContainer">
+          <span>There are no products in this collection!!</span>
+        </div>
+        <div v-else class="collectionListContainerBorder"> 
+          <div class="collectionListContainer">
+            <lightgallery :settings="gallerySettings" :onInit="onInit" :onBeforeSlide="onBeforeSlide" class="imageContainer">
+              <a v-for="(product, index) in collectionProducts" :data-lg-index="index" data-sub-html=".lg-sub-html" :key="index" class="productLink">
+                <div class="productOverlay" @click="openProductComponent(product)">
+                  <h3>{{ product.name }}</h3>
+                  <p>{{ product.description }}</p>
+                  <div v-if="product.customFields">
+                    <div v-for="customField in product.customFields" style="display: flex; justify-content: center;">
+                      <p class="bold customFieldKey">{{ customField.key}}:</p>
+                      <p> {{ customField.value }}</p>
+                    </div>
+                  </div>
+                </div>
+                <img class="lightGalleryImg" v-if="product.image" :alt="'img' + (index + 1)" :src="product.image"/>
+                <img class="lightGalleryImg" v-else :alt="'img' + (index + 1)" src="../assets/imgs/logo_without_background.png"/>
+              </a>
+            </lightgallery>
+          </div>
         </div>
       </div>
     </div>
@@ -152,11 +157,13 @@ const emitCloseCollectionComponent = () => {
 onMounted(async () => {
   await getCollectionCategories();
   await getCollectionProducts();
+  isLoading.value = false;
 });
 
 const showProducts = ref<boolean>(true);
 const showProductData = ref<boolean>(false);
 const selectedProduct = ref<WholeProductDataInterface>();
+const isLoading = ref<boolean>(true);
 
 const openProductComponent = (product: WholeProductDataInterface) => {
   selectedProduct.value = product;
@@ -593,5 +600,36 @@ button.p-button.p-component.editCollectionButton:hover {
   width: 400px;
 }
 
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
+}
 
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #f3f3f3; 
+  border-top: 8px solid #333; 
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+}
 </style>
