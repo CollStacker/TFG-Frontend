@@ -1,7 +1,15 @@
 <template>
   <div class="chat-container">
     <div class="chat-header">
-      <h2>Chat</h2>
+      <div class="friendData" v-if="props.friend">
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'femaleYoung'" src="../../assets/imgs/profilePhoto/female-young.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'maleYoung'" src="../../assets/imgs/profilePhoto/male-young.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'maleAdult'" src="../../assets/imgs/profilePhoto/male-adult.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'maleOld'" src="../../assets/imgs/profilePhoto/male-old.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'femaleOld'" src="../../assets/imgs/profilePhoto/female-old.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'femaleAdult'" src="../../assets/imgs/profilePhoto/female-adult.jpg"/>
+        <h2>{{ props.friend.username }}</h2>
+      </div>
       <span class="closeButton pi pi-times" @click="closeChat()"></span>
     </div>
     <div class="chat-messages">
@@ -167,7 +175,7 @@ const closeChat = () => {
   border: 1px solid #333;
 }
 
-.chat-header h2 {
+.chat-header div {
   flex: 1;
   text-align: center;
   margin: 0; 
@@ -182,5 +190,22 @@ const closeChat = () => {
 .closeButton:hover {
   transform: scale(1.1);
   cursor: pointer;
+}
+
+.friendDataProfilePhoto {
+  max-width: 70px;
+  max-height: 70px;
+  border-radius: 50px;
+}
+
+.friendData {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+}
+
+.friendData h2 {
+  margin: 0px;
+  margin-left: 15px;
 }
 </style>
