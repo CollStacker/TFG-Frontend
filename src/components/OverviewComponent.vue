@@ -1,7 +1,7 @@
 <template>
   <Toast/>
   <Dialog v-model:visible="readComments" class="commentsDialog" header=" ">
-
+    <CommentDialogComponent/>
   </Dialog>
   <div v-if="isLoading" class="loading-spinner">
     <div class="spinner"></div>
@@ -28,9 +28,9 @@
             </div>
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
-              <Button class="footerButton pi pi-thumbs-up" label=" Like" />
-              <Button class="footerButton pi pi-comment" label=" Comment" style="margin:0px 10px 0px 10px" @click="openProductComments()"/>
-              <Button class="footerButton pi pi-link" label=" Share" />
+              <Button class="footerButton pi pi-thumbs-up" label=" Like"></Button>
+              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments()" label=" Comment"></Button>
+              <Button class="footerButton pi pi-link" label=" Share"></Button>
             </div>
           </div>
         </div>
@@ -61,6 +61,7 @@ import { type WholeProductDataInterface } from '@/types/product';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import CommentDialogComponent from './Dialog/CommentDialogComponent.vue';
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -358,6 +359,16 @@ const openProductComments = () => {
   }
 }
 
+</style>
+
+<style>
+
+.p-dialog.p-component.p-ripple-disabled.commentsDialog {
+  width: 800px;
+  height: 600px;
+  margin-left: 220px;
+}
+
 button.p-button.p-component.footerButton {
   background-color: #333;
   border: 2px solid #333;
@@ -367,25 +378,13 @@ button.p-button.p-component.footerButton {
 
 button.p-button.p-component.footerButton span {
   font-family: "Inter var", sans-serif;
-  text-transform: uppercase;
   font-weight: bold;
 }
 
-button.p-button.p-component.footerButton span{
-  display: none;
-}
 button.p-button.p-component.footerButton:hover {
   color: #333;
   border: 2px solid #333;
   background-color: white;
   transform: scale(1);
-}
-</style>
-
-<style>
-
-.p-dialog.p-component.p-ripple-disabled.commentsDialog {
-  width: 800px;
-  height: 600px;
 }
 </style>
