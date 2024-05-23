@@ -19,26 +19,29 @@
               <img v-if="foundedUserData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
               <img v-if="foundedUserData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
             </div>
-            <span class="usernameText" >{{foundedUserData.username}}</span>
+            <div>
+              <span class="usernameText" >{{foundedUserData.username}}</span><br>
+              <span class="formGroupInputTextb">@{{ foundedUserData.name }} {{ foundedUserData.surnames }}</span>
+            </div>
             <div class="foundedUserDataContainer">
               <div class="foundedUserDataText">
-                <div class="formGroup">
-                  <span class="formGroupInputText">Email</span>
-                  <InputText class="customUserProfileInputText" v-model="foundedUserData.email" :disabled="inputTextEditable" />
+                <!-- <div class="formGroup">
+                  <span class="formGroupInputTextb">Email</span>
+                  <span>{{ foundedUserData.email }}</span>
+                </div> -->
+                <!-- <div class="formGroup">
+                  <span class="formGroupInputTextb">Name</span>
                 </div>
                 <div class="formGroup">
-                  <span class="formGroupInputText">Name</span>
-                  <InputText class="customUserProfileInputText" v-model="foundedUserData.name" :disabled="inputTextEditable" />  
-                </div>
-                <div class="formGroup">
-                  <span class="formGroupInputText">Surnames</span>
-                  <InputText class="customUserProfileInputText" v-model="foundedUserData.surnames" :disabled="inputTextEditable" />
-                </div>
+                  <span class="formGroupInputTextb">Surnames</span>
+                  <span>{{ foundedUserData.surnames }}</span>
+                </div> -->
               </div>
               <div class="biografyFormGroup" v-if="foundedUserData.biography">
-                <div class="formGroup">
-                  <span class="formGroupInputText">About me</span>
-                  <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize />
+                <div class="formGroup textCenter">
+                  <span class="formGroupInputTextb biography">About me</span>
+                  <span>{{ foundedUserData.biography }}</span>
+                  <!-- <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize /> -->
                 </div>
               </div>
             </div>
@@ -160,10 +163,11 @@ const sendFriendRequest = async () => {
 }
 
 .usernameText {
-  font-family: 'Pacifico', cursive;
+  font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-size: 34px;
+  font-weight: bold;
   color: #2c2c2c; 
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
   margin-bottom: 40px;
 }
 
@@ -171,7 +175,7 @@ const sendFriendRequest = async () => {
   display: block;
   margin-top: 0em;
   unicode-bidi: isolate; 
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .foundedUserDataText {
@@ -186,8 +190,8 @@ const sendFriendRequest = async () => {
   padding: 4px;
 }
 
-.formGroupInputText {
-  align-self: flex-start;
+.formGroupInputTextb {
+  /* align-self: flex-start; */
   text-transform: uppercase;
   /* font-family: Roboto, Helvetica Neue, Arial, sans-serif; */
   font-family: sans-serif;
@@ -196,6 +200,11 @@ const sendFriendRequest = async () => {
   margin-bottom: 5px;
   font-weight: bold;
   margin-left: 2px;
+}
+
+.biography {
+  color: #333;
+  font-size: 16px;
 }
 
 input.p-inputtext.p-component.customUserProfileInputText {

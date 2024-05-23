@@ -111,10 +111,11 @@ const userData = ref(authStore.getUserData());
 }
 
 .usernameText {
-  font-family: 'Pacifico', cursive;
+  font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-size: 34px;
+  font-weight: bold;
   color: #2c2c2c; 
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
   margin-bottom: 40px;
 }
 
