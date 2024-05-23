@@ -2,6 +2,7 @@
   <div class="chat-container">
     <div class="chat-header">
       <h2>Chat</h2>
+      <span class="closeButton pi pi-times"></span>
     </div>
     <div class="chat-messages">
       <div
@@ -82,7 +83,7 @@ const formatDate = (date: Date) => {
 }
 
 .chat-header {
-  background-color: #007bff;
+  background-color: #333;
   color: white;
   padding: 10px;
   text-align: center;
@@ -145,14 +146,21 @@ const formatDate = (date: Date) => {
 
 .chat-input button {
   padding: 10px 20px;
-  background-color: #007bff;
-  border: none;
+  background-color: #333;
+  border: 1px solid #333;
   border-radius: 5px;
   color: white;
   cursor: pointer;
 }
 
 .chat-input button:hover {
-  background-color: #0056b3;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #333;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 </style>
