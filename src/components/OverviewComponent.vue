@@ -369,6 +369,7 @@ const openProductComments = () => {
   margin-left: 220px;
 }
 
+button.p-button.p-component,
 button.p-button.p-component.footerButton {
   background-color: #333;
   border: 2px solid #333;
@@ -376,11 +377,13 @@ button.p-button.p-component.footerButton {
   height: 50px;
 }
 
+button.p-button.p-component span,
 button.p-button.p-component.footerButton span {
   font-family: "Inter var", sans-serif;
   font-weight: bold;
 }
 
+button.p-button.p-component:hover,
 button.p-button.p-component.footerButton:hover {
   color: #333;
   border: 2px solid #333;
