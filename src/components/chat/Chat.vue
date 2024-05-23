@@ -2,7 +2,7 @@
   <div class="chat-container">
     <div class="chat-header">
       <h2>Chat</h2>
-      <span class="closeButton pi pi-times"></span>
+      <span class="closeButton pi pi-times" @click="closeChat()"></span>
     </div>
     <div class="chat-messages">
       <div
@@ -44,6 +44,8 @@ const props = defineProps({
   },
 })
 
+const emits= defineEmits(["closeChat"]);
+
 const messages = ref<Message[]>([
   { id: 1, content: 'Hello!', date: new Date(), senderId: 'user1', receiverId: 'user2' },
   { id: 2, content: 'Hi, how are you?', date: new Date(), senderId: 'user2', receiverId: 'user1' },
@@ -68,6 +70,10 @@ const sendMessage = () => {
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
 };
+
+const closeChat = () => {
+  emits("closeChat");
+}
 </script>
 
 <style scoped>
@@ -86,7 +92,9 @@ const formatDate = (date: Date) => {
   background-color: #333;
   color: white;
   padding: 10px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .chat-messages {
@@ -157,6 +165,18 @@ const formatDate = (date: Date) => {
   background-color: #fff;
   color: #333;
   border: 1px solid #333;
+}
+
+.chat-header h2 {
+  flex: 1;
+  text-align: center;
+  margin: 0; 
+}
+
+.closeButton {
+  padding-right: 6px;
+  margin-left: auto; 
+  cursor: pointer;
 }
 
 .closeButton:hover {

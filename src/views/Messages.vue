@@ -69,7 +69,7 @@
       </div>
       <Footer class="customFooter"></Footer>
     </div>
-    <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat"/>
+    <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat" @closeChat="closeChat()"/>
   </div>
 </template>
 
@@ -287,7 +287,7 @@ const openChat = (friend: UserInterface) => {
 };
 
 const closeChat = () => {
-
+  isChatOpen.value = false;
 }
 
 </script>
