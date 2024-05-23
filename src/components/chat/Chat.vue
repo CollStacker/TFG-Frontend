@@ -12,7 +12,7 @@
       </div>
       <span class="closeButton pi pi-times" @click="closeChat()"></span>
     </div>
-    <div class="chat-messages">
+    <div class="chat-messages" ref="chatMessages">
       <div
         v-for="message in messages"
         :class="{'message-sent': message.senderId === authStore.getUserData().id, 'message-received': message.senderId !== authStore.getUserData().id}"
@@ -64,6 +64,7 @@ const emits= defineEmits(["closeChat"]);
 
 onMounted(async () => {
   await getConversation();
+  scrollToBottom();
 })
 
 const messages = ref<Message[]>([]);
@@ -120,6 +121,14 @@ const getConversation = async () => {
     }
   }
 }
+
+const chatMessages = ref<HTMLDivElement | null>(null);
+const scrollToBottom = () => {
+  const container = chatMessages.value;
+  if (container) {
+    container.scrollTop = container.scrollHeight;
+  }
+};
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
