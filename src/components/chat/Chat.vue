@@ -67,7 +67,7 @@ const formatDate = (date: Date) => {
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* height: 100vh; */
   max-width: 600px;
   margin: 0 auto;
   border: 1px solid #ccc;
