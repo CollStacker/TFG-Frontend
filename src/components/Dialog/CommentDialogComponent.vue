@@ -22,9 +22,11 @@ import { userAuthentication } from '@/store/userAuth.store';
 import { useToast } from "primevue/usetoast";
 import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
+import { type UserInterface } from '@/types/user';
 
 onMounted(async () => {
   await getComments();
+  await getCommentsOwner();
   scrollToBottom();
 })
 
@@ -47,6 +49,7 @@ const authStore = userAuthentication();
 const router = useRouter();
 
 const comments = ref<Comment[]>([]);
+const commentsOwner = ref<UserInterface[]>([]);
 
 const newCommentText = ref('');
 
@@ -84,23 +87,45 @@ const addComment = async () => {
 
 const getComments = async () => {
   if(!authStore.checkToken()) {
-      router.push('/')
+    router.push('/')
+  } else {
+    const response = await fetch(API_URI + `/productComments/byProductId/${props.currentProduct ? props.currentProduct._id : ''}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if(!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting comment.', life: 3000 });
     } else {
-      const response = await fetch(API_URI + `//productComments/byProductId/${props.currentProduct ? props.currentProduct._id : ''}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authStore.getToken()}`,
-        },
-      })
-      if(!response.ok) {
-        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting comment.', life: 3000 });
-      } else {
-        comments.value = await response.json();
-      }
+      comments.value = await response.json();
     }
+  }
 }
 
+const getCommentsOwner = async () => {
+  if(comments.value) {
+    if(!authStore.checkToken()) {
+    router.push('/')
+  } else {
+      for( const comment of comments.value) {
+        const response = await fetch(API_URI + `/findUserById/${comment.userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        })
+        if(!response.ok) {
+          toast.add({ severity: 'error', summary: 'Error Message', detail: 'Something wrong finding comment owner.', life: 3000 });
+        } else {
+          commentsOwner.value.push(await response.json());
+        }
+      }
+    }
+  }
+}
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
