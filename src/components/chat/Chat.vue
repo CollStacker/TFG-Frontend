@@ -119,7 +119,7 @@ const closeChat = () => {
 }
 
 .message-sent {
-  align-self: flex-end;
+  margin-left: auto;
   background-color: #dcf8c6;
   border-radius: 15px 15px 0 15px;
 }
