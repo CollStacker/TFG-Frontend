@@ -1,7 +1,7 @@
 <template>
   <Toast/>
   <Dialog v-model:visible="readComments" class="commentsDialog" header=" ">
-    <CommentDialogComponent/>
+    <CommentDialogComponent :currentProduct="currentProduct"/>
   </Dialog>
   <div v-if="isLoading" class="loading-spinner">
     <div class="spinner"></div>
@@ -29,7 +29,7 @@
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
               <Button class="footerButton pi pi-thumbs-up" label=" Like"></Button>
-              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments()" label=" Comment"></Button>
+              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" label=" Comment"></Button>
               <Button class="footerButton pi pi-link" label=" Share"></Button>
             </div>
           </div>
@@ -197,7 +197,9 @@ const closeProductComponent = () => {
   showProductInformation.value =  false;
 }
 
-const openProductComments = () => {
+const currentProduct = ref<HomeViewProductDataInterface>();
+const openProductComments = (product : HomeViewProductDataInterface) => {
+  currentProduct.value = product;
   readComments.value = true;
 }
 
@@ -365,7 +367,7 @@ const openProductComments = () => {
 
 .p-dialog.p-component.p-ripple-disabled.commentsDialog {
   width: 800px;
-  height: 600px;
+  max-height: 600px;
   margin-left: 220px;
 }
 

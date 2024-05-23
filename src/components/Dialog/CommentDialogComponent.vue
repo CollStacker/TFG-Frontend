@@ -1,6 +1,6 @@
 <template>
-  <div class="comments-container">
-    <div v-for="comment in comments" :key="comment._id" class="comment">
+  <div class="comments-container" ref="dialogComments">
+    <div v-for="comment in comments" :key="comment._id" class="comment" >
       <div class="comment-header">
         <span class="comment-author">{{ comment.userId }}</span>
         <span class="comment-date">{{ formatDate(comment.publicationDate) }}</span>
@@ -17,44 +17,80 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
+import { userAuthentication } from '@/store/userAuth.store';
+import { useToast } from "primevue/usetoast";
+import { useRouter } from 'vue-router';
+import { API_URI } from '@/types/env';
+
+onMounted(async () => {
+  scrollToBottom();
+})
+
+const props = defineProps({
+  currentProduct: {
+    type: Object
+  },
+})
 
 interface Comment {
   _id?: number;
   userId: string;
   publicationDate: Date;
   content: string;
+  productId: string;
 }
 
-const comments = ref<Comment[]>([
-  { _id: 1, userId: 'User1', publicationDate: new Date(), content: 'Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!Great product!' },
-  { _id: 2, userId: 'User2', publicationDate: new Date(), content: 'Really enjoyed using this.' },
-  { _id: 3, userId: 'User3', publicationDate: new Date(), content: 'Highly recommend!' },
-  { _id: 1, userId: 'User1', publicationDate: new Date(), content: 'Great product!' },
-  { _id: 2, userId: 'User2', publicationDate: new Date(), content: 'Really enjoyed using this.' },
-  { _id: 3, userId: 'User3', publicationDate: new Date(), content: 'Highly recommend!' },
-  { _id: 1, userId: 'User1', publicationDate: new Date(), content: 'Great product!' },
-  { _id: 2, userId: 'User2', publicationDate: new Date(), content: 'Really enjoyed using this.' },
-  { _id: 3, userId: 'User3', publicationDate: new Date(), content: 'Highly recommend!' },
-]);
+const toast = useToast();
+const authStore = userAuthentication();
+const router = useRouter();
+
+const comments = ref<Comment[]>([]);
 
 const newCommentText = ref('');
 
-const addComment = () => {
+const addComment = async () => {
   if (newCommentText.value.trim()) {
     const newComment: Comment = {
-      _id: comments.value.length + 1,
-      userId: 'New User',  // Replace with the actual user's name in a real application
-      publicationDate: new Date(),
       content: newCommentText.value,
+      publicationDate: new Date(),
+      userId: authStore.getUserData().id, 
+      productId: props.currentProduct ? props.currentProduct._id : '',
     };
-    comments.value.push(newComment);
+
+    if(!authStore.checkToken()) {
+      router.push('/')
+    } else {
+      const response = await fetch(API_URI + `/productComments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(newComment),
+      })
+      if(!response.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting comment.', life: 3000 });
+      } else {
+        toast.add({ severity: 'success', summary: 'Categorie created', detail: `Comment posted`, life: 3000 });
+        comments.value.push(await response.json());
+      }
+    }
+
     newCommentText.value = '';
   }
 };
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
+};
+
+const dialogComments = ref<HTMLDivElement | null>(null);
+const scrollToBottom = () => {
+  const container = dialogComments.value;
+  if (container) {
+    container.scrollTop = container.scrollHeight;
+  }
 };
 
 </script>
@@ -108,7 +144,12 @@ const formatDate = (date: Date) => {
 
 .new-comment {
   display: flex;
-  margin-top: 20px;
+  margin-top: auto;
+  padding: 10px 0;
+  background-color: #fff;
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid #e0e0e0;
 }
 
 .new-comment-input {
