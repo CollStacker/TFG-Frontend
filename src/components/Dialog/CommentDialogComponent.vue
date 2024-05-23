@@ -1,8 +1,14 @@
 <template>
   <div class="comments-container" ref="dialogComments">
-    <div v-for="comment in comments" :key="comment._id" class="comment" >
-      <div class="comment-header">
-        <span class="comment-author">{{ comment.userId }}</span>
+    <div v-for="(comment,index) in comments" class="comment" >
+      <div class="comment-header" v-if="commentsOwner[index]">
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'femaleYoung'" src="../../assets/imgs/profilePhoto/female-young.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'maleYoung'" src="../../assets/imgs/profilePhoto/male-young.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'maleAdult'" src="../../assets/imgs/profilePhoto/male-adult.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'maleOld'" src="../../assets/imgs/profilePhoto/male-old.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'femaleOld'" src="../../assets/imgs/profilePhoto/female-old.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'femaleAdult'" src="../../assets/imgs/profilePhoto/female-adult.jpg"/>
+        <span class="comment-author">{{ commentsOwner[index].username }}</span>
         <span class="comment-date">{{ formatDate(comment.publicationDate) }}</span>
       </div>
       <div class="comment-body">
@@ -77,10 +83,10 @@ const addComment = async () => {
         toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting comment.', life: 3000 });
       } else {
         toast.add({ severity: 'success', summary: 'Categorie created', detail: `Comment posted`, life: 3000 });
-        comments.value.push(await response.json());
+        await getComments();
+        await getCommentsOwner();
       }
     }
-
     newCommentText.value = '';
   }
 };
@@ -109,6 +115,7 @@ const getCommentsOwner = async () => {
     if(!authStore.checkToken()) {
     router.push('/')
   } else {
+      const tmpArray:UserInterface[] = []; 
       for( const comment of comments.value) {
         const response = await fetch(API_URI + `/findUserById/${comment.userId}`, {
           method: 'GET',
@@ -120,9 +127,10 @@ const getCommentsOwner = async () => {
         if(!response.ok) {
           toast.add({ severity: 'error', summary: 'Error Message', detail: 'Something wrong finding comment owner.', life: 3000 });
         } else {
-          commentsOwner.value.push(await response.json());
+          tmpArray.push(await response.json());
         }
       }
+      commentsOwner.value = tmpArray;
     }
   }
 }
@@ -165,7 +173,7 @@ const scrollToBottom = () => {
 
 .comment-header {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   font-weight: 600;
   margin-bottom: 10px;
   color: #555;
@@ -173,12 +181,14 @@ const scrollToBottom = () => {
 
 .comment-author {
   color: #3498db;
+  margin-left: 10px;
   font-size: 1.1em;
 }
 
 .comment-date {
   color: #aaa;
   font-size: 0.9em;
+  margin-left: auto;
 }
 
 .comment-body {
@@ -221,5 +231,11 @@ const scrollToBottom = () => {
   background-color: white;
   color: #333;
   border: 1px solid #333;
+}
+
+.commentProfilePhoto {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
 }
 </style>
