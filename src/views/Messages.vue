@@ -50,7 +50,7 @@
                   <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                   <span class="ml-12 largeText">{{ friend.username }}</span>
                   <div class="button-container">
-                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat()"></Button>
+                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat(friend)"></Button>
                     <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
                   </div>
                 </div>
@@ -69,7 +69,7 @@
       </div>
       <Footer class="customFooter"></Footer>
     </div>
-    <Chat v-if="isChatOpen" class="chat-popup" />
+    <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat"/>
   </div>
 </template>
 
@@ -280,10 +280,15 @@ const deleteFriend = async (friendId: string) => {
 }
 
 const isChatOpen = ref(false);
-
-const openChat = () => {
+const friendChat = ref<UserInterface>();
+const openChat = (friend: UserInterface) => {
   isChatOpen.value = true;
+  friendChat.value = friend;
 };
+
+const closeChat = () => {
+
+}
 
 </script>
 

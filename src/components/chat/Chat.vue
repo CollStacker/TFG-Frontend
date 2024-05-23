@@ -37,6 +37,12 @@ interface Message {
   receiverId: string;
 }
 
+const props = defineProps({
+  friend: {
+    type: Object
+  },
+})
+
 const messages = ref<Message[]>([
   { id: 1, content: 'Hello!', date: new Date(), senderId: 'user1', receiverId: 'user2' },
   { id: 2, content: 'Hi, how are you?', date: new Date(), senderId: 'user2', receiverId: 'user1' },
