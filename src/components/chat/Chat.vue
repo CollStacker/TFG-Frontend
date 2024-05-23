@@ -15,7 +15,6 @@
     <div class="chat-messages">
       <div
         v-for="message in messages"
-        :key="message.id"
         :class="{'message-sent': message.senderId === userId, 'message-received': message.senderId !== userId}"
         class="message">
         <div class="message-content">
@@ -37,14 +36,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { userAuthentication } from '@/store/userAuth.store';
+import { useToast } from "primevue/usetoast";
+import { useRouter } from 'vue-router';
+import { API_URI } from '@/types/env';
 
 interface Message {
-  id: number;
   content: string;
   date: Date;
   senderId: string;
   receiverId: string;
 }
+
+const toast = useToast();
+const authStore = userAuthentication();
+const router = useRouter();
 
 const props = defineProps({
   friend: {
@@ -55,22 +61,40 @@ const props = defineProps({
 const emits= defineEmits(["closeChat"]);
 
 const messages = ref<Message[]>([
-  { id: 1, content: 'Hello!', date: new Date(), senderId: 'user1', receiverId: 'user2' },
-  { id: 2, content: 'Hi, how are you?', date: new Date(), senderId: 'user2', receiverId: 'user1' },
+  { content: 'Hello!', date: new Date(), senderId: 'user1', receiverId: 'user2' },
+  { content: 'Hi, how are you?', date: new Date(), senderId: 'user2', receiverId: 'user1' },
 ]);
 
 const newMessage = ref('');
 const userId = 'user1';
 
-const sendMessage = () => {
+const sendMessage = async () => {
   if (newMessage.value.trim() !== '') {
-    messages.value.push({
-      id: Date.now(),
+    const tmpMessage: Message = {
       content: newMessage.value,
       date: new Date(),
       senderId: userId,
-      receiverId: 'user2',
-    });
+      receiverId: props.friend ? props.friend.id : '',
+    }
+    messages.value.push(tmpMessage);
+    console.log(tmpMessage)
+    if(!await authStore.checkToken()) {
+      return('/')
+    } else {
+      const response = await fetch(API_URI + `/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(tmpMessage)
+      })
+      if(!response.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting a message.', life: 3000 });
+      } else {
+        console.log(await response.json());
+      }
+    }
     newMessage.value = '';
   }
 };
