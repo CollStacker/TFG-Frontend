@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
 
 onMounted(async () => {
+  await getComments();
   scrollToBottom();
 })
 
@@ -80,6 +81,26 @@ const addComment = async () => {
     newCommentText.value = '';
   }
 };
+
+const getComments = async () => {
+  if(!authStore.checkToken()) {
+      router.push('/')
+    } else {
+      const response = await fetch(API_URI + `//productComments/byProductId/${props.currentProduct ? props.currentProduct._id : ''}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+      })
+      if(!response.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting comment.', life: 3000 });
+      } else {
+        comments.value = await response.json();
+      }
+    }
+}
+
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
