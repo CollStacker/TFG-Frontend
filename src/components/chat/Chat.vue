@@ -15,7 +15,7 @@
     <div class="chat-messages">
       <div
         v-for="message in messages"
-        :class="{'message-sent': message.senderId === userId, 'message-received': message.senderId !== userId}"
+        :class="{'message-sent': message.senderId === authStore.getUserData().id, 'message-received': message.senderId !== authStore.getUserData().id}"
         class="message">
         <div class="message-content">
           <p>{{ message.content }}</p>
@@ -35,13 +35,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { userAuthentication } from '@/store/userAuth.store';
 import { useToast } from "primevue/usetoast";
 import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
+import { type UserInterface } from '@/types/user';
 
 interface Message {
+  _id? : string,
   content: string;
   date: Date;
   senderId: string;
@@ -60,24 +62,23 @@ const props = defineProps({
 
 const emits= defineEmits(["closeChat"]);
 
-const messages = ref<Message[]>([
-  { content: 'Hello!', date: new Date(), senderId: 'user1', receiverId: 'user2' },
-  { content: 'Hi, how are you?', date: new Date(), senderId: 'user2', receiverId: 'user1' },
-]);
+onMounted(async () => {
+  await getConversation();
+})
+
+const messages = ref<Message[]>([]);
 
 const newMessage = ref('');
-const userId = 'user1';
 
 const sendMessage = async () => {
   if (newMessage.value.trim() !== '') {
     const tmpMessage: Message = {
       content: newMessage.value,
       date: new Date(),
-      senderId: userId,
+      senderId: authStore.getUserData().id,
       receiverId: props.friend ? props.friend.id : '',
     }
     messages.value.push(tmpMessage);
-    console.log(tmpMessage)
     if(!await authStore.checkToken()) {
       return('/')
     } else {
@@ -92,12 +93,33 @@ const sendMessage = async () => {
       if(!response.ok) {
         toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting a message.', life: 3000 });
       } else {
-        console.log(await response.json());
+        getConversation();
       }
     }
     newMessage.value = '';
   }
 };
+
+const getConversation = async () => {
+  if (!authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const senderId: string = authStore.getUserData().id;
+    const friendId: string = props.friend ? props.friend.id : '';
+    const response = await fetch(API_URI + `/messages/${senderId}/${friendId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    });
+    if(!response.ok) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting conversation.', life: 3000 });
+    } else {
+      messages.value = await response.json();
+    }
+  }
+}
 
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleTimeString();
