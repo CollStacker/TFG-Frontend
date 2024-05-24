@@ -26,7 +26,9 @@
               <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
               <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
             </div>
-            {{ productLikesVec[index] }} Likes
+            <div class="likesText">
+              {{ productLikesVec[index] }} Likes
+            </div>
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
               <Button class="footerButton pi pi-thumbs-up" :label="t(' Like')" @click="giveALike(product._id,index)"></Button>
@@ -126,7 +128,7 @@ const findProductsOwners = async() => {
           toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed finding owners.'), life: 3000 });
         } else {
           last20ProductsUser.value.push(await response.json());
-          productLikesVec.value.push(0);
+          productLikesVec.value.push(product.likes as number);
         }
       }
     }
@@ -390,6 +392,11 @@ const giveALike = async (productId: string, productIndex: number) => {
     transform: rotate(360deg);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   }
+}
+
+.likesText {
+  margin-left: 30px;
+  margin-right: auto;
 }
 
 </style>
