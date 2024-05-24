@@ -1,5 +1,8 @@
 <template>
   <Toast/>
+  <Dialog v-model:visible="readComments" class="commentsDialog" header=" ">
+    <CommentDialogComponent :currentProduct="currentProduct"/>
+  </Dialog>
   <div v-if="isLoading" class="loading-spinner">
     <div class="spinner"></div>
   </div>
@@ -22,6 +25,12 @@
               <img v-if="product.image" :src="product.image" class="productImg" @click="openProductDataComponent(product)">
               <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
               <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
+            </div>
+            <Divider></Divider>
+            <div class="footerOverviewMainContainer">
+              <Button class="footerButton pi pi-thumbs-up" label=" Like"></Button>
+              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" label=" Comment"></Button>
+              <Button class="footerButton pi pi-link" label=" Share"></Button>
             </div>
           </div>
         </div>
@@ -49,6 +58,10 @@ import { type UserInterface } from '@/types/user';
 import { API_URI } from '@/types/env';
 import ProductDataComponent from './ProductDataComponent.vue';
 import { type WholeProductDataInterface } from '@/types/product';
+import Divider from 'primevue/divider';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import CommentDialogComponent from './Dialog/CommentDialogComponent.vue';
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -68,6 +81,8 @@ const isLoading = ref<boolean>(true);
 const readOnly = ref<boolean>(true);
 const showProductInformation = ref(false);
 const selectedProduct = ref<WholeProductDataInterface>();
+
+const readComments = ref<boolean>(false);
 
 const findProducts = async() => {
   if(!await authStore.checkToken()) {
@@ -180,6 +195,12 @@ const openProductDataComponent = async (product: HomeViewProductDataInterface) =
 
 const closeProductComponent = () => {
   showProductInformation.value =  false;
+}
+
+const currentProduct = ref<HomeViewProductDataInterface>();
+const openProductComments = (product : HomeViewProductDataInterface) => {
+  currentProduct.value = product;
+  readComments.value = true;
 }
 
 </script>
@@ -340,4 +361,35 @@ const closeProductComponent = () => {
   }
 }
 
+</style>
+
+<style>
+
+.p-dialog.p-component.p-ripple-disabled.commentsDialog {
+  width: 800px;
+  max-height: 600px;
+  margin-left: 220px;
+}
+
+button.p-button.p-component,
+button.p-button.p-component.footerButton {
+  background-color: #333;
+  border: 2px solid #333;
+  border-radius: 50px;
+  height: 50px;
+}
+
+button.p-button.p-component span,
+button.p-button.p-component.footerButton span {
+  font-family: "Inter var", sans-serif;
+  font-weight: bold;
+}
+
+button.p-button.p-component:hover,
+button.p-button.p-component.footerButton:hover {
+  color: #333;
+  border: 2px solid #333;
+  background-color: white;
+  transform: scale(1);
+}
 </style>

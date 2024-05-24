@@ -21,6 +21,9 @@ import { ref } from "vue";
 import Menu from 'primevue/menu';
 import { useRouter } from 'vue-router';
 
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
+
 const router = useRouter();
 const items = ref([
   {
@@ -29,23 +32,23 @@ const items = ref([
         separator: true
       },
       {
-        label: 'HOME',
+        label: t('HOME'),
         icon: 'pi pi-home',
       },
       {
-        label: 'USER PROFILE',
+        label: t('USER PROFILE'),
         icon: 'pi pi-user',
       },
       {
-        label: 'COLLECTIONS',
+        label: t('COLLECTIONS'),
         icon: 'pi pi-server'
       },
       {
-        label: 'MESSAGES',
+        label: t('MESSAGES'),
         icon: 'pi pi-comments'
       },
       {
-        label: 'SETTINGS',
+        label: t('SETTINGS'),
         icon: 'pi pi-cog'
       },
     ]
@@ -58,19 +61,19 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
     elementSelected = label.toString();
   }
   switch (elementSelected) {
-    case 'HOME':
+    case t('HOME'):
       router.push('/main');
       break;
-    case 'USER PROFILE':
+    case t('USER PROFILE'):
       router.push('/userProfile');
       break;
-    case 'COLLECTIONS':
+    case t('COLLECTIONS'):
       router.push('/collections');
       break;
-    case 'MESSAGES':
+    case t('MESSAGES'):
       router.push('/messages');
       break;
-    case 'SETTINGS':
+    case t('SETTINGS'):
       router.push('/settings');
       break;
     default:

@@ -50,7 +50,7 @@
                   <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                   <span class="ml-12 largeText">{{ friend.username }}</span>
                   <div class="button-container">
-                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click=""></Button>
+                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat(friend)"></Button>
                     <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
                   </div>
                 </div>
@@ -69,6 +69,7 @@
       </div>
       <Footer class="customFooter"></Footer>
     </div>
+    <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat" @closeChat="closeChat()"/>
   </div>
 </template>
 
@@ -85,6 +86,7 @@ import { useToast } from "primevue/usetoast";
 import { type UserInterface } from '@/types/user';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
+import Chat from '@/components/chat/Chat.vue';
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -275,6 +277,17 @@ const deleteFriend = async (friendId: string) => {
       await resetInformation();
     }
   }
+}
+
+const isChatOpen = ref(false);
+const friendChat = ref<UserInterface>();
+const openChat = (friend: UserInterface) => {
+  isChatOpen.value = true;
+  friendChat.value = friend;
+};
+
+const closeChat = () => {
+  isChatOpen.value = false;
 }
 
 </script>
@@ -473,6 +486,26 @@ button.p-button.p-component.customRefuseRequestButton.spanDisplayNone span {
     transform: rotate(360deg);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   }
+}
+
+.messagesContainer {
+  display: flex;
+}
+
+.messagesContent {
+  flex: 1;
+}
+
+.chat-popup {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 500px;
+  height: 600px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
 </style>
