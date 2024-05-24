@@ -21,42 +21,42 @@
             <SplitterPanel class="customSecondtSplitterMenu" :size="87" :minSize="10">
               <template v-if="secondSplitterDisplay == 'User Profile'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text" >User profile</span>
+                  <span class="uppercase bold big-text" >{{t('User profile')}}</span>
                   <div class="separator"></div>
                 </div>
                 <div style="display:flex">
                   <div style="flex: 1; margin-right: 20px;">
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Username</span>
+                      <span class="uppercase bold">{{t('Username')}}</span>
                       <InputText class="customSettingsInputText" v-model="newUserData.username" :placeholder="userData.username"/>
-                      <small>Your username is public for other users, with it other collectors can access your profile. You can change it at any time</small>
+                      <small>{{t('Your username is public for other users, with it other collectors can access your profile. You can change it at any time')}}</small>
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Email</span>
+                      <span class="uppercase bold">{{t('Email')}}</span>
                       <InputText class="customSettingsInputText" v-model="newUserData.email" :placeholder="userData.email"/>
-                      <small>Your email is private for other users. You can change it at any time</small>
+                      <small>{{t('Your email is private for other users. You can change it at any time')}}</small>
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Name</span>
+                      <span class="uppercase bold">{{t('Name')}}</span>
                       <InputText class="customSettingsInputText" v-model="newUserData.name" :placeholder="userData.name"/>
-                      <small>Your name is public for other users. You can change it at any time</small>
+                      <small>{{t('Your name is public for other users. You can change it at any time')}}</small>
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Surnames</span>
+                      <span class="uppercase bold">{{t('Surnames')}}</span>
                       <InputText class="customSettingsInputText" v-model="newUserData.surnames" :placeholder="userData.surnames"/>
-                      <small>Your surnames is public for other users. You can change it at any time</small>
+                      <small>{{t('Your surnames is public for other users. You can change it at any time')}}</small>
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Biography</span>
+                      <span class="uppercase bold">{{t('Biography')}}</span>
                       <Textarea class="userProfileSettingTextArea" v-model="newUserData.biography" :placeholder="userData.biography" :autoResize="true"/>
-                      <small>Your biography is public for other users, represents the way users see you. You can change it at any time</small>
+                      <small>{{t('Your biography is public for other users, represents the way users see you. You can change it at any time')}}</small>
                     </div>
                     <div class="mb-15">
-                      <Button class="customSettingsButton" label="Update profile" @click="updateProfile()"/>
+                      <Button class="customSettingsButton" :label="t('Update profile')" @click="updateProfile()"/>
                     </div>
                   </div>
                   <div class="userProfileSettingsform mr-20">
-                    <span class="uppercase bold" >Profile picture</span>
+                    <span class="uppercase bold" >{{t('Profile picture')}}</span>
                     <img v-if="newUserData.profilePhoto === ''" class="customAvatar" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/camera_icon.png"></img>
                     <img v-if="newUserData.profilePhoto === 'maleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-young.jpg"/>
                     <img v-if="newUserData.profilePhoto === 'maleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
@@ -79,77 +79,77 @@
               </template>
               <template v-if="secondSplitterDisplay == 'Change Password'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text" >Change Password</span>
+                  <span class="uppercase bold big-text" >{{t('Change Password')}}</span>
                   <div class="separator"></div>
                 </div>
                 <div style="display:flex">
                   <div style="flex: 1; margin-right: 20px;">
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Current Password</span>
+                      <span class="uppercase bold">{{t('Current Password')}}</span>
                       <Password class="settingCustomPassword" v-model="currentPassword" toggleMask :feedback="false" />
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">New password</span>
+                      <span class="uppercase bold">{{t('New password')}}</span>
                       <Password class="settingCustomPassword" v-model="newPassword" toggleMask >
                         <template #footer>
                             <Divider />
-                            <p class="mt-2">Suggestions</p>
+                            <p class="mt-2">{{t('Suggestions')}}</p>
                             <ul class="pl-2 ml-20 mt-0" style="line-height: 1.5">
-                                <li>At least one lowercase</li>
-                                <li>At least one uppercase</li>
-                                <li>At least one numeric</li>
-                                <li>At least one icon(@/"$..)</li>
-                                <li>Minimum 8 characters</li>
+                                <li>{{t('At least one lowercase')}}</li>
+                                <li>{{t('At least one uppercase')}}</li>
+                                <li>{{t('At least one numeric')}}</li>
+                                <li>{{t("At least one icon")}}(@/"$..)</li>
+                                <li>{{t('Minimum 8 characters')}}</li>
                             </ul>
                         </template>
                     </Password>
                     </div>
                     <div class="userProfileSettingsform mb-8">
-                      <span class="uppercase bold">Repeat new password</span>
+                      <span class="uppercase bold">{{t('Repeat new password')}}</span>
                       <Password class="settingCustomPassword" v-model="repeatedNewPassword" toggleMask :feedback="false" />
-                      <p class="error-message" v-if="!checkPassword() && repeatedNewPassword.length > 0">Password does not match</p>
+                      <p class="error-message" v-if="!checkPassword() && repeatedNewPassword.length > 0">{{t('Password does not match')}}</p>
                     </div>
                     <div class="mb-15 mt-12">
-                      <Button class="customSettingsButton" label="Change password" @click="changePassword()"/>
+                      <Button class="customSettingsButton" :label="t('Change password')" @click="changePassword()"/>
                     </div>
                   </div>
                 </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Delete Account'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text red-text" >Delete Account</span>
+                  <span class="uppercase bold big-text red-text" >{{t('Delete Account')}}</span>
                   <div class="separator"></div>
                 </div>
                 <div style="display:flex">
                   <div style="flex: 1; margin-right: 20px;">
                     <div class="userProfileSettingsform mb-8">
-                      <label>Deleting your account means loose all your data inside the application. As well as the elements shared with the rest of the application users. Make sure you are safe performing this action</label>
+                      <label>{{t('Deleting your account means loose all your data inside the application. As well as the elements shared with the rest of the application users. Make sure you are safe performing this action')}}</label>
                     </div>
                     <div class="mb-8 align-horizontal">
                       <Checkbox v-model="deleteAccCheckBox" inputId="deleteAccCheckbox" :binary="true"/>
                       <label class="ml-4">  
-                        Are you sure you want to <label class="bold red-text uppercase">delete</label> your account?
+                        {{t('Are you sure you want to')}} <label class="bold red-text uppercase">{{t('delete')}}</label> {{t('your account?')}}
                       </label>
                     </div>
                     <div v-if="deleteAccCheckBox === true" class="userProfileSettingsform mb-8">
                       <label>{{ "If you are sure to delete your account then write ('" + userData.username + "')."  }}</label>
-                      <InputText class="customSettingsInputText" v-model="deleteAccConfirmated" placeholder="Username"/>
+                      <InputText class="customSettingsInputText" v-model="deleteAccConfirmated" :placeholder="t('Username')"/>
                     </div>
                     <div class="mb-15 mt-12">
-                      <Button class="deleteAccountButton" label="Delete account" @click="deleteAccount()" :disabled="!(deleteAccConfirmated === userData.username && deleteAccConfirmated !== '')"/>
+                      <Button class="deleteAccountButton" :label="t('Delete account')" @click="deleteAccount()" :disabled="!(deleteAccConfirmated === userData.username && deleteAccConfirmated !== '')"/>
                     </div>
                   </div>
                 </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Email'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text" >Email</span>
+                  <span class="uppercase bold big-text" >{{t('Email')}}</span>
                   <div class="separator"></div>
                 </div>
               </template>
               <template v-if="secondSplitterDisplay == 'Notifications'">
                 <div class="secondSplitterHeader mb-8">
-                  <span class="uppercase bold big-text" >Notifications</span>
+                  <span class="uppercase bold big-text" >{{t('Notifications')}}</span>
                   <div class="separator"></div>
                 </div>
               </template>
@@ -181,36 +181,39 @@ import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
 import Swal from 'sweetalert2'
 
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
+
 const router = useRouter();
 const authStore = userAuthentication();
 
 const items = ref([
     {
-      label: 'Account',
+      label: t('Account'),
       items: [
             {
-                label: 'User Profile',
+                label: t('User Profile'),
                 icon: 'pi pi-user'
             },
             {
-                label: 'Change Password',
+                label: t('Change Password'),
                 icon: 'pi pi-key'
             },
             {
-                label: 'Delete Account',
+                label: t('Delete Account'),
                 icon: 'pi pi-trash'
             }
         ]
     },
     {
-        label: 'Access',
+        label: t('Access'),
         items: [
             {
-                label: 'Email',
+                label: t('Email'),
                 icon: 'pi pi-envelope'
             },
             {
-                label: 'Notifications',
+                label: t('Notifications'),
                 icon: 'pi pi-bell'
             }
         ]
@@ -238,20 +241,20 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
     elementSelected = label.toString();
   }
   switch (elementSelected) {
-    case 'User Profile':
+    case t('User Profile'):
       secondSplitterDisplay.value = elementSelected;
       break;
-    case 'Change Password':
+    case t('Change Password'):
       secondSplitterDisplay.value = elementSelected;
     break;
-    case 'Delete Account':
+    case t('Delete Account'):
       secondSplitterDisplay.value = elementSelected;
     break;
-    case 'Email':
+    case t('Email'):
       secondSplitterDisplay.value = elementSelected;
     break;
-    case 'Notifications':
-          secondSplitterDisplay.value = elementSelected;
+    case t('Notifications'):
+      secondSplitterDisplay.value = elementSelected;
     break;
     default:
       break;
@@ -305,14 +308,14 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
     if (!updateUser.ok) {
       Swal.fire({
         title: 'Error!',
-        text: 'User couldnt be updated',
+        text: t('User couldnt be updated'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })
     } else {
       Swal.fire({
         title: "Great!",
-        text: "Your account have been updated!",
+        text: t("Your account have been updated!"),
         icon: "success"
       });
     }
@@ -336,7 +339,7 @@ const changePassword = async () => {
   if (currentPassword.value == "" || repeatedNewPassword.value == "" || newPassword.value == "") {
     Swal.fire({
       title: 'Error!',
-      text: 'All fields must be filled.',
+      text: t('All fields must be filled.'),
       icon: 'error',
       confirmButtonText: 'Ok'
     })
@@ -345,7 +348,7 @@ const changePassword = async () => {
     if (newPassword.value !== repeatedNewPassword.value) {
       Swal.fire({
         title: 'Error!',
-        text: 'Passwords does not match!',
+        text: t('Passwords does not match!'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })
@@ -353,7 +356,7 @@ const changePassword = async () => {
     } else if (currentPassword.value === newPassword.value) {
       Swal.fire({
         title: 'Error!',
-        text: 'Could not use old password again. Try a new password!',
+        text: t('Could not use old password again. Try a new password!'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })
@@ -361,7 +364,7 @@ const changePassword = async () => {
     } else if(!isCorrectPassword(newPassword.value)) {
       Swal.fire({
         title: 'Error!',
-        text: 'Password is weakness!! Do it better!!',
+        text: t('Password is weakness!! Do it better!!'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })
@@ -386,14 +389,14 @@ const changePassword = async () => {
         if (!passwordChanged.ok) {
           Swal.fire({
             title: 'Error!',
-            text: 'Server can not proccess your petition.',
+            text: t('Server can not proccess your petition.'),
             icon: 'error',
             confirmButtonText: 'Ok'
           })
         } else {
           Swal.fire({
             title: "Great!",
-            text: "Your password have been changed!",
+            text: t("Your password have been changed!"),
             icon: "success"
           });
         }
@@ -426,7 +429,7 @@ const deleteAccount = async () => {
     if(userDeleted.ok) {
       Swal.fire({
         icon: "success",
-        title: "Your account is being deleted!",
+        title: t("Your account is being deleted!"),
         showConfirmButton: false,
         timer: 1700
       });
@@ -436,7 +439,7 @@ const deleteAccount = async () => {
     } else {
       Swal.fire({
         title: 'Error!',
-        text: 'Server can not proccess your petition.Try it again!',
+        text: t('Server can not proccess your petition.Try it again!'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })

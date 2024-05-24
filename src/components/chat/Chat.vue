@@ -28,7 +28,7 @@
         v-model="newMessage"
         @keyup.enter="sendMessage"
         type="text"
-        placeholder="Type your message here..." />
+        :placeholder="t('Type your message here...')" />
       <button @click="sendMessage">{{t('Send')}}</button>
     </div>
   </div>

@@ -8,7 +8,6 @@
       </div>
       <Footer class="customFooter"></Footer>
     </div>
-    
   </div>
 </template>
 

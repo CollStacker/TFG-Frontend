@@ -10,7 +10,7 @@
       <div v-else>
         <div class ="messagesMainContent">
           <div class="friendRequestContainer">
-            <span class="uppercase bold big-text pl-7">Friend Requests</span>
+            <span class="uppercase bold big-text pl-7">{{t('Friend Requests')}}</span>
             <div class="ccseparator"></div>
             <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
               <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
@@ -32,12 +32,12 @@
             </template>
             <template v-else>
               <div class="p-5">
-                <span class="largeText">Sorry, you currently have no friend requests! </span>
+                <span class="largeText">{{t('Sorry, you currently have no friend requests!')}}</span>
               </div>
             </template>
           </div>
           <div class="friendListContainer">
-            <span class="uppercase bold big-text pl-7">Friends List</span>
+            <span class="uppercase bold big-text pl-7">{{t('Friends List')}}</span>
             <div class="ccseparator"></div>
             <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
               <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
@@ -59,7 +59,7 @@
             </template>
             <template v-else>
               <div class="p-5">
-                <span class="largeText">Sorry, you currently have no friends! </span>
+                <span class="largeText">{{t('Sorry, you currently have no friends!')}}</span>
               </div>
             </template>
           </div>
@@ -87,6 +87,9 @@ import { type UserInterface } from '@/types/user';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Chat from '@/components/chat/Chat.vue';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -179,9 +182,9 @@ const acceptFriendRequest = async (requesterId: string) => {
       body: JSON.stringify(acceptRequestBody)
     })
     if(!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed accepting friend request.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed accepting friend request')+'.', life: 3000 });
     } else {
-      toast.add({ severity: 'success', summary: 'Succes message', detail: 'New friend added to list.', life: 3000 });
+      toast.add({ severity: 'success', summary: 'Succes message', detail: t('New friend added to list')+'.', life: 3000 });
       await resetInformation();
     }
   }
@@ -204,9 +207,9 @@ const refuseFriendRequest = async (requesterId: string) => {
       body: JSON.stringify(refuseRequestBody)
     });
     if(!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed refusing friend request.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed refusing friend request')+'.', life: 3000 });
     } else {
-      toast.add({ severity: 'info', summary: 'Succes message', detail: 'Friend request refused.', life: 3000 });
+      toast.add({ severity: 'info', summary: 'Succes message', detail: t('Friend request refused')+'.', life: 3000 });
       await resetInformation();
     }
   }
@@ -224,7 +227,7 @@ const getFriendList = async () => {
       },
     })
     if(!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed finding friends.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed finding friends')+'.', life: 3000 });
     } else {
       friendList.value = await response.json();
     }
@@ -271,9 +274,9 @@ const deleteFriend = async (friendId: string) => {
       body: JSON.stringify(deleteFriendRequestBody),
     });
     if (!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed deleting friend.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed deleting friend')+'.', life: 3000 });
     } else {
-      toast.add({ severity: 'info', summary: 'Succes message', detail: 'Friend deleted.', life: 3000 });
+      toast.add({ severity: 'info', summary: 'Succes message', detail: t('Friend deleted')+'.', life: 3000 });
       await resetInformation();
     }
   }

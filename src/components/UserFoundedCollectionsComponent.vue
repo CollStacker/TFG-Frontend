@@ -4,7 +4,8 @@
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == true">
         <div class="foundedUsercollectionContainer" style="margin-top: 20px;">
           <div class="foundedUsercollectionContainterHeader" style="display: flex; justify-content: center;">
-            <h1 class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }} {{t('collections')}}</h1>
+            <h1 v-if="locale === 'en'" class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }}'s collections</h1>
+            <h1 v-if="locale === 'es'"class="uppercase bold big-text foundedUsercustomHeaderText">Colecciones de {{ props.foundedUser.username }} </h1>
           </div>
           <div style="display: flex; justify-content: center; margin-bottom: 20px;">
             <div class="separator"></div>
@@ -43,7 +44,7 @@ import { type CollectionInterface } from '@/types/collection';
 import CollectionDataComponent from '@/components/CollectionDataComponent.vue';
 
 import { useI18n } from 'vue-i18n'
-const {t} = useI18n();
+const {t, locale} = useI18n();
 
 const props = defineProps({
   foundedUser: {
