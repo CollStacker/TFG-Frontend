@@ -26,9 +26,10 @@
               <img v-else src="../assets/imgs/logo_without_background.png" class="productImg" @click="openProductDataComponent(product)">
               <h1 class="bold productTitle" @click="openProductDataComponent(product)">{{ product.name }}</h1>
             </div>
+            {{ productLikesVec[index] }} Likes
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
-              <Button class="footerButton pi pi-thumbs-up" :label="t(' Like')"></Button>
+              <Button class="footerButton pi pi-thumbs-up" :label="t(' Like')" @click="giveALike(product._id,index)"></Button>
               <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" :label="t(' Comment')"></Button>
               <Button class="footerButton pi pi-link" :label="t(' Share')"></Button>
             </div>
@@ -87,6 +88,8 @@ const selectedProduct = ref<WholeProductDataInterface>();
 
 const readComments = ref<boolean>(false);
 
+const productLikesVec =  ref<number[]>([])
+
 const findProducts = async() => {
   if(!await authStore.checkToken()) {
     router.push('/');
@@ -123,6 +126,7 @@ const findProductsOwners = async() => {
           toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed finding owners.'), life: 3000 });
         } else {
           last20ProductsUser.value.push(await response.json());
+          productLikesVec.value.push(0);
         }
       }
     }
@@ -204,6 +208,30 @@ const currentProduct = ref<HomeViewProductDataInterface>();
 const openProductComments = (product : HomeViewProductDataInterface) => {
   currentProduct.value = product;
   readComments.value = true;
+}
+
+const giveALike = async (productId: string, productIndex: number) => {
+  if(!authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const requestBody = {
+      productId: productId,
+      userId: authStore.getUserData().id,
+    }
+    const response = await fetch(API_URI + `/productLike`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(requestBody)
+    })
+    if(!response.ok) {
+
+    } else {
+      productLikesVec.value[productIndex] += 1;
+    }
+  }
 }
 
 </script>
