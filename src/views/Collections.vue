@@ -2,7 +2,7 @@
   <div class="collectionsContainer" :key="refreshComponent"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div v-if="isLoading" class="loading-spinner">
         <div class="spinner"></div>
       </div>
@@ -11,24 +11,24 @@
           <div v-if="collectionNum == 1" class="numCollsText" style="display: flex; align-items: center;">
             <div>
               <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-              <h1 class="collectionCounterText"> Collection</h1>
+              <h1 class="collectionCounterText">{{t(' Collection')}}</h1>
             </div>
             <div style="margin-left: auto;">
-              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
+              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" :label="t(' Create collection')"/>
             </div>
           </div>
           <div v-else class="numCollsText" style="display: flex; align-items: center;">
             <div>
               <h1 class="collectionCounterNumber">{{ collectionNum }}</h1>
-              <h1 class="collectionCounterText"> Collections</h1>
+              <h1 class="collectionCounterText">{{t(' Collections')}}</h1>
             </div>
             <div style="margin-left: auto;">
-              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" label=" Create collection"/>
+              <Button @click="createCollection" class="pi pi-plus customCreateCollectionButton bigger" :label="t(' Create collection')"/>
             </div>
           </div>
           <div class="collectionContainer" style="margin-top: 20px;">
             <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-              <h1 class="uppercase bold big-text customHeaderText">My collections</h1>
+              <h1 class="uppercase bold big-text customHeaderText">{{t('My collections')}}</h1>
             </div>
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
               <div class="separator"></div>
@@ -46,7 +46,7 @@
                 </lightgallery>
               </div>
               <div v-else class="collectionListContainer" style="margin-bottom: 30px;">
-                <span style="font-size: 20px;">You dont have any collection yet!!</span>
+                <span style="font-size: 20px;">{{t('You dont have any collection yet!!')}}</span>
               </div>
             </div>
           </div>
@@ -73,6 +73,9 @@ import { userAuthentication } from '@/store/userAuth.store';
 import { type CollectionInterface } from '@/types/collection';
 import CollectionDataComponent from '@/components/CollectionDataComponent.vue';
 
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
+
 // GALERY
 import Lightgallery from 'lightgallery/vue';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -92,6 +95,11 @@ const onInit = () => {
 const onBeforeSlide = () => {
   
 };
+
+const refreshNav = () => {
+  refreshComponent.value = refreshComponent.value + 1;
+}
+
 
 // SCRIPT
 
@@ -128,7 +136,7 @@ const getCollectionData = async () => {
     if (!response.ok) {
       Swal.fire({
         icon: "error",
-        title: "Failed to get collections",
+        title: t("Failed to get collections"),
         showConfirmButton: false,
         timer: 1700
       });

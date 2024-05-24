@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="new-comment">
-      <input v-model="newCommentText" type="text" placeholder="Add a comment..." class="new-comment-input" />
+      <input v-model="newCommentText" type="text" :placeholder="t('Add a comment...')" class="new-comment-input" />
       <button @click="addComment" class="new-comment-button">{{t('Post')}}</button>
     </div>
   </div>

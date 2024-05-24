@@ -1,8 +1,8 @@
 <template>
-  <div class="userProfileContainer"> 
+  <div class="userProfileContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="userProfileContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div class ="userProfileMainContent">
         <UserProfileComponent></UserProfileComponent>
       </div>
@@ -17,6 +17,12 @@ import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
 import UserProfileComponent from '@/components/UserProfileComponent.vue';
+import {ref} from 'vue'
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
+}
 </script>
 
 <style>

@@ -1,9 +1,9 @@
 <template>
   <Toast/>
-  <div class="collectionsFormContainer"> 
+  <div class="collectionsFormContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsFormContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div class="collectionsFormMainContent"> 
         <div class=" collectionFormContainer">
           <Toast/>
@@ -13,14 +13,14 @@
               <form @submit.prevent="createCollection">
                 <template id="registerFormStep1" v-if="collectionFormStep === 0">
                   <div class="collectionFormHeader">
-                    <h1 class="uppercase bold big-text">Create Collection</h1>
+                    <h1 class="uppercase bold big-text">{{t('Create Collection')}}</h1>
                     <div class="separator mb-15"></div>
                   </div>
                   <div class="collectionform mb-8">
                     <div class="title-wrapper">
-                      <span class="uppercase bold fs-b"><label class="red-text">* </label>Title</span>
-                      <InputText class="biggerInputText" v-model="collectionFormData.title" placeholder="Title"/>
-                      <small>Choose a creative name, remember you can change it later</small>
+                      <span class="uppercase bold fs-b"><label class="red-text">* </label>{{t('Title')}}</span>
+                      <InputText class="biggerInputText" v-model="collectionFormData.title" :placeholder="t('Title')"/>
+                      <small>{{t('Choose a creative name, remember you can change it later')}}</small>
                     </div>
                   </div>
                   <i class="customNextStepButton pi pi-arrow-right" @click="handleNextStep"></i>
@@ -28,12 +28,12 @@
                 <template id="registerFormStep2" v-if="collectionFormStep === 1">
                   <div class="collectionform mb-8">
                     <div class="title-wrapper">
-                      <span class="uppercase bold fs-b">Collection image</span>
+                      <span class="uppercase bold fs-b">{{t('Collection image')}}</span>
                       <!-- {{ "lenght" + collectionFormData.frontPage.length }} -->
                       <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
                         @select="upload($event)">
                         <template #empty>
-                          <p v-if="collectionFormData.frontPage.length === 0">Drag and drop files to here to upload.</p>
+                          <p v-if="collectionFormData.frontPage.length === 0">{{t('Drag and drop files to here to upload')}}.</p>
                         </template>
                         <template #content>
                           <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
@@ -51,7 +51,7 @@
                   <div class="button-container">
                     <i class="customPreviousStepButton pi pi-arrow-left" @click="previousCollectionStep"></i>
                     <!-- create collection button-->
-                    <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button>
+                    <Button class="createCollectionButton pi pi-check" :label="t('Create')" type="submit"></Button>
                   </div>
                 </template>
               </form>
@@ -60,8 +60,8 @@
               <div class="overlay">
                 <!-- Left panel-->
                 <div class="overlay-panel overlay-left">
-                  <h1>Hey there, Treasure Hunter!</h1>
-                  <p>Let's create a collection together, give it a name and if you wish, insert an image</p>
+                  <h1>{{t('Hey there, Treasure Hunter!')}}</h1>
+                  <p>{{("Let's create a collection together, give it a name and if you wish, insert an image")}}</p>
                 </div>
               </div>
             </div>
@@ -87,6 +87,9 @@ import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2'
 import { useToast } from "primevue/usetoast";
 import { API_URI } from '@/types/env';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const toast = useToast();
 const router = useRouter();
@@ -123,13 +126,13 @@ const createCollection = async () => {
     if(!collectionSaved.ok) {
       Swal.fire({
         title: 'Error!',
-        text: 'Something were wrong in the creation of your collection. Try it later!',
+        text: t('Something were wrong in the creation of your collection. Try it later!'),
         icon: 'error',
         confirmButtonText: 'Ok'
       })
     } else {
       clearFormData();
-      toast.add({ severity: 'success', summary: 'Collection created', detail: 'Your collection has been created.', life: 3000 });
+      toast.add({ severity: 'success', summary: 'Collection created', detail: t('Your collection has been created')+'.', life: 3000 });
       setTimeout(function() {
         router.push('/collections')
       }, 1200);
@@ -143,7 +146,7 @@ const collectionFormStep = ref(0);
 const handleNextStep = () => {
   if(collectionFormStep.value === 0) {
     if (collectionFormData.value.title == '' || collectionFormData.value.title.length == 0) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name is a mandatory field.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Name is a mandatory field.'), life: 3000 });
     } else {
       collectionFormStep.value += 1;
     }
@@ -179,6 +182,11 @@ const upload = (e: any) => {
 
 const deleteUploadImg = () => {
   collectionFormData.value.frontPage = '';
+}
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
 }
 
 </script>

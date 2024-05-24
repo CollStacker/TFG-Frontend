@@ -8,19 +8,19 @@
           <form @submit.prevent="createProduct">
             <template id="createProductFormStep1" v-if="productFormStep === 0">
               <div class="productFormHeader">
-                <h1 class="uppercase bold big-text">Create a product</h1>
+                <h1 class="uppercase bold big-text">{{t('Create a product')}}</h1>
                 <div class="separator mb-15"></div>
               </div>
               <div class="productForm mb-8">
                 <div class="title-wrapper">
-                  <span class="uppercase bold fs-b"><label class="red-text">* </label>Product Name</span>
-                  <InputText class="biggerInputText" v-model="productData.name" placeholder="Product Name"/>
+                  <span class="uppercase bold fs-b"><label class="red-text">* </label>{{t('Product Name')}}</span>
+                  <InputText class="biggerInputText" v-model="productData.name" :placeholder="t('Product Name')"/>
                 </div>
               </div>
               <div class="productForm mb-8">
                 <div class="title-wrapper">
-                  <span class="uppercase bold fs-b">Description</span>
-                  <Textarea class="biggerInputText" v-model="productData.description" placeholder="Product Name" autoResize maxlength="350"/>
+                  <span class="uppercase bold fs-b">{{t('Description')}}</span>
+                  <Textarea class="biggerInputText" v-model="productData.description" :placeholder="t('Product description')" autoResize maxlength="350"/>
                 </div>
               </div>
               <small>{{`${productData.description.length}/350`}}</small>
@@ -28,7 +28,7 @@
             </template>
             <template id="createProductFormStep2" v-if="productFormStep === 1">
               <div class="productFormHeader">
-                <h1 class="uppercase bold big-text">Insert an image</h1>
+                <h1 class="uppercase bold big-text">{{t('Insert an image')}}</h1>
                 <div class="separator mb-15"></div>
               </div>
               <div class="productForm mb-8">
@@ -36,7 +36,7 @@
                   <FileUpload name="collectionImg[]" customUpload auto :multiple="false" accept="image/*" :maxFileSize="1000000"
                     @select="upload($event)">
                     <template #empty>
-                      <p v-if="productData.image.length === 0">Drag and drop files to here to upload.</p>
+                      <p v-if="productData.image.length === 0">{{t('Drag and drop files to here to upload.')}}</p>
                     </template>
                     <template #content>
                       <!--MOSTRAR LA IMAGEN CARGADA EN fileUpload CON SU PESO Y UN BOTÓN PARA ELIMINARLA-->
@@ -59,29 +59,29 @@
             </template>
             <template id="createProductFormStep3" v-if="productFormStep === 2">
               <div class="productFormHeader">
-                <h1 class="uppercase bold big-text">Insert custom fields</h1>
+                <h1 class="uppercase bold big-text">{{t('Insert custom fields')}}</h1>
                 <div class="separator mb-15"></div>
               </div>
               <div class="productForm mb-8">
                 <div class="title-wrapper">
-                  <span class="uppercase bold fs-b">Custom fields</span>
-                  <Dialog v-model:visible="customFieldsDialogVisible" modal header="CUSTOM FIELDS LIST" class="customFieldsDialog" :style="{ width: '60rem', height: '28rem' }">
+                  <span class="uppercase bold fs-b">{{t('Custom fields')}}</span>
+                  <Dialog v-model:visible="customFieldsDialogVisible" modal :header="t('CUSTOM FIELDS LIST')" class="customFieldsDialog" :style="{ width: '60rem', height: '28rem' }">
                     <div class="separator mb-15"></div>
                     <DataTable :value="customFields" paginator :rows="4" tableStyle="min-width: 50rem">
-                      <Column field="key" header="Name"></Column>
-                      <Column field="value" header="Value"></Column>
+                      <Column field="key" :header="t('Name')"></Column>
+                      <Column field="value" :header="t('Value')"></Column>
                     </DataTable>
                   </Dialog>
-                  <InputText class="biggerInputText" v-model="customField.key" placeholder="Field name"/>
-                  <InputText class="biggerInputText" v-model="customField.value" placeholder="Field value"/>
-                  <Button class="addCustomFieldButton pi pi-plus" label="ADD CUSTOM FIELD" @click="addCustomField"/>
-                  <Button class="addCustomFieldButton pi pi-eye" label="CHECK CUSTOM FIELDS" @click="customFieldsDialogVisible = true" :disabled="customFields.length === 0"/>
+                  <InputText class="biggerInputText" v-model="customField.key" :placeholder="t('Field name')"/>
+                  <InputText class="biggerInputText" v-model="customField.value" :placeholder="t('Field value')"/>
+                  <Button class="addCustomFieldButton pi pi-plus" :label="t('ADD CUSTOM FIELD')" @click="addCustomField"/>
+                  <Button class="addCustomFieldButton pi pi-eye" :label="t('CHECK CUSTOM FIELDS')" @click="customFieldsDialogVisible = true" :disabled="customFields.length === 0"/>
                 </div>
               </div>
               <div class="button-container">
                 <i class="customPreviousStepButton pi pi-arrow-left" @click="previousProductStep"></i>
                 <!-- create collection button-->
-                <Button class="createCollectionButton pi pi-check" label="Create" type="submit"></Button>
+                <Button class="createCollectionButton pi pi-check" :label="t('Create')" type="submit"></Button>
               </div>
             </template>
           </form>
@@ -91,7 +91,6 @@
             <!-- Left panel-->
             <div class="overlay-panel overlay-left">
               <h1>Hey there, Treasure Hunter!</h1>
-              <p>Let's create a collection together, give it a name and if you wish, insert an image</p>
             </div>
           </div>
         </div>
@@ -116,6 +115,9 @@ import { useRouter } from 'vue-router';
 import { type ProductInterface } from '@/types/product';
 import { API_URI } from '@/types/env';
 import Swal from 'sweetalert2'
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -196,7 +198,7 @@ const createProduct = async () => {
     if(!response.ok) {
       Swal.fire({
         icon: "error",
-        title: "Something were wrong in the insertion of the product.",
+        title: t("Something were wrong in the insertion of the product."),
         showConfirmButton: false,
       });
     } else {
@@ -218,7 +220,7 @@ const createProduct = async () => {
         if (!response.ok) {
           Swal.fire({
             icon: "error",
-            title: "Something were wrong in the insertion of custom fields into the product.",
+            title: t("Something were wrong in the insertion of custom fields into the product."),
             showConfirmButton: false,
           });
         }
@@ -232,7 +234,7 @@ const productFormStep = ref(0);
 const handleNextStep = () => {
   if(productFormStep.value === 0) {
     if (productData.value.name == '' || productData.value.name.length == 0) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name is a mandatory field.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Name is a mandatory field.'), life: 3000 });
     } else {
       productFormStep.value += 1;
     }
@@ -253,7 +255,7 @@ const addCustomField = () => {
     productId: customField.value.productId
   } 
   if (tmpCustomFieldData.key == '' || tmpCustomFieldData.value == '') {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
+    toast.add({ severity: 'error', summary: 'Error Message', detail: t('All fields must be filled.'), life: 3000 });
     return;
   } else {
     customFields.value.push(tmpCustomFieldData);

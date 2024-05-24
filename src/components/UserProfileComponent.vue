@@ -16,21 +16,21 @@
           <div class="userDataContainer">
             <div class="userDataText">
               <div class="formGroup">
-                <span class="formGroupInputText">Email</span>
+                <span class="formGroupInputText">{{t('Email')}}</span>
                 <InputText class="customUserProfileInputText" v-model="userData.email" :disabled="inputTextEditable" />
               </div>
               <div class="formGroup">
-                <span class="formGroupInputText">Name</span>
+                <span class="formGroupInputText">{{t('Name')}}</span>
                 <InputText class="customUserProfileInputText" v-model="userData.name" :disabled="inputTextEditable" />  
               </div>
               <div class="formGroup">
-                <span class="formGroupInputText">Surnames</span>
+                <span class="formGroupInputText">{{t('Surnames')}}</span>
                 <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
               </div>
             </div>
             <div class="biografyFormGroup" v-if="userData.biography">
               <div class="formGroup">
-                <span class="formGroupInputText">About me</span>
+                <span class="formGroupInputText">{{t('About me')}}</span>
                 <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
               </div>
             </div>
@@ -47,6 +47,9 @@ import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import { ref } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const authStore = userAuthentication();
 

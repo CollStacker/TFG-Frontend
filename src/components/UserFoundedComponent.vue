@@ -5,7 +5,7 @@
       <div class="foundedUserProfileComponentColumn">
         <div v-if="!checkAlreadyFriend()">
           <div class="userFoundedButtonsContainer" v-if="foundedUserData.id !== currentUserData.id">
-            <Button class="customAddFriendButton pi pi-plus" label=" Add friend" @click="sendFriendRequest()"></Button>
+            <Button class="customAddFriendButton pi pi-plus" :label="t(' Add friend')" @click="sendFriendRequest()"></Button>
           </div>
         </div>
         <div class="userProfileComponentCard"> 
@@ -39,7 +39,7 @@
               </div>
               <div class="biografyFormGroup" v-if="foundedUserData.biography">
                 <div class="formGroup textCenter">
-                  <span class="formGroupInputTextb biography">About me</span>
+                  <span class="formGroupInputTextb biography">{{t('About me')}}</span>
                   <span>{{ foundedUserData.biography }}</span>
                   <!-- <Textarea class="customUserProfileTextArea" v-model="foundedUserData.biography" :disabled="inputTextEditable" autoResize /> -->
                 </div>
@@ -65,6 +65,9 @@ import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import { API_URI } from '@/types/env';
 import UserFoundedCollectionsComponent from './UserFoundedCollectionsComponent.vue'
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const authStore = userAuthentication();
 const router = useRouter();
@@ -99,7 +102,7 @@ const sendFriendRequest = async () => {
       const e = await friendshipRequest.json();
       toast.add({ severity: 'error', summary: 'Error Message', detail: e.error.message, life: 3000 });
     } else {
-      toast.add({ severity: 'success', summary: 'Collection created', detail: 'Friend request has been sent.', life: 3000 });
+      toast.add({ severity: 'success', summary: 'Collection created', detail: t('Friend request has been sent')+'.', life: 3000 });
     }
   }
 }
