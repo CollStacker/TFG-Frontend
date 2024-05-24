@@ -1,9 +1,9 @@
 <template>
   <Toast/>
-  <div class="collectionsFormContainer"> 
+  <div class="collectionsFormContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsFormContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div class="collectionsFormMainContent"> 
         <div class=" collectionFormContainer">
           <Toast/>
@@ -182,6 +182,11 @@ const upload = (e: any) => {
 
 const deleteUploadImg = () => {
   collectionFormData.value.frontPage = '';
+}
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
 }
 
 </script>

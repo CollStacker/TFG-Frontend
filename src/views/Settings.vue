@@ -1,8 +1,8 @@
 <template>
-  <div class="settingsContainer"> 
+  <div class="settingsContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="settingsContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div class ="settingsMainContent">
         <Splitter class="customSettingsSplitter">
             <SplitterPanel class="" :size="14" :minSize="14" >
@@ -183,6 +183,11 @@ import Swal from 'sweetalert2'
 
 import { useI18n } from 'vue-i18n'
 const {t} = useI18n();
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
+}
 
 const router = useRouter();
 const authStore = userAuthentication();

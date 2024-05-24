@@ -1,9 +1,9 @@
 <template>
   <Toast/>
-  <div class="messagesContainer"> 
+  <div class="messagesContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="messagesContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div v-if="isLoading" class="loading-spinner">
         <div class="spinner"></div>
       </div>
@@ -23,8 +23,8 @@
                   <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                   <span class="ml-12 largeText">{{ friendRequest.username }}</span>
                   <div class="button-container">
-                    <Button class="customAcceptRequestButton pi pi-plus" label=" Accept" @click="acceptFriendRequest(friendRequest.id)"></Button>
-                    <Button class="customRefuseRequestButton ml-12 pi pi-minus" label=" Decline" @click="refuseFriendRequest(friendRequest.id)"></Button>
+                    <Button class="customAcceptRequestButton pi pi-plus" :label="t(' Accept')" @click="acceptFriendRequest(friendRequest.id)"></Button>
+                    <Button class="customRefuseRequestButton ml-12 pi pi-minus" :label="t(' Decline')" @click="refuseFriendRequest(friendRequest.id)"></Button>
                   </div>
                 </div>
                 <Divider />
@@ -102,6 +102,11 @@ const friendRequestsRelevantData = ref<UserInterface[]>([]);
 const friendList = ref<string[]>();
 const friendListRelevantData = ref<UserInterface[]>([]);
 const isLoading = ref<boolean>(true);
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
+}
 
 onMounted(async () => {
   await getFriendRequest();

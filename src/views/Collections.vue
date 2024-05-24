@@ -2,7 +2,7 @@
   <div class="collectionsContainer" :key="refreshComponent"> 
     <SideBar class="sidebar"></SideBar>
     <div class="collectionsContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div v-if="isLoading" class="loading-spinner">
         <div class="spinner"></div>
       </div>
@@ -95,6 +95,11 @@ const onInit = () => {
 const onBeforeSlide = () => {
   
 };
+
+const refreshNav = () => {
+  refreshComponent.value = refreshComponent.value + 1;
+}
+
 
 // SCRIPT
 

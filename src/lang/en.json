@@ -144,5 +144,7 @@
  "Delete account": "Delete account",
  "Change password": "Change password",
  "Add a comment...": "Add a comment...",
- "Type your message here...": "Type your message here..."
+ "Type your message here...": "Type your message here...",
+ " Accept": " Accept",
+ " Decline": " Decline"
 }
