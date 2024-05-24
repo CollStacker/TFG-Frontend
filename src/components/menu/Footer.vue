@@ -1,14 +1,16 @@
 <template>
   <div class="footer">
     <p class="customText">
-      Created by
+      {{t('Created by')}}
       <a target="_blank" href="https://github.com/Adrian-glz01">Adrián González Expósito</a>
-      - As a application for the final degree project.
+      - {{t('As a application for the final degree project')}}.
     </p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 </script>
 
 <style scoped>

@@ -17,7 +17,7 @@
     </div>
     <div class="new-comment">
       <input v-model="newCommentText" type="text" placeholder="Add a comment..." class="new-comment-input" />
-      <button @click="addComment" class="new-comment-button">Post</button>
+      <button @click="addComment" class="new-comment-button">{{t('Post')}}</button>
     </div>
   </div>
 </template>
@@ -29,6 +29,9 @@ import { useToast } from "primevue/usetoast";
 import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
 import { type UserInterface } from '@/types/user';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 onMounted(async () => {
   await getComments();
@@ -80,9 +83,9 @@ const addComment = async () => {
         body: JSON.stringify(newComment),
       })
       if(!response.ok) {
-        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting comment.', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error posting comment.'), life: 3000 });
       } else {
-        toast.add({ severity: 'success', summary: 'Categorie created', detail: `Comment posted`, life: 3000 });
+        toast.add({ severity: 'success', summary: 'Categorie created', detail: t(`Comment posted.`), life: 3000 });
         await getComments();
         await getCommentsOwner();
       }
@@ -103,7 +106,7 @@ const getComments = async () => {
       },
     })
     if(!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting comment.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error getting comment.'), life: 3000 });
     } else {
       comments.value = await response.json();
     }
@@ -125,7 +128,7 @@ const getCommentsOwner = async () => {
           },
         })
         if(!response.ok) {
-          toast.add({ severity: 'error', summary: 'Error Message', detail: 'Something wrong finding comment owner.', life: 3000 });
+          toast.add({ severity: 'error', summary: 'Error Message', detail: t('Something wrong finding comment owner.'), life: 3000 });
         } else {
           tmpArray.push(await response.json());
         }

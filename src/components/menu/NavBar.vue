@@ -6,7 +6,7 @@
         <Toast/>
         <div class="searchInputText">
           <span class="customSearchLogo pi pi-search"></span>
-          <InputText v-model="currentUser" placeholder="Search" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
+          <InputText v-model="currentUser" :placeholder="t('Search')" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
           <span v-if="locale === 'en'" class="tText" @click="changeLanguage('es')">En</span>
           <span v-if="locale==='es'" class="tText" @click="changeLanguage('en')">Es</span>
         </div>
@@ -41,6 +41,7 @@ const {t, locale } = useI18n();
 
 const changeLanguage = (lang: string) => {
   locale.value = lang;
+  emits("refreshNav");
 };
 
 const toast = useToast();
@@ -48,7 +49,7 @@ const authStore = userAuthentication();
 
 const router = useRouter();
 
-const emits = defineEmits(["refreshPage"])
+const emits = defineEmits(["refreshPage","refreshNav"])
 
 onMounted(async () => {
   await getFriendRequest();

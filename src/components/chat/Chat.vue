@@ -29,7 +29,7 @@
         @keyup.enter="sendMessage"
         type="text"
         placeholder="Type your message here..." />
-      <button @click="sendMessage">Send</button>
+      <button @click="sendMessage">{{t('Send')}}</button>
     </div>
   </div>
 </template>
@@ -41,6 +41,9 @@ import { useToast } from "primevue/usetoast";
 import { useRouter } from 'vue-router';
 import { API_URI } from '@/types/env';
 import { type UserInterface } from '@/types/user';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 interface Message {
   _id? : string,
@@ -92,7 +95,7 @@ const sendMessage = async () => {
         body: JSON.stringify(tmpMessage)
       })
       if(!response.ok) {
-        toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error posting a message.', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error posting a message.'), life: 3000 });
       } else {
         getConversation();
       }
@@ -115,7 +118,7 @@ const getConversation = async () => {
       },
     });
     if(!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Error getting conversation.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error getting conversation.'), life: 3000 });
     } else {
       messages.value = await response.json();
     }

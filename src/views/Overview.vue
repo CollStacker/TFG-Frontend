@@ -1,8 +1,8 @@
 <template>
-  <div class="overViewContainer"> 
+  <div class="overViewContainer" :key="key"> 
     <SideBar class="sidebar"></SideBar>
     <div class="overViewContent">
-      <NavBar class="customNavBar"></NavBar>
+      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
       <div class ="overViewMainContent">
         <OverviewComponent></OverviewComponent>
       </div>
@@ -17,6 +17,12 @@ import SideBar from '@/components/menu/SideBar.vue';
 import NavBar from '@/components/menu/NavBar.vue';
 import Footer from '@/components/menu/Footer.vue';
 import OverviewComponent from '@/components/OverviewComponent.vue'
+import {ref} from 'vue'
+
+const key = ref<number>(0);
+const refreshNav = () => {
+  key.value = key.value + 1;
+}
 </script>
 
 <style>
