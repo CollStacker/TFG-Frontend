@@ -4,7 +4,7 @@
       <div class ="foundedUsercollectionsMainContent" v-if="showCollectionView == true">
         <div class="foundedUsercollectionContainer" style="margin-top: 20px;">
           <div class="foundedUsercollectionContainterHeader" style="display: flex; justify-content: center;">
-            <h1 class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }} collections</h1>
+            <h1 class="uppercase bold big-text foundedUsercustomHeaderText">{{ props.foundedUser.username }} {{t('collections')}}</h1>
           </div>
           <div style="display: flex; justify-content: center; margin-bottom: 20px;">
             <div class="separator"></div>
@@ -22,7 +22,7 @@
               </lightgallery>
             </div>
             <div v-else class="foundedUsercollectionListContainer" style="margin-bottom: 30px;">
-              <span style="font-size: 20px;">{{ props.foundedUser.username }} doesn't have any collection yet!!</span>
+              <span style="font-size: 20px;">{{ props.foundedUser.username }} {{t("doesn't have any collection yet!!")}}</span>
             </div>
           </div>
         </div>
@@ -41,6 +41,9 @@ import { ref, onMounted  } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
 import { type CollectionInterface } from '@/types/collection';
 import CollectionDataComponent from '@/components/CollectionDataComponent.vue';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const props = defineProps({
   foundedUser: {
@@ -94,7 +97,7 @@ const getCollectionData = async () => {
       if (!response.ok) {
         Swal.fire({
           icon: "error",
-          title: "Failed to get collections",
+          title: t("Failed to get collections"),
           showConfirmButton: false,
           timer: 1700
         });

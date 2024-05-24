@@ -6,26 +6,26 @@
         <CreateProductForm :collectionId="props.collection ? props.collection._id : ''" @closeProductDialog="closeProductDialog()"/>
       </div>
     </Dialog>
-    <Dialog v-model:visible="openAddCategoriesDialog" modal header="Add a category" :style="{ width: '30rem' }">
+    <Dialog v-model:visible="openAddCategoriesDialog" modal :header="t('Add a category')" :style="{ width: '30rem' }">
       <div style="padding-left: 14px;">
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
-          <label class="uppercase bold">Category name</label>
+          <label class="uppercase bold">{{t('Category name')}}</label>
           <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newCategoryName"/>
         </div>
         <div style="display: flex; justify-content: end;">
-          <Button type="button" label="Cancel" severity="secondary" @click="openAddCategoriesDialog = false"></Button>
-          <Button type="button" label="Save" @click="addCategorie()" style="margin-left: 5px;"></Button>
+          <Button type="button" :label="t('Cancel')" severity="secondary" @click="openAddCategoriesDialog = false"></Button>
+          <Button type="button" :label="t('Save')" @click="addCategorie()" style="margin-left: 5px;"></Button>
         </div>
       </div>
     </Dialog>
     <Dialog v-model:visible="editCollection" modal header="Edit collection" :style="{ width: '30rem' }">
       <div style="padding-left: 16px;">
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
-          <label for="username" class="uppercase bold">Title</label>
+          <label for="username" class="uppercase bold">{{t('Title')}}</label>
           <InputText id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newTitle"/>
         </div>
         <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;">
-          <label for="username" class="uppercase bold">Description</label>
+          <label for="username" class="uppercase bold">{{t('Description')}}</label>
           <Textarea id="username" class="editCollectioncustomInput" autocomplete="off" v-model="newDescription" auto-resize :maxlength="350"/>
           <div style="display: flex; justify-content: center; align-items: center;">
             {{ newDescription.length + "/350" }}
@@ -33,13 +33,13 @@
         </div>
         <div>
           <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 6px;"></div>
-          <label for="username" class="uppercase bold">Image</label>
+          <label for="username" class="uppercase bold">{{t('Image')}}</label>
           <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" customUpload auto chooseLabel="Browse" @select="upload($event)"/>
         </div>
       </div>
       <div style="display: flex; justify-content: end;">
-        <Button type="button" label="Cancel" @click="editCollection = false"></Button>
-        <Button type="button" label="Save" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
+        <Button type="button" :label="t('Cancel')" @click="editCollection = false"></Button>
+        <Button type="button" :label="t('Save')" @click="saveNewCollectionData()" style="margin-left: 5px;"></Button>
       </div>
     </Dialog>
     <div v-if="isLoading" class="loading-spinner">
@@ -49,8 +49,8 @@
       <div style="display: flex;">
         <Button class="editCollectionButton pi pi-arrow-left" @click="emitCloseCollectionComponent()"/>
         <div style="margin-left: auto;" v-if="!props.readOnly">
-          <Button class="addCategoriesButton pi pi-plus" label=" ADD PRODUCT" @click="openCreateProductDialog = true"></Button>
-          <Button class="addCategoriesButton pi pi-plus" label=" ADD CATEGORY" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
+          <Button class="addCategoriesButton pi pi-plus" :label="t(' ADD PRODUCT')" @click="openCreateProductDialog = true"></Button>
+          <Button class="addCategoriesButton pi pi-plus" :label="t(' ADD CATEGORY')" @click="openAddCategoriesDialog = true" style="margin-left: 10px;"></Button>
           <Button class="editCollectionButton pi pi-pencil" @click="editCollection = true" style="margin-left: 10px;"/>
         </div>
       </div>
@@ -79,13 +79,13 @@
       </div>
       <div class="collectionContainer" >
         <div class="collectionContainterHeader" style="display: flex; justify-content: center;">
-          <h1 class="uppercase bold big-text customHeaderText">Products</h1>
+          <h1 class="uppercase bold big-text customHeaderText">{{t('Products')}}</h1>
         </div>
         <div style="display: flex; justify-content: center; margin-bottom: 20px;">
           <div class="separator"></div>
         </div> 
         <div v-if="!collectionProducts" class="noProductsContainer">
-          <span>There are no products in this collection!!</span>
+          <span>{{t('There are no products in this collection!!')}}</span>
         </div>
         <div v-else class="collectionListContainerBorder"> 
           <div class="collectionListContainer">
@@ -133,7 +133,10 @@ import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
 import CreateProductForm from '@/components/CreateProductForm.vue';
 import { type WholeProductDataInterface } from '@/types/product';
-import ProductDataComponent from './ProductDataComponent.vue'
+import ProductDataComponent from './ProductDataComponent.vue';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const toast = useToast();
 const router = useRouter();
@@ -191,7 +194,7 @@ const getCollectionCategories = async () => {
     if (!categories.ok) {
       Swal.fire({
         icon: "error",
-        title: "Couldn't get categories",
+        title: t("Couldn't get categories"),
         showConfirmButton: false,
       });
     } else {
@@ -215,7 +218,7 @@ const getCollectionProducts = async () => {
     if (!response.ok) {
       Swal.fire({
         icon: "error",
-        title: "Couldn't get products",
+        title: t("Couldn't get products"),
         showConfirmButton: false,
       });
     } else {
@@ -240,7 +243,7 @@ const getProductCustomFields = async () => {
         if (!response.ok) {
           Swal.fire({
             icon: "error",
-            title: `Couldn't get products fields of product ${product.name}`,
+            title: t('Could not get products fields of product') + product.name,
             showConfirmButton: false,
           });
         } else {
@@ -295,7 +298,7 @@ const saveNewCollectionData = async () => {
       if(!response.ok) {
         Swal.fire({
           icon: "error",
-          title: "Failed to update collection",
+          title: t("Failed to update collection"),
           showConfirmButton: false,
         });
       } else {
@@ -351,18 +354,18 @@ const addCategorie = async () => {
       if (!response.ok) {
         Swal.fire({
           icon: "error",
-          title: "Something were wrong in the insertion of the category.",
+          title: t("Something were wrong in the insertion of the category."),
           showConfirmButton: false,
         });
       } else {
         newCategoryName.value = "";
-        toast.add({ severity: 'success', summary: 'Categorie created', detail: `Categorie: ${newCategory.value.name} has been created.`, life: 3000 });
+        toast.add({ severity: 'success', summary: 'Categorie created', detail: t('Categorie: ') + newCategory.value.name + t(' has been created.'), life: 3000 });
         await getCollectionCategories();
         openAddCategoriesDialog.value = false;
       }
     }
   } else {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Name is a mandatory field.', life: 3000 });
+    toast.add({ severity: 'error', summary: 'Error Message', detail: t('Name is a mandatory field.'), life: 3000 });
   }
 }
 

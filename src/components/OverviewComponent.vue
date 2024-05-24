@@ -28,16 +28,16 @@
             </div>
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
-              <Button class="footerButton pi pi-thumbs-up" label=" Like"></Button>
-              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" label=" Comment"></Button>
-              <Button class="footerButton pi pi-link" label=" Share"></Button>
+              <Button class="footerButton pi pi-thumbs-up" :label="t(' Like')"></Button>
+              <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" :label="t(' Comment')"></Button>
+              <Button class="footerButton pi pi-link" :label="t(' Share')"></Button>
             </div>
           </div>
         </div>
       </template>
       <template v-else>
         <div class="overviewComponentContainer">
-          <span class="ml-12 largeText">There are no recent posts, refresh the page</span>
+          <span class="ml-12 largeText">{{t('There are no recent posts, refresh the page')}}</span>
         </div>
       </template>
     </div>
@@ -62,6 +62,9 @@ import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import CommentDialogComponent from './Dialog/CommentDialogComponent.vue';
+
+import { useI18n } from 'vue-i18n'
+const {t} = useI18n();
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -96,7 +99,7 @@ const findProducts = async() => {
       },
     }) 
     if (!response.ok) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed finding products.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed finding products.'), life: 3000 });
     } else {
       last20Products.value = await response.json();
     }
@@ -117,7 +120,7 @@ const findProductsOwners = async() => {
           },
         });
         if (!response.ok) {
-          toast.add({ severity: 'error', summary: 'Error Message', detail: 'Failed finding owners.', life: 3000 });
+          toast.add({ severity: 'error', summary: 'Error Message', detail: t('Failed finding owners.'), life: 3000 });
         } else {
           last20ProductsUser.value.push(await response.json());
         }
