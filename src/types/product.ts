@@ -7,6 +7,7 @@ export interface ProductInterface {
   image?: string
   publicationDate?: Date
   collectionId: string
+  likes?: number
 }
 
 export interface WholeProductDataInterface {
@@ -17,6 +18,7 @@ export interface WholeProductDataInterface {
   publicationDate?: Date
   collectionId: string
   customFields?: ProducFieldInterface[]
+  likes?: number
 }
 
 export interface HomeViewProductDataInterface {
@@ -26,4 +28,5 @@ export interface HomeViewProductDataInterface {
   image?: string,
   publicationDate?: Date,
   ownerId: string,
+  likes?: number
 }
