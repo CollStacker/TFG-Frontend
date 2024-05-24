@@ -8,18 +8,18 @@
             <SplitterPanel class="" :size="14" :minSize="14" >
               <Menu :model="items" class="customFirstSplitterMenu">
                 <template #submenuheader="{ item }">
-                  <span class="splitterSubMenuHeader uppercase">{{ item.label }}</span>
+                  <span class="splitterSubMenuHeader uppercase">{{ t(item.label as string) }}</span>
                 </template>
                 <template #item="{ item, props }">
-                  <a v-ripple class="" v-bind="props.action" @click="handleRoutering(item.label)">
+                  <a v-ripple class="" v-bind="props.action" @click="handleRoutering(t(item.label as string))">
                     <span :class="item.icon" />
-                    <span class="menuText">{{ item.label }}</span>
+                    <span class="menuText">{{ t(item.label as string) }}</span>
                   </a>
                 </template>
               </Menu>
             </SplitterPanel>
             <SplitterPanel class="customSecondtSplitterMenu" :size="87" :minSize="10">
-              <template v-if="secondSplitterDisplay == 'User Profile'">
+              <template v-if="secondSplitterDisplay == t('User Profile')">
                 <div class="secondSplitterHeader mb-8">
                   <span class="uppercase bold big-text" >{{t('User profile')}}</span>
                   <div class="separator"></div>
@@ -77,7 +77,7 @@
                   </section>
                 </Dialog>
               </template>
-              <template v-if="secondSplitterDisplay == 'Change Password'">
+              <template v-if="secondSplitterDisplay == t('Change Password')">
                 <div class="secondSplitterHeader mb-8">
                   <span class="uppercase bold big-text" >{{t('Change Password')}}</span>
                   <div class="separator"></div>
@@ -115,7 +115,7 @@
                   </div>
                 </div>
               </template>
-              <template v-if="secondSplitterDisplay == 'Delete Account'">
+              <template v-if="secondSplitterDisplay == t('Delete Account')">
                 <div class="secondSplitterHeader mb-8">
                   <span class="uppercase bold big-text red-text" >{{t('Delete Account')}}</span>
                   <div class="separator"></div>
@@ -245,6 +245,8 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
   if (label !== undefined) {
     elementSelected = label.toString();
   }
+  console.log(elementSelected)
+  console.log(t('User Profile'))
   switch (elementSelected) {
     case t('User Profile'):
       secondSplitterDisplay.value = elementSelected;
