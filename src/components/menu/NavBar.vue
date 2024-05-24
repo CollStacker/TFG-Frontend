@@ -1,4 +1,5 @@
-<template>
+<template >
+<div>
   <div class="navBarContainer">
     <Menubar :model="items" class="customNavBar">
       <template #start>
@@ -6,6 +7,8 @@
         <div class="searchInputText">
           <span class="customSearchLogo pi pi-search"></span>
           <InputText v-model="currentUser" placeholder="Search" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
+          <span v-if="locale === 'en'" class="tText" @click="changeLanguage('es')">En</span>
+          <span v-if="locale==='es'" class="tText" @click="changeLanguage('en')">Es</span>
         </div>
       </template>
       <template #item="{item, props, hasSubmenu, root}">
@@ -18,6 +21,8 @@
       </template>
     </Menubar> 
   </div>
+</div>
+    
 </template>
 
 <script setup lang="ts">
@@ -30,6 +35,13 @@ import { userAuthentication } from '@/store/userAuth.store';
 import { API_URI } from '@/types/env';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
+
+import { useI18n } from 'vue-i18n'
+const {t, locale } = useI18n();
+
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+};
 
 const toast = useToast();
 const authStore = userAuthentication();
@@ -65,34 +77,34 @@ const getFriendRequest = async () => {
 
 const items = ref([
     {
-        label: 'Messages',
+        label: t('Messages'),
         icon: 'pi pi-comments',
         badge: 2
     },
     {
-        label: 'Account',
+        label: t('Account'),
         icon: 'pi pi-user',
         items: [
             {
-                label: 'My profile',
+                label: t('My profile'),
                 icon: 'pi pi-user'
             },
             {
-                label: 'My collections',
+                label: t('My collections'),
                 icon: 'pi pi-server'
             },
             {
-                label: 'Help',
+                label: t('Help'),
                 icon: 'pi pi-question-circle'
             },
             {
-                label: 'Log out',
+                label: t('Log out'),
                 icon: 'pi pi-sign-out'
             },
         ]
     },
     {
-        label: 'Settings',
+        label: t('Settings'),
         icon: 'pi pi-cog'
     }
 ]);
@@ -104,23 +116,23 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
     itemSelected = label.toString();
   }
   switch (itemSelected) {
-    case 'Messages':
+    case t('Messages'):
       router.push('/messages')
       break;
-    case 'My profile':
+    case t('My profile'):
       router.push('/userProfile')
       break;
-    case 'Help':
+    case t('Help'):
       
       break;
-    case 'My collections':
+    case t('My collections'):
       router.push('/collections')
       break;
-    case 'Log out':
+    case t('Log out'):
       authStore.clearStore();
       router.push('/')
       break;
-    case 'Settings':
+    case t('Settings'):
       router.push('/settings')
       break;
     default:
@@ -143,7 +155,7 @@ const searchUser = async () => {
         },
       })
       if (!foundedUser.ok) {
-        toast.add({ severity: 'error', summary: 'Error Message', detail: 'User not found.', life: 5000 });
+        toast.add({ severity: 'error', summary: 'Error Message', detail: t('User not found'), life: 5000 });
       } else {
         const foundedUserJSON = await foundedUser.json();
         authStore.setFoundedUserData(foundedUserJSON);
@@ -247,6 +259,11 @@ const searchUser = async () => {
 .customNavbarItem:hover::before,
 .customNavbarItem:hover::after {
   width: 50%;
+}
+
+.tText:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 </style>
