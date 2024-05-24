@@ -31,7 +31,8 @@
             </div>
             <Divider></Divider>
             <div class="footerOverviewMainContainer">
-              <Button class="footerButton pi pi-thumbs-up" :label="t(' Like')" @click="giveALike(product._id,index)"></Button>
+              <Button v-if="likedProducts[index] === false" class="footerButton pi pi-thumbs-up" :label="t(' Like')" @click="giveALike(product._id,index)"></Button>
+              <Button v-if="likedProducts[index] === true" class="footerButton pi pi-thumbs-up-fill" :label="t(' Like')" @click="removeALike(product._id,index)"></Button>
               <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" :label="t(' Comment')"></Button>
               <Button class="footerButton pi pi-link" :label="t(' Share')"></Button>
             </div>
@@ -91,6 +92,7 @@ const selectedProduct = ref<WholeProductDataInterface>();
 const readComments = ref<boolean>(false);
 
 const productLikesVec =  ref<number[]>([])
+const likedProducts =  ref<boolean[]>([]);
 
 const findProducts = async() => {
   if(!await authStore.checkToken()) {
@@ -130,6 +132,18 @@ const findProductsOwners = async() => {
           last20ProductsUser.value.push(await response.json());
           productLikesVec.value.push(product.likes as number);
         }
+        const getUserLikesResponse = await fetch(API_URI + `/productLike/${authStore.getUserData().id}/${product._id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        });
+        if(!getUserLikesResponse.ok) {
+          
+        } else {
+          likedProducts.value.push(await getUserLikesResponse.json());
+        }
       }
     }
   }
@@ -157,6 +171,12 @@ const reverseArrays = async () => {
   }
   if(last20ProductsUser.value) {
     last20ProductsUser.value = last20ProductsUser.value.reverse();
+  }
+  if(productLikesVec.value) {
+    productLikesVec.value = productLikesVec.value.reverse();
+  }
+  if(likedProducts.value) {
+    likedProducts.value = likedProducts.value.reverse();
   }
 }
 
@@ -232,6 +252,31 @@ const giveALike = async (productId: string, productIndex: number) => {
 
     } else {
       productLikesVec.value[productIndex] += 1;
+      likedProducts.value[productIndex] = true;
+    }
+  }
+}
+
+const removeALike = async (productId: string, productIndex: number) => {
+  if(!authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const requestBody = {
+      productId: productId,
+      userId: authStore.getUserData().id,
+    }
+    const response = await fetch(API_URI + `/productLike`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+      body: JSON.stringify(requestBody)
+    })
+    if(!response.ok) {
+    } else {
+      productLikesVec.value[productIndex] -= 1;
+      likedProducts.value[productIndex] = false;
     }
   }
 }
