@@ -59,6 +59,16 @@ export const userAuthentication = defineStore({
       this.profilePhoto = userData.profilePhoto;
       this.biography = userData.biography;
     },
+    setUserDataLoginWithGoogle(userData: { biography: string, email: string, id: string,name: string, profilePhoto: string,surnames: string, username: string, token: string}) {
+      this.id = userData.id;
+      this.username = userData.username; 
+      this.email = userData.email; 
+      this.name = userData.name;
+      this.surnames = userData.surnames;
+      this.profilePhoto = userData.profilePhoto;
+      this.biography = userData.biography;
+      this.token = userData.token;
+    },
     getUserData() {
       return {
         id: this.id,
@@ -99,6 +109,21 @@ export const userAuthentication = defineStore({
         this.setUserData(userDataJSON);
         this.findFriends();
         return "Succes";
+      }
+    },
+    async loginWithGoogle() {
+      window.location.href = API_URI + `/auth/google`;
+      const response = await fetch(API_URI + `/auth/google`, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      console.log(response);
+      if(!response.ok) {
+        return "Error"
+      } else {
+        console.log(await response.json())
+        return "Succes"
       }
     },
     async checkToken() {
