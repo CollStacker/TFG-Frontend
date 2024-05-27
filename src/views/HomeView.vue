@@ -65,7 +65,13 @@
           <InputText v-model="signInForm.email" placeholder="Email account" />
           <Password v-model="signInForm.password" placeholder="Password" toggleMask :feedback="false" />
           <a href="#" style="color: #333">Forgot your password?</a>
-          <button type="submit">Sign In</button>
+          <button type="submit" style="margin-bottom: 10px; width: 188px; font-size: 11px; height: 42px; border-radius: 30px;">Sign In</button>
+          <button class="google-login-button" @click="signingInWithGoogle = true">
+            <div class="icon">
+              <img src="../assets/imgs/google icon.png" alt="Google Icon" class="google-icon">
+            </div>
+            <div class="text">Sign in with google</div>
+          </button>
         </form>
       </div>
       <div class="overlay-container">
@@ -80,7 +86,7 @@
           <div class="overlay-panel overlay-right">
             <h1>Hello, Collector!</h1>
             <p>Are you still not registered?. Enter your personal details and start journey with us</p>
-            <button class="ghost" @click="toggleSignIn">Sign Up</button>
+            <button class="ghost" @click="toggleSignIn" style="width: 188px; font-size: 11px; height: 42px; border-radius: 30px;">Sign Up</button>
           </div>
         </div>
       </div>
@@ -108,6 +114,7 @@ import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import Swal from 'sweetalert2'
 import { API_URI } from '@/types/env';
+import { l } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
 
 const authStore = userAuthentication();
 
@@ -115,6 +122,8 @@ const router = useRouter();
 const toast = useToast();
 
 const wrongPasswordErrorMessage = "Password must be greater than 8 characters.\n Must have at least one number, one capital letter and one non-alphanumeric character"
+
+const signingInWithGoogle = ref<boolean>(false);
 
 const isSignUp = ref(false);
 const signUpForm = ref({
@@ -185,18 +194,25 @@ const handleSignUp = async () => {
 
 const handleSignIn = async () => {
   let errorFounded = false;
-  if (signInForm.value.email === '' || signInForm.value.password === '' ) {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
-    errorFounded = true;
-  }
-  if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
-    toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
-    errorFounded = true;
+  if(signingInWithGoogle.value === false) {
+    if (signInForm.value.email === '' || signInForm.value.password === '' ) {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
+      errorFounded = true;
+    }
+    if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'The email address is incorrect', life: 3000 });
+      errorFounded = true;
+    }
   }
   if (errorFounded) {
     return;
   } else {
-    const response = await authStore.login(signInForm.value);
+    let response: "Error" | "Succes";
+    if(signingInWithGoogle.value === true) {
+      response = await authStore.loginWithGoogle();
+    } else {
+      response = await authStore.login(signInForm.value);
+    }
     if (response === "Succes") {
       router.push('/main')
     } else if (response === "Error") {
@@ -240,7 +256,7 @@ const areAllRegisterStepOneFieldsFilled = () => {
 const nextRegisterFormStep = () => {
   if (registerStep.value == 0) {
     if (!areAllRegisterStepOneFieldsFilled()) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
     } 
     if (!isCorrectPassword()) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
@@ -621,12 +637,13 @@ footer a {
 }
 
 .customSignUpButton {
-  margin-left: 180px;
+  margin-left: 160px;
 }
 
 .button-container {
   display: flex;
   align-items: center; /* Alinear verticalmente al centro */
+  margin-left: 0px;
 }
 
 .customPreviousStepButton {
@@ -712,6 +729,42 @@ section img:hover {
 .p-dialog-content {
   background-color: red;
   color: red;
+}
+
+.google-login-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #333;
+  border-radius: 30px;
+  background-color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.google-login-button:hover {
+  background-color: #f1f1f1;
+}
+
+.google-login-button .icon {
+  margin-right: 0.5rem;
+}
+
+.google-login-button .google-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.google-login-button .text {
+  font-size: 10px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.google-login-button:hover .text {
+  color: #333;
 }
 
 </style>
