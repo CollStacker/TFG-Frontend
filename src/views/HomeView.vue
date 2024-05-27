@@ -196,11 +196,11 @@ const handleSignIn = async () => {
   let errorFounded = false;
   if(signingInWithGoogle.value === false) {
     if (signInForm.value.email === '' || signInForm.value.password === '' ) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
       errorFounded = true;
     }
     if (!isCorrectEmail(signInForm.value.email) && signInForm.value.email !== '') {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'The email address is incorrect', life: 3000 });
       errorFounded = true;
     }
   }
@@ -256,7 +256,7 @@ const areAllRegisterStepOneFieldsFilled = () => {
 const nextRegisterFormStep = () => {
   if (registerStep.value == 0) {
     if (!areAllRegisterStepOneFieldsFilled()) {
-      toast.add({ severity: 'error', summary: 'Error Message', detail: 'Every fields must be filled.', life: 3000 });
+      toast.add({ severity: 'error', summary: 'Error Message', detail: 'All fields must be filled.', life: 3000 });
     } 
     if (!isCorrectPassword()) {
       toast.add({ severity: 'error', summary: 'Error Message', detail: wrongPasswordErrorMessage, life: 5000 })
@@ -637,12 +637,13 @@ footer a {
 }
 
 .customSignUpButton {
-  margin-left: 180px;
+  margin-left: 160px;
 }
 
 .button-container {
   display: flex;
   align-items: center; /* Alinear verticalmente al centro */
+  margin-left: 0px;
 }
 
 .customPreviousStepButton {
