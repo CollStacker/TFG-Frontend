@@ -146,5 +146,8 @@
   "Add a comment...": "Añade un comentario...",
   "Type your message here...": "Escribe tu mensaje aquí...",
   " Accept": " Acceptar",
-  " Decline": " Rechazar"
+  " Decline": " Rechazar",
+  "You don't have friends to share the product with": "No tienes amigos con los que compartir el producto",
+  "Error sharing product": "Error al compartir el producto",
+  "Product shared": "Producto compartido"
 }

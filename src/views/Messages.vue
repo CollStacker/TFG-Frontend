@@ -1,76 +1,81 @@
 <template>
   <Toast/>
-  <div class="messagesContainer" :key="key"> 
-    <SideBar class="sidebar"></SideBar>
-    <div class="messagesContent">
-      <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
-      <div v-if="isLoading" class="loading-spinner">
-        <div class="spinner"></div>
-      </div>
-      <div v-else>
-        <div class ="messagesMainContent">
-          <div class="friendRequestContainer">
-            <span class="uppercase bold big-text pl-7">{{t('Friend Requests')}}</span>
-            <div class="ccseparator"></div>
-            <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
-              <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
-                <div class="friendRequestData">
-                  <img v-if="friendRequest.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-                  <img v-if="friendRequest.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-                  <img v-if="friendRequest.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-                  <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-                  <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-                  <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-                  <span class="ml-12 largeText">{{ friendRequest.username }}</span>
-                  <div class="button-container">
-                    <Button class="customAcceptRequestButton pi pi-plus" :label="t(' Accept')" @click="acceptFriendRequest(friendRequest.id)"></Button>
-                    <Button class="customRefuseRequestButton ml-12 pi pi-minus" :label="t(' Decline')" @click="refuseFriendRequest(friendRequest.id)"></Button>
-                  </div>
-                </div>
-                <Divider />
-              </div>
-            </template>
-            <template v-else>
-              <div class="p-5">
-                <span class="largeText">{{t('Sorry, you currently have no friend requests!')}}</span>
-              </div>
-            </template>
-          </div>
-          <div class="friendListContainer">
-            <span class="uppercase bold big-text pl-7">{{t('Friends List')}}</span>
-            <div class="ccseparator"></div>
-            <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
-              <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
-                <div class="friendRequestData">
-                  <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
-                  <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
-                  <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-                  <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
-                  <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
-                  <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-                  <span class="ml-12 largeText">{{ friend.username }}</span>
-                  <div class="button-container">
-                    <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat(friend)"></Button>
-                    <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
-                  </div>
-                </div>
-                <Divider />
-              </div>
-            </template>
-            <template v-else>
-              <div class="p-5">
-                <span class="largeText">{{t('Sorry, you currently have no friends!')}}</span>
-              </div>
-            </template>
-          </div>
-          <!-- {{ friendList }}
-          {{ friendListRelevantData }} -->
+    <div class="messagesContainer" :key="key"> 
+      <SideBar class="sidebar"></SideBar>
+      <div class="messagesContent">
+        <NavBar class="customNavBar" @refreshNav="refreshNav()"></NavBar>
+        <div v-if="isLoading" class="loading-spinner">
+          <div class="spinner"></div>
         </div>
+        <div v-else>
+          <div v-if="messageComponentOpen">
+            <div class ="messagesMainContent">
+              <div class="friendRequestContainer">
+                <span class="uppercase bold big-text pl-7">{{t('Friend Requests')}}</span>
+                <div class="ccseparator"></div>
+                <template v-if="friendRequestsRelevantData && friendRequestsRelevantData.length > 0">
+                  <div v-for="(friendRequest, index) in friendRequestsRelevantData" :key="index" class="friendRequestWrapper">
+                    <div class="friendRequestData">
+                      <img v-if="friendRequest.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                      <span class="ml-12 largeText">{{ friendRequest.username }}</span>
+                      <div class="button-container">
+                        <Button class="customAcceptRequestButton pi pi-plus" :label="t(' Accept')" @click="acceptFriendRequest(friendRequest.id)"></Button>
+                        <Button class="customRefuseRequestButton ml-12 pi pi-minus" :label="t(' Decline')" @click="refuseFriendRequest(friendRequest.id)"></Button>
+                      </div>
+                    </div>
+                    <Divider />
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="p-5">
+                    <span class="largeText">{{t('Sorry, you currently have no friend requests!')}}</span>
+                  </div>
+                </template>
+              </div>
+              <div class="friendListContainer">
+                <span class="uppercase bold big-text pl-7">{{t('Friends List')}}</span>
+                <div class="ccseparator"></div>
+                <template v-if="friendListRelevantData && friendListRelevantData.length > 0">
+                  <div v-for="(friend, index) in friendListRelevantData" :key="index" class="friendRequestWrapper">
+                    <div class="friendRequestData">
+                      <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                      <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg"/>
+                      <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+                      <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
+                      <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
+                      <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                      <span class="ml-12 largeText">{{ friend.username }}</span>
+                      <div class="button-container">
+                        <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat(friend)"></Button>
+                        <Button class="customRefuseRequestButton spanDisplayNone ml-12 pi pi-minus" @click="deleteFriend(friend.id)"></Button>
+                      </div>
+                    </div>
+                    <Divider />
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="p-5">
+                    <span class="largeText">{{t('Sorry, you currently have no friends!')}}</span>
+                  </div>
+                </template>
+              </div>
+              <!-- {{ friendList }}
+              {{ friendListRelevantData }} -->
+            </div>
+          </div>
+          <div v-else class="messagesMainContent">
+            <ProductDataComponent :selectedProduct="selectedProduct" :readOnly="readOnly" @emitCloseProductComponent="closeProductComponent()"/>
+          </div>
+        </div>
+        <Footer class="customFooter"></Footer>
       </div>
-      <Footer class="customFooter"></Footer>
+      <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat" @closeChat="closeChat()" @openSharedProduct="openSharedProduct"/>
     </div>
-    <Chat v-if="isChatOpen" class="chat-popup" :friend="friendChat" @closeChat="closeChat()"/>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -87,6 +92,8 @@ import { type UserInterface } from '@/types/user';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Chat from '@/components/chat/Chat.vue';
+import ProductDataComponent from '../components/ProductDataComponent.vue';
+import {type WholeProductDataInterface } from '@/types/product';
 
 import { useI18n } from 'vue-i18n'
 const {t} = useI18n();
@@ -296,6 +303,51 @@ const openChat = (friend: UserInterface) => {
 
 const closeChat = () => {
   isChatOpen.value = false;
+}
+
+const readOnly = ref<boolean>(true);
+const selectedProduct = ref<WholeProductDataInterface>();
+const messageComponentOpen = ref<boolean>(true);
+const openSharedProduct = async (messageContent: string) => {
+  if(!authStore.checkToken()) {
+    router.push('/')
+  } else {
+    const response = await fetch(API_URI + `/product/${messageContent}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authStore.getToken()}`,
+      },
+    })
+    if (!response.ok) {
+      console.log("Algo va mal");
+    } else {
+      selectedProduct.value = await response.json();
+      if(selectedProduct.value) {
+        const productFieldResponse = await fetch(API_URI + `/product-fields/${messageContent}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        })
+        if (!productFieldResponse.ok) {
+          console.log("no se encontraron los campos")
+        } else {
+          const productFields = await productFieldResponse.json();
+          if (productFields) {
+            selectedProduct.value.customFields = productFields;
+          }
+        }
+      }
+    }
+  }
+  messageComponentOpen.value = false;
+  isChatOpen.value = false;
+}
+
+const closeProductComponent = () => {
+  messageComponentOpen.value = true;
 }
 
 </script>
