@@ -18,7 +18,8 @@
         :class="{'message-sent': message.senderId === authStore.getUserData().id, 'message-received': message.senderId !== authStore.getUserData().id}"
         class="message">
         <div class="message-content">
-          <p>{{ message.content }}</p>
+          <p class="linkStyle" v-if="checkIfIsSharedProduct(message.content)" @click="openSharedProduct(message.content)">{{getMessageContentLink(message.content)}}</p>
+          <p v-else>{{ message.content }}</p>
           <span class="message-date">{{ formatDate(message.date) }}</span>
         </div>
       </div>
@@ -63,7 +64,7 @@ const props = defineProps({
   },
 })
 
-const emits= defineEmits(["closeChat"]);
+const emits= defineEmits(["closeChat","openSharedProduct"]);
 
 onMounted(async () => {
   await getConversation();
@@ -140,6 +141,19 @@ const formatDate = (date: Date) => {
 const closeChat = () => {
   emits("closeChat");
 }
+
+const checkIfIsSharedProduct = (messageContent: string): boolean => {
+  return messageContent.includes("%#ShArEpRoDuCt#%#CoMpArTiRpRoDuCtO#%#PrOdUkTtEiLeN#%:");
+}
+
+const getMessageContentLink = (messageContent: string): string => {
+  return "/collstacker/productShared/" + messageContent.substring(53,messageContent.length);
+}
+
+const openSharedProduct = (messageContent: string) => {
+  emits("openSharedProduct", messageContent.substring(53,messageContent.length));
+}
+
 </script>
 
 <style scoped>
@@ -265,5 +279,17 @@ const closeChat = () => {
 .friendData h2 {
   margin: 0px;
   margin-left: 15px;
+}
+
+.linkStyle {
+  color: rgb(63, 63, 216); 
+  text-decoration: underline;
+  cursor: pointer; 
+  transition: color 0.3s ease;
+}
+
+.linkStyle:hover {
+  color: #00a; 
+  text-decoration: underline; 
 }
 </style>

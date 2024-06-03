@@ -3,6 +3,28 @@
   <Dialog v-model:visible="readComments" class="commentsDialog" header=" ">
     <CommentDialogComponent :currentProduct="currentProduct"/>
   </Dialog>
+  <Dialog v-model:visible="shareDialog" class="shareDialog" header=" ">
+    <div v-if="friendsData.length > 0">
+      <div v-for="(friend, index) in friendsData" class="shareDialogFriendContainer">
+        <div class="shareDialogFriendList">
+          <div class="friendInfo">
+            <img v-if="friend.profilePhoto === 'maleYoung'" src="../assets/imgs/profilePhoto/male-young.jpg" />
+            <img v-if="friend.profilePhoto === 'maleAdult'" src="../assets/imgs/profilePhoto/male-adult.jpg" />
+            <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg" />
+            <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg" />
+            <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg" />
+            <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg" />
+            <span>{{ friend.username }}</span>
+          </div>
+          <Button class="footerButton" @click="shareProduct(friend.id)" label="Share"></Button>
+        </div>
+        <Divider class="divider"></Divider>
+      </div>
+    </div>
+    <div v-else>
+      <h2>{{t("You don't have friends to share the product with")}}</h2>
+    </div>
+  </Dialog>
   <div v-if="isLoading" class="loading-spinner">
     <div class="spinner"></div>
   </div>
@@ -34,7 +56,7 @@
               <Button v-if="likedProducts[index] === false" class="footerButton pi pi-thumbs-up" :label="t(' Like')" @click="giveALike(product._id,index)"></Button>
               <Button v-if="likedProducts[index] === true" class="footerButton pi pi-thumbs-up-fill" :label="t(' Like')" @click="removeALike(product._id,index)"></Button>
               <Button class="footerButton pi pi-comment" style="margin:0px 10px 0px 10px" @click="openProductComments(product)" :label="t(' Comment')"></Button>
-              <Button class="footerButton pi pi-link" :label="t(' Share')"></Button>
+              <Button class="footerButton pi pi-link" :label="t(' Share')" @click="openShareDialog(product._id)"></Button>
             </div>
           </div>
         </div>
@@ -66,6 +88,7 @@ import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import CommentDialogComponent from './Dialog/CommentDialogComponent.vue';
+
 
 import { useI18n } from 'vue-i18n'
 const {t} = useI18n();
@@ -281,6 +304,73 @@ const removeALike = async (productId: string, productIndex: number) => {
   }
 }
 
+
+// Share products
+const shareDialog = ref<boolean>(false);
+const friendsData = ref<UserInterface[]>([]);
+const productToShare = ref<string>("");
+
+const openShareDialog = async (productId: string) => {
+  productToShare.value = productId;
+  friendsData.value = [];
+  shareDialog.value = true;
+  if(!authStore.checkToken()) {
+    router.push('/');
+  } else {
+    if(authStore.getFriends().length > 0) {
+      for (const friend of authStore.getFriends()) {
+        const response = await fetch(API_URI + `/findUserById/${friend}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+        })
+        if(response.ok) {
+          friendsData.value.push(await response.json());
+        } 
+      }
+    }
+  }
+}
+
+const shareProduct = async (friendId: string) => {
+  let messageToSend:string = "";
+  if(productToShare.value !== "") {
+    messageToSend = "%#ShArEpRoDuCt#%#CoMpArTiRpRoDuCtO#%#PrOdUkTtEiLeN#%:" + productToShare.value;
+  } 
+  if(messageToSend === "") {
+    toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error sharing product'), life: 3000 });
+    return;
+  }
+
+  if(!authStore.checkToken()) {
+    router.push('/');
+  } else {
+    const tmpMessage = {
+      content: messageToSend,
+      date: new Date(),
+      senderId: authStore.getUserData().id,
+      receiverId: friendId,
+    }
+    const response = await fetch(API_URI + `/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authStore.getToken()}`,
+        },
+        body: JSON.stringify(tmpMessage)
+      })
+      if(!response.ok) {
+        toast.add({ severity: 'error', summary: 'Error Message', detail: t('Error posting a message.'), life: 3000 });
+      } else {
+        toast.add({ severity: 'success', summary: 'Product edited', detail: t('Product shared'), life: 3000 });
+      }
+  }
+  //friendsData.value = []; // clear friends array
+  //productToShare.value = ""; // clear product to share variable
+  //shareDialog.value = false; // close dialog
+}
 </script>
 
 <style scoped>
@@ -451,7 +541,12 @@ const removeALike = async (productId: string, productIndex: number) => {
 .p-dialog.p-component.p-ripple-disabled.commentsDialog {
   width: 800px;
   max-height: 600px;
-  margin-left: 220px;
+  /* margin-left: 220px; */
+}
+
+.p-dialog.p-component.p-ripple-disabled.shareDialog {
+  width: 500px;
+  max-height: 400px;
 }
 
 button.p-button.p-component,
@@ -475,4 +570,39 @@ button.p-button.p-component.footerButton:hover {
   background-color: white;
   transform: scale(1);
 }
+
+.shareDialogFriendContainer {
+  margin-bottom: 10px;
+}
+
+.shareDialogFriendList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.friendInfo {
+  display: flex;
+  align-items: center;
+}
+
+.friendInfo img {
+  margin-right: 10px;
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 70px;
+}
+
+.shareButton {
+  margin-left: auto;
+}
+
+.divider {
+  width: 100%;
+  height: 1px; 
+  background-color: #ccc;
+  margin-top: 10px; 
+}
+
+
 </style>
