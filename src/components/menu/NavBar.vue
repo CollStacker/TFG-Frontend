@@ -96,10 +96,6 @@ const items = ref([
                 icon: 'pi pi-server'
             },
             {
-                label: t('Help'),
-                icon: 'pi pi-question-circle'
-            },
-            {
                 label: t('Log out'),
                 icon: 'pi pi-sign-out'
             },
@@ -123,9 +119,6 @@ const handleNavbar = (label: string | ((...args: any) => string) | undefined) =>
       break;
     case t('My profile'):
       router.push('/userProfile')
-      break;
-    case t('Help'):
-      
       break;
     case t('My collections'):
       router.push('/collections')
