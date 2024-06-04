@@ -1,42 +1,47 @@
 <template>
-  <div class="userProfileComponentContainer">
-    <div class="userProfileComponentColumn">
-      <div class="userProfileComponentCard"> 
-        <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
-        <div class="cardBody littleProfile textCenter">
-          <div class="proImg">
-            <img v-if="userData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
-            <img v-if="userData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
-            <img v-if="userData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
-            <img v-if="userData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
-            <img v-if="userData.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
-          </div>
-          <span class="usernameText" >{{userData.username}}</span>
-          <div class="userDataContainer">
-            <div class="userDataText">
-              <div class="formGroup">
-                <span class="formGroupInputText">{{t('Email')}}</span>
-                <InputText class="customUserProfileInputText" v-model="userData.email" :disabled="inputTextEditable" />
+    <div v-if="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+  <div v-else>
+    <div class="userProfileComponentContainer">
+      <div class="userProfileComponentColumn">
+        <div class="userProfileComponentCard"> 
+          <img class="cardImgTop" src="../assets/imgs/sidebar/sidebar.jpg" alt="Card image cap">
+          <div class="cardBody littleProfile textCenter">
+            <div class="proImg">
+              <img v-if="userData.profilePhoto === 'maleYoung'"  src="../assets/imgs/profilePhoto/male-young.jpg"/>
+              <img v-if="userData.profilePhoto === 'maleAdult'"  src="../assets/imgs/profilePhoto/male-adult.jpg"/>
+              <img v-if="userData.profilePhoto === 'maleOld'"  src="../assets/imgs/profilePhoto/male-old.jpg"/>
+              <img v-if="userData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
+              <img v-if="userData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+              <img v-if="userData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
+              <img v-if="userData.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
+            </div>
+            <span class="usernameText" >{{userData.username}}</span>
+            <div class="userDataContainer">
+              <div class="userDataText">
+                <div class="formGroup">
+                  <span class="formGroupInputText">{{t('Email')}}</span>
+                  <InputText class="customUserProfileInputText" v-model="userData.email" :disabled="inputTextEditable" />
+                </div>
+                <div class="formGroup">
+                  <span class="formGroupInputText">{{t('Name')}}</span>
+                  <InputText class="customUserProfileInputText" v-model="userData.name" :disabled="inputTextEditable" />  
+                </div>
+                <div class="formGroup">
+                  <span class="formGroupInputText">{{t('Surnames')}}</span>
+                  <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
+                </div>
               </div>
-              <div class="formGroup">
-                <span class="formGroupInputText">{{t('Name')}}</span>
-                <InputText class="customUserProfileInputText" v-model="userData.name" :disabled="inputTextEditable" />  
-              </div>
-              <div class="formGroup">
-                <span class="formGroupInputText">{{t('Surnames')}}</span>
-                <InputText class="customUserProfileInputText" v-model="userData.surnames" :disabled="inputTextEditable" />
+              <div class="biografyFormGroup" v-if="userData.biography">
+                <div class="formGroup">
+                  <span class="formGroupInputText">{{t('About me')}}</span>
+                  <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
+                </div>
               </div>
             </div>
-            <div class="biografyFormGroup" v-if="userData.biography">
-              <div class="formGroup">
-                <span class="formGroupInputText">{{t('About me')}}</span>
-                <Textarea class="customUserProfileTextArea" v-model="userData.biography" :disabled="inputTextEditable" autoResize />
-              </div>
-            </div>
+  
           </div>
-
         </div>
       </div>
     </div>
@@ -46,11 +51,16 @@
 <script setup lang="ts">
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { userAuthentication } from '@/store/userAuth.store';
 
 import { useI18n } from 'vue-i18n'
 const {t} = useI18n();
+
+const isLoading = ref<boolean>(true);
+onMounted(() => {
+  isLoading.value = false;
+})
 
 const authStore = userAuthentication();
 
@@ -174,6 +184,14 @@ textarea.p-inputtextarea.p-inputtext.customUserProfileTextArea {
   border: 1px solid #b9b9b9;
   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #EEEEEE;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
 }
 
 </style>
