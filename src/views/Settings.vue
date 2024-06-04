@@ -187,6 +187,7 @@ const {t} = useI18n();
 
 const key = ref<number>(0);
 const refreshNav = () => {
+  secondSplitterDisplay.value = t("User Profile");
   key.value = key.value + 1;
 }
 
@@ -211,24 +212,24 @@ const items = ref([
             }
         ]
     },
-    {
-        label: t('Access'),
-        items: [
-            {
-                label: t('Email'),
-                icon: 'pi pi-envelope'
-            },
-            {
-                label: t('Notifications'),
-                icon: 'pi pi-bell'
-            }
-        ]
-    }
+    // {
+    //     label: t('Access'),
+    //     items: [
+    //         {
+    //             label: t('Email'),
+    //             icon: 'pi pi-envelope'
+    //         },
+    //         {
+    //             label: t('Notifications'),
+    //             icon: 'pi pi-bell'
+    //         }
+    //     ]
+    // }
 ]);
 
 // UPDATE USER DATA
 
-const secondSplitterDisplay = ref("User Profile");
+const secondSplitterDisplay = ref(t("User Profile"));
 const dialogVisible = ref(false);
 const userData = authStore.getUserData();
 
