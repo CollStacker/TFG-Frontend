@@ -92,7 +92,7 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
   min-height: 100vh;
   background-image: url('../../assets/imgs/sidebar/sidebar.jpg');
   background-size: contain;
-  background-position: center;
+  background-position: contain;
   background-attachment: fixed;
 }
 
