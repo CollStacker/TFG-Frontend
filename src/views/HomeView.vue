@@ -151,7 +151,7 @@ const handleSignUp = async () => {
   let errorFounded = false;
   if(signUpForm.value.profilePhoto === '') {
     signUpForm.value.profilePhoto = 'defaultProfilePhoto';
-    errorFounded = true;
+    //errorFounded = true;
   }
   if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
