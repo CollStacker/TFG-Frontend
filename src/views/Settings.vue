@@ -307,13 +307,13 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
       const userAuthenticated = await authStore.checkToken();
       if (userAuthenticated) {
         const updateUser = await fetch(API_URI + `/updateUser/${userData.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-      },
-      body: JSON.stringify(newUserData.value),
-    });
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+          body: JSON.stringify(newUserData.value),
+        });
     if (!updateUser.ok) {
       Swal.fire({
         title: 'Error!',
@@ -322,6 +322,12 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
         confirmButtonText: 'Ok'
       })
     } else {
+      authStore.username = newUserData.value.username;
+      authStore.email = newUserData.value.email;
+      authStore.name = newUserData.value.name;
+      authStore.surnames = newUserData.value.surnames;
+      authStore.biography = newUserData.value.biography;
+      authStore.profilePhoto = newUserData.value.profilePhoto;
       Swal.fire({
         title: "Great!",
         text: t("Your account have been updated!"),
