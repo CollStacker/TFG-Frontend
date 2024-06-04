@@ -5,6 +5,7 @@
       <template #start>
         <Toast/>
         <div class="searchInputText">
+          <span class="homeIcon pi pi-home" @click="goHome"></span>
           <span class="customSearchLogo pi pi-search"></span>
           <InputText v-model="currentUser" :placeholder="t('Search')" type="text" class="customNavBarInputText" @keydown.enter="searchUser" />
           <span v-if="locale === 'en'" class="tText" @click="changeLanguage('es')">En</span>
@@ -170,6 +171,10 @@ const searchUser = async () => {
   }
 }
 
+const goHome = () => {
+  router.push('/main')
+}
+
 </script>
 
 <style>
@@ -264,6 +269,19 @@ const searchUser = async () => {
 
 .tText:hover {
   transform: scale(1.1);
+  cursor: pointer;
+}
+
+.homeIcon {
+  margin: 0 5px 0 5px
+}
+
+.homeIcon.pi.pi-home {
+  font-size: 20px;
+}
+
+.homeIcon:hover {
+  transform: scale(1.2);
   cursor: pointer;
 }
 
