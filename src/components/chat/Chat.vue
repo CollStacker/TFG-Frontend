@@ -8,6 +8,7 @@
         <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'maleOld'" src="../../assets/imgs/profilePhoto/male-old.jpg"/>
         <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'femaleOld'" src="../../assets/imgs/profilePhoto/female-old.jpg"/>
         <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'femaleAdult'" src="../../assets/imgs/profilePhoto/female-adult.jpg"/>
+        <img class="friendDataProfilePhoto" v-if="props.friend.profilePhoto === 'defaultProfilePhoto'" src="../../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
         <h2>{{ props.friend.username }}</h2>
       </div>
       <span class="closeButton pi pi-times" @click="closeChat()"></span>

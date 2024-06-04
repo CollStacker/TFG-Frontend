@@ -64,6 +64,7 @@
                     <img v-if="newUserData.profilePhoto === 'femaleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-old.jpg"/>
                     <img v-if="newUserData.profilePhoto === 'femaleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                     <img v-if="newUserData.profilePhoto === 'femaleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                    <img v-if="newUserData.profilePhoto === 'defaultProfilePhoto'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
                   </div>
                 </div>
                 <Dialog v-model:visible="dialogVisible" modal style="width:53rem;" :closable="false" :showHeader="false" class="customDialog">

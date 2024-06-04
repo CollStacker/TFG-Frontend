@@ -18,6 +18,7 @@
               <img v-if="foundedUserData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
               <img v-if="foundedUserData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
               <img v-if="foundedUserData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
+              <img v-if="foundedUserData.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
             </div>
             <div>
               <span class="usernameText" >{{foundedUserData.username}}</span><br>

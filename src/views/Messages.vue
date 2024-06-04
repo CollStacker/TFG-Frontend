@@ -22,6 +22,7 @@
                       <img v-if="friendRequest.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
                       <img v-if="friendRequest.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
                       <img v-if="friendRequest.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                      <img v-if="friendRequest.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
                       <span class="ml-12 largeText">{{ friendRequest.username }}</span>
                       <div class="button-container">
                         <Button class="customAcceptRequestButton pi pi-plus" :label="t(' Accept')" @click="acceptFriendRequest(friendRequest.id)"></Button>
@@ -49,6 +50,7 @@
                       <img v-if="friend.profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
                       <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
                       <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+                      <img v-if="friend.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
                       <span class="ml-12 largeText">{{ friend.username }}</span>
                       <div class="button-container">
                         <Button class="customAcceptRequestButton spanDisplayNone pi pi-comment" @click="openChat(friend)"></Button>

@@ -11,6 +11,7 @@
             <img v-if="userData.profilePhoto === 'femaleOld'"  src="../assets/imgs/profilePhoto/female-old.jpg"/>
             <img v-if="userData.profilePhoto === 'femaleAdult'"  src="../assets/imgs/profilePhoto/female-adult.jpg"/>
             <img v-if="userData.profilePhoto === 'femaleYoung'"  src="../assets/imgs/profilePhoto/female-young.jpg"/>
+            <img v-if="userData.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
           </div>
           <span class="usernameText" >{{userData.username}}</span>
           <div class="userDataContainer">

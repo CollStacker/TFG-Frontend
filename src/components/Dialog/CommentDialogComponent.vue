@@ -8,6 +8,7 @@
         <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'maleOld'" src="../../assets/imgs/profilePhoto/male-old.jpg"/>
         <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'femaleOld'" src="../../assets/imgs/profilePhoto/female-old.jpg"/>
         <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'femaleAdult'" src="../../assets/imgs/profilePhoto/female-adult.jpg"/>
+        <img class="commentProfilePhoto" v-if="commentsOwner[index].profilePhoto === 'defaultProfilePhoto'" src="../../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
         <span class="comment-author">{{ commentsOwner[index].username }}</span>
         <span class="comment-date">{{ formatDate(comment.publicationDate) }}</span>
       </div>
