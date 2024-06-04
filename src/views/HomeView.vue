@@ -608,8 +608,8 @@ footer a {
 
 .customNextStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
-  background-color: #FF4B2B;
+  margin-top: 7px;
+  margin-bottom: 7px;
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
   border: 1px solid #333;
@@ -648,7 +648,8 @@ footer a {
 
 .customPreviousStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   /* background-color: #FF4B2B; */
   background-color: #333;
   /* border: 1px solid #FF4B2B; */

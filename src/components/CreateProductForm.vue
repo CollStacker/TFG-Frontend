@@ -90,7 +90,18 @@
           <div class="overlay">
             <!-- Left panel-->
             <div class="overlay-panel overlay-left">
-              <h1>Hey there, Treasure Hunter!</h1>
+              <div v-if="productFormStep === 0">
+                <h1>Hey there, Treasure Hunter!</h1>
+                <p>{{("Let's create a product together, give it a name and if you wish, insert a description")}}</p>
+              </div>
+              <div v-if="productFormStep === 1">
+                <h1>Hey there, Treasure Hunter!</h1>
+                <p>{{("It is time to select an image. Yhis step is optional and can be completed later.")}}</p>
+              </div>
+              <div v-if="productFormStep === 2">
+                <h1>Hey there, Treasure Hunter!</h1>
+                <p>{{("Finally, add custom fields to the product; you can preview them at any time.")}}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -616,7 +627,8 @@ form {
 
 .customNextStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
   border: 1px solid #333;
@@ -636,7 +648,8 @@ form {
 
 .customPreviousStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   /* background-color: #FF4B2B; */
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
@@ -644,6 +657,10 @@ form {
   padding: 8px;
   border-radius: 20px;
   margin-right: 0;
+}
+
+.button-container {
+  margin: 0px;
 }
 
 .customPreviousStepButton:hover {
