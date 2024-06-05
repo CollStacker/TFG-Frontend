@@ -64,6 +64,7 @@
                     <img v-if="newUserData.profilePhoto === 'femaleOld'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-old.jpg"/>
                     <img v-if="newUserData.profilePhoto === 'femaleAdult'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
                     <img v-if="newUserData.profilePhoto === 'femaleYoung'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/female-young.jpg"/>
+                    <img v-if="newUserData.profilePhoto === 'defaultProfilePhoto'" class="customProfilePhoto" @click="dialogVisible = true" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
                   </div>
                 </div>
                 <Dialog v-model:visible="dialogVisible" modal style="width:53rem;" :closable="false" :showHeader="false" class="customDialog">
@@ -186,6 +187,7 @@ const {t} = useI18n();
 
 const key = ref<number>(0);
 const refreshNav = () => {
+  secondSplitterDisplay.value = t("User Profile");
   key.value = key.value + 1;
 }
 
@@ -210,24 +212,24 @@ const items = ref([
             }
         ]
     },
-    {
-        label: t('Access'),
-        items: [
-            {
-                label: t('Email'),
-                icon: 'pi pi-envelope'
-            },
-            {
-                label: t('Notifications'),
-                icon: 'pi pi-bell'
-            }
-        ]
-    }
+    // {
+    //     label: t('Access'),
+    //     items: [
+    //         {
+    //             label: t('Email'),
+    //             icon: 'pi pi-envelope'
+    //         },
+    //         {
+    //             label: t('Notifications'),
+    //             icon: 'pi pi-bell'
+    //         }
+    //     ]
+    // }
 ]);
 
 // UPDATE USER DATA
 
-const secondSplitterDisplay = ref("User Profile");
+const secondSplitterDisplay = ref(t("User Profile"));
 const dialogVisible = ref(false);
 const userData = authStore.getUserData();
 
@@ -305,13 +307,13 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
       const userAuthenticated = await authStore.checkToken();
       if (userAuthenticated) {
         const updateUser = await fetch(API_URI + `/updateUser/${userData.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authStore.getToken()}`,
-      },
-      body: JSON.stringify(newUserData.value),
-    });
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authStore.getToken()}`,
+          },
+          body: JSON.stringify(newUserData.value),
+        });
     if (!updateUser.ok) {
       Swal.fire({
         title: 'Error!',
@@ -320,6 +322,12 @@ const handleRoutering = (label: string | ((...args: any) => string) | undefined)
         confirmButtonText: 'Ok'
       })
     } else {
+      authStore.username = newUserData.value.username;
+      authStore.email = newUserData.value.email;
+      authStore.name = newUserData.value.name;
+      authStore.surnames = newUserData.value.surnames;
+      authStore.biography = newUserData.value.biography;
+      authStore.profilePhoto = newUserData.value.profilePhoto;
       Swal.fire({
         title: "Great!",
         text: t("Your account have been updated!"),

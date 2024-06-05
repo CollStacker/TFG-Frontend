@@ -19,5 +19,12 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    rollupOptions: {
+      external: [
+        'node_modules/vite/dist/node/types.d-aGj9QkWt' // Externaliza este módulo específico
+      ]
+    }
   }
 })

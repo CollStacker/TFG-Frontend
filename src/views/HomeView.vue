@@ -114,7 +114,6 @@ import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import Swal from 'sweetalert2'
 import { API_URI } from '@/types/env';
-import { l } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
 
 const authStore = userAuthentication();
 
@@ -151,7 +150,7 @@ const handleSignUp = async () => {
   let errorFounded = false;
   if(signUpForm.value.profilePhoto === '') {
     signUpForm.value.profilePhoto = 'defaultProfilePhoto';
-    errorFounded = true;
+    //errorFounded = true;
   }
   if (!isCorrectEmail(signUpForm.value.email) && signUpForm.value.email !== '') {
     toast.add({ severity: 'error', summary: 'Error Message', detail: 'Email is incorrect.', life: 3000 });
@@ -608,8 +607,8 @@ footer a {
 
 .customNextStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
-  background-color: #FF4B2B;
+  margin-top: 7px;
+  margin-bottom: 7px;
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
   border: 1px solid #333;
@@ -648,7 +647,8 @@ footer a {
 
 .customPreviousStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   /* background-color: #FF4B2B; */
   background-color: #333;
   /* border: 1px solid #FF4B2B; */

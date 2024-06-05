@@ -14,6 +14,7 @@
             <img v-if="friend.profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg" />
             <img v-if="friend.profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg" />
             <img v-if="friend.profilePhoto === 'femaleYoung'" src="../assets/imgs/profilePhoto/female-young.jpg" />
+            <img v-if="friend.profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
             <span>{{ friend.username }}</span>
           </div>
           <Button class="footerButton" @click="shareProduct(friend.id)" label="Share"></Button>
@@ -40,6 +41,7 @@
               <img v-if="last20ProductsUser[index].profilePhoto === 'maleOld'" src="../assets/imgs/profilePhoto/male-old.jpg"/>
               <img v-if="last20ProductsUser[index].profilePhoto === 'femaleOld'" src="../assets/imgs/profilePhoto/female-old.jpg"/>
               <img v-if="last20ProductsUser[index].profilePhoto === 'femaleAdult'" src="../assets/imgs/profilePhoto/female-adult.jpg"/>
+              <img v-if="last20ProductsUser[index].profilePhoto === 'defaultProfilePhoto'" src="../assets/imgs/profilePhoto/defaultProfilePhoto.png" />
               <span class="ml-12 largeText userNameSpan" @click="redirectToUserPage(last20ProductsUser[index])">{{ last20ProductsUser[index].username }}</span>
             </div>
             <span class="publicationDate" v-if="product.publicationDate">{{ timeSince(product.publicationDate.toString()) }}</span>

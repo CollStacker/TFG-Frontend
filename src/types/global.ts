@@ -17,12 +17,11 @@ export const Product: ProductInterface = {
   name: "",
   description: "",
   collectionId: "",
-  brand: "",
   image: "",
-  releaseYear: ""
 }
 
 export const User: UserInterface = {
+  id: "",
   username: "",
   email: "",
   name: "",

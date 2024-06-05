@@ -372,6 +372,10 @@ textarea.p-inputtextarea.p-inputtext.p-component.biggerTextArea,
 
 <style scoped>
 
+.button-container {
+  margin: 0px;
+}
+
 form {
   background-color: #FFFFFF;
   display: flex;
@@ -519,7 +523,8 @@ form {
 
 .customNextStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
   border: 1px solid #333;
@@ -539,7 +544,8 @@ form {
 
 .customPreviousStepButton {
   color: #FFFFFF;
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 7px;
   /* background-color: #FF4B2B; */
   background-color: #333;
   /* border: 1px solid #FF4B2B; */
