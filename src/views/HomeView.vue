@@ -114,7 +114,6 @@ import { useRouter } from 'vue-router';
 import { userAuthentication } from '@/store/userAuth.store';
 import Swal from 'sweetalert2'
 import { API_URI } from '@/types/env';
-import { l } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
 
 const authStore = userAuthentication();
 

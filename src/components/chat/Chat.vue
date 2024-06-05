@@ -13,7 +13,10 @@
       </div>
       <span class="closeButton pi pi-times" @click="closeChat()"></span>
     </div>
-    <div class="chat-messages" ref="chatMessages">
+    <div v-if="isLoading" class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+    <div v-else class="chat-messages" ref="chatMessages">
       <div
         v-for="message in messages"
         :class="{'message-sent': message.senderId === authStore.getUserData().id, 'message-received': message.senderId !== authStore.getUserData().id}"
@@ -34,6 +37,7 @@
       <button @click="sendMessage">{{t('Send')}}</button>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -65,11 +69,13 @@ const props = defineProps({
   },
 })
 
+const isLoading = ref<boolean>(true);
 const emits= defineEmits(["closeChat","openSharedProduct"]);
 
 onMounted(async () => {
   await getConversation();
   scrollToBottom();
+  isLoading.value = false;
 })
 
 const messages = ref<Message[]>([]);
@@ -292,5 +298,13 @@ const openSharedProduct = (messageContent: string) => {
 .linkStyle:hover {
   color: #00a; 
   text-decoration: underline; 
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8); 
 }
 </style>
